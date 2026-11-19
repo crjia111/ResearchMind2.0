@@ -1,0 +1,552 @@
+"""
+Session Manager
+
+Manages chat sessions, data isolation, and persistence.
+Ensures data (structures, images, messages) are isolated per session.
+
+本地会话数据存储，无需登录或平台凭证。
+"""
+
+import os
+import json
+import logging
+import shutil
+import time
+import threading
+from pathlib import Path
+from typing import Dict, Any, Optional, List
+from datetime import datetime, timedelta
+
+logger = logging.getLogger(__name__)
+
+
+class SessionManager:
+    """Manage chat sessions and data isolation"""
+
+    # 🔧 使用统一的路径管理模块
+    import sys
+    from pathlib import Path as PathLib
+    _utils_path = PathLib(__file__).parent.parent / "utils"
+    if str(_utils_path) not in sys.path:
+        sys.path.insert(0, str(_utils_path))
+
+    from utils.paths import session_data_root
+
+    # Base directories（位于 ../data/session_data）
+    BASE_DATA_DIR = session_data_root()
+    STRUCTURES_DIR = BASE_DATA_DIR / "structures"
+    IMAGES_DIR = BASE_DATA_DIR / "images"
+    METADATA_DIR = BASE_DATA_DIR / "metadata"
+    HISTORY_DIR = BASE_DATA_DIR / "history"  # 🆕 聊天历史记录
+    HISTORY_SUMMARY_DIR = BASE_DATA_DIR / "history_summary"
+    EVIDENCE_DIR = BASE_DATA_DIR / "evidence"
+
+    # Session registry
+    _sessions: Dict[str, Dict[str, Any]] = {}
+    _session_registry_file = BASE_DATA_DIR / "session_registry.json"
+    _initialized: bool = False
+
+    # 线程安全锁，保护会话数据
+    _sessions_lock = threading.RLock()
+
+    # Session cleanup configuration
+    SESSION_TIMEOUT = timedelta(hours=24)  # 24小时超时
+    
+    @classmethod
+    def initialize(cls):
+        """Initialize session manager and create base directories"""
+        # Prevent duplicate initialization
+        if cls._initialized:
+            logger.debug("Session Manager already initialized, skipping")
+            return
+        
+        # Create directories with retry logic to handle race conditions
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                # Create base directory first
+                if not cls.BASE_DATA_DIR.exists():
+                    cls.BASE_DATA_DIR.mkdir(exist_ok=True)
+                
+                # 只创建核心目录（metadata, history, evidence）
+                # structures 和 images 目录在 create_session 时按需创建，避免空目录
+                for directory in [cls.METADATA_DIR, cls.HISTORY_DIR, cls.HISTORY_SUMMARY_DIR, cls.EVIDENCE_DIR]:
+                    if not directory.exists():
+                        directory.mkdir(parents=True, exist_ok=True)
+                
+                break  # Success, exit retry loop
+                
+            except FileExistsError:
+                # Directory was created by another process, which is fine
+                logger.debug(f"Directory already exists (attempt {attempt + 1}/{max_retries})")
+                break
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    logger.warning(f"Failed to create directories (attempt {attempt + 1}/{max_retries}): {e}")
+                    time.sleep(0.1)  # Brief delay before retry
+                else:
+                    logger.error(f"Failed to create directories after {max_retries} attempts: {e}")
+                    return
+        
+        # Load session registry
+        cls._load_session_registry()
+        
+        cls._initialized = True
+        logger.info(f"✅ Session Manager initialized")
+        logger.debug(f"📁 Base data directory: {cls.BASE_DATA_DIR.absolute()}")
+    
+    @classmethod
+    def _load_session_registry(cls):
+        """Load session registry from file"""
+        with cls._sessions_lock:
+            if cls._session_registry_file.exists():
+                try:
+                    with open(cls._session_registry_file, 'r', encoding='utf-8') as f:
+                        cls._sessions = json.load(f)
+                    logger.info(f"📖 Loaded {len(cls._sessions)} sessions from registry")
+                except Exception as e:
+                    logger.error(f"Failed to load session registry: {e}")
+                    cls._sessions = {}
+            else:
+                cls._sessions = {}
+
+    @classmethod
+    def _save_session_registry(cls):
+        """Save session registry to file"""
+        with cls._sessions_lock:
+            try:
+                with open(cls._session_registry_file, 'w', encoding='utf-8') as f:
+                    json.dump(cls._sessions, f, indent=2, ensure_ascii=False)
+                logger.debug(f"💾 Saved session registry ({len(cls._sessions)} sessions)")
+            except Exception as e:
+                logger.error(f"Failed to save session registry: {e}")
+    
+    @classmethod
+    def create_session(
+        cls,
+        session_id: str,
+        client_id: str,
+        agent_id: Optional[str] = None,
+        title: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Create a new session
+
+        Args:
+            session_id: Unique session ID
+            client_id: Client ID
+            agent_id: Agent ID (optional)
+            title: Session title (optional)
+
+        Returns:
+            Session metadata
+        """
+        with cls._sessions_lock:
+            if session_id in cls._sessions:
+                logger.warning(f"Session {session_id} already exists")
+                return cls._sessions[session_id]
+
+            # Create session metadata
+            session_data = {
+                "session_id": session_id,
+                "client_id": client_id,
+                "agent_id": agent_id,
+                "title": title or f"Session {session_id[:8]}",
+                "created_at": datetime.now().isoformat(),
+                "updated_at": datetime.now().isoformat(),
+                "message_count": 0,
+            }
+
+            # Create session directories
+            # session_structures_dir = cls.STRUCTURES_DIR / session_id  # 🗑️ Removed as redundant
+            # session_images_dir = cls.IMAGES_DIR / session_id # 🗑️ Removed as redundant
+            session_metadata_file = cls.METADATA_DIR / f"{session_id}.json"
+
+            # session_structures_dir.mkdir(parents=True, exist_ok=True) # 🗑️ Removed
+            # session_images_dir.mkdir(parents=True, exist_ok=True) # 🗑️ Removed
+
+            # Save session metadata
+            try:
+                with open(session_metadata_file, 'w', encoding='utf-8') as f:
+                    json.dump(session_data, f, indent=2, ensure_ascii=False)
+            except Exception as e:
+                logger.error(f"Failed to save session metadata: {e}")
+
+            # Register session
+            cls._sessions[session_id] = session_data
+            cls._save_session_registry()
+
+            logger.info(f"🆕 Created session: {session_id} (client: {client_id}, agent: {agent_id})")
+
+            return session_data
+    
+    @classmethod
+    def get_session(cls, session_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Get session metadata
+        
+        Args:
+            session_id: Session ID
+        
+        Returns:
+            Session metadata or None
+        """
+        return cls._sessions.get(session_id)
+    
+    @classmethod
+    def update_session(cls, session_id: str, updates: Dict[str, Any]):
+        """
+        Update session metadata
+
+        Args:
+            session_id: Session ID
+            updates: Fields to update
+        """
+        with cls._sessions_lock:
+            if session_id not in cls._sessions:
+                logger.warning(f"Session {session_id} not found")
+                return
+
+            cls._sessions[session_id].update(updates)
+            cls._sessions[session_id]["updated_at"] = datetime.now().isoformat()
+
+            # Save to file
+            session_metadata_file = cls.METADATA_DIR / f"{session_id}.json"
+            try:
+                with open(session_metadata_file, 'w', encoding='utf-8') as f:
+                    json.dump(cls._sessions[session_id], f, indent=2, ensure_ascii=False)
+            except Exception as e:
+                logger.error(f"Failed to update session metadata: {e}")
+
+            cls._save_session_registry()
+
+    @classmethod
+    def delete_session(cls, session_id: str):
+        """
+        Delete a session and all its data
+
+        Args:
+            session_id: Session ID
+        """
+        with cls._sessions_lock:
+            if session_id not in cls._sessions:
+                logger.warning(f"Session {session_id} not found")
+                return
+
+            # Delete session directories
+            # session_structures_dir = cls.STRUCTURES_DIR / session_id # 🗑️ Removed
+            # session_images_dir = cls.IMAGES_DIR / session_id # 🗑️ Removed
+            session_metadata_file = cls.METADATA_DIR / f"{session_id}.json"
+            session_history_file = cls.HISTORY_DIR / f"{session_id}.json"  # 🆕
+
+            try:
+                # if session_structures_dir.exists():
+                #     shutil.rmtree(session_structures_dir)
+                # if session_images_dir.exists():
+                #     shutil.rmtree(session_images_dir)
+                if session_metadata_file.exists():
+                    session_metadata_file.unlink()
+                if session_history_file.exists():  # 🆕
+                    session_history_file.unlink()
+            except Exception as e:
+                logger.error(f"Failed to delete session files: {e}")
+
+            # Remove from registry
+            del cls._sessions[session_id]
+            cls._save_session_registry()
+
+            logger.info(f"🗑️ Deleted session: {session_id}")
+    
+    @classmethod
+    def get_session_structures_dir(cls, session_id: str) -> Path:
+        """
+        Get structures directory for a session.
+        Creates the directory if it doesn't exist.
+        """
+        structures_dir = cls.STRUCTURES_DIR / session_id
+        structures_dir.mkdir(parents=True, exist_ok=True)
+        return structures_dir
+
+    # @classmethod
+    # def get_session_images_dir(cls, session_id: str) -> Path:
+    #     """
+    #     Deprecated: Images are now stored in simulation directories.
+    #     """
+    #     return cls.BASE_DATA_DIR / "simulation" / session_id / "images"
+    
+    @classmethod
+    def get_session_phonon_dir(cls, session_id: str) -> Path:
+        """Get phonon results directory for a session"""
+        # 🔧 Updated to point to new location: simulation/{session_id}/phonon_results
+        phonon_dir = cls.BASE_DATA_DIR / "simulation" / session_id / "phonon_results"
+        phonon_dir.mkdir(parents=True, exist_ok=True)
+        return phonon_dir
+    
+    @classmethod
+    def list_sessions(cls, client_id: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        List all sessions, optionally filtered by client
+        
+        Args:
+            client_id: Optional client ID filter
+        
+        Returns:
+            List of session metadata
+        """
+        sessions = list(cls._sessions.values())
+        
+        if client_id:
+            sessions = [s for s in sessions if s.get("client_id") == client_id]
+        
+        # Sort by updated_at (most recent first)
+        sessions.sort(key=lambda s: s.get("updated_at", ""), reverse=True)
+        
+        return sessions
+    
+    @classmethod
+    def increment_message_count(cls, session_id: str):
+        """Increment message count for a session"""
+        if session_id in cls._sessions:
+            cls._sessions[session_id]["message_count"] = cls._sessions[session_id].get("message_count", 0) + 1
+            cls.update_session(session_id, {})
+    
+    @classmethod
+    def increment_structure_count(cls, session_id: str):
+        """Increment structure count for a session"""
+        if session_id in cls._sessions:
+            cls._sessions[session_id]["structure_count"] = cls._sessions[session_id].get("structure_count", 0) + 1
+            cls.update_session(session_id, {})
+    
+    @classmethod
+    def increment_image_count(cls, session_id: str):
+        """Increment image count for a session"""
+        if session_id in cls._sessions:
+            cls._sessions[session_id]["image_count"] = cls._sessions[session_id].get("image_count", 0) + 1
+            cls.update_session(session_id, {})
+
+    @classmethod
+    def cleanup_expired_sessions(cls) -> int:
+        """
+        清理过期会话
+
+        Returns:
+            清理的会话数量
+        """
+        with cls._sessions_lock:
+            now = datetime.now()
+            expired_sessions = []
+
+            for session_id, session_data in cls._sessions.items():
+                try:
+                    # 解析 updated_at 时间戳
+                    updated_at_str = session_data.get('updated_at')
+                    if not updated_at_str:
+                        continue
+
+                    # 支持 ISO 格式时间戳
+                    updated_at = datetime.fromisoformat(updated_at_str.replace('Z', '+00:00'))
+
+                    # 检查是否过期
+                    if now - updated_at > cls.SESSION_TIMEOUT:
+                        expired_sessions.append(session_id)
+                except (ValueError, TypeError) as e:
+                    logger.warning(f"⚠️ 无法解析会话 {session_id} 的时间戳: {e}")
+                    continue
+
+            # 删除过期会话
+            for session_id in expired_sessions:
+                try:
+                    del cls._sessions[session_id]
+                    logger.info(f"🗑️ 清理过期会话: {session_id}")
+                except Exception as e:
+                    logger.error(f"❌ 清理会话 {session_id} 失败: {e}")
+
+            # 保存更新后的注册表
+            if expired_sessions:
+                cls._save_session_registry()
+
+            return len(expired_sessions)
+
+
+
+
+    @classmethod
+    def save_history(cls, session_id: str, history: List[Any]):
+        """
+        Save session history to disk
+        
+        Args:
+            session_id: Session ID
+            history: List of message/event objects (Google ADK types)
+        """
+        if not history:
+            logger.debug(f"📝 No history to save for session {session_id}")
+            return
+            
+        try:
+            # Convert ADK message/event objects to serializable dicts
+            serialized_history = []
+            for i, msg in enumerate(history):
+                try:
+                    # Google ADK uses Pydantic models with model_dump()
+                    if hasattr(msg, 'model_dump'):
+                        serialized_history.append(msg.model_dump())
+                    elif hasattr(msg, 'to_dict'):
+                        serialized_history.append(msg.to_dict())
+                    elif hasattr(msg, 'dict'):
+                        # Older Pydantic v1 style
+                        serialized_history.append(msg.dict())
+                    elif isinstance(msg, dict):
+                        serialized_history.append(msg)
+                    elif hasattr(msg, '__dict__'):
+                        # Fallback for simple objects
+                        data = {}
+                        for k, v in msg.__dict__.items():
+                            if not k.startswith('_'):
+                                try:
+                                    # Test if value is JSON serializable
+                                    json.dumps(v)
+                                    data[k] = v
+                                except (TypeError, ValueError):
+                                    data[k] = str(v)
+                        serialized_history.append(data)
+                    else:
+                        logger.warning(f"⚠️ Cannot serialize message {i} of type {type(msg)}")
+                except Exception as e:
+                    logger.warning(f"⚠️ Failed to serialize message {i}: {e}")
+                    continue
+            
+            if not serialized_history:
+                logger.warning(f"⚠️ No messages could be serialized for session {session_id}")
+                return
+            
+            # Ensure history directory exists
+            if not cls.HISTORY_DIR.exists():
+                cls.HISTORY_DIR.mkdir(parents=True, exist_ok=True)
+            
+            history_file = cls.HISTORY_DIR / f"{session_id}.json"
+            
+            # Atomic write pattern
+            temp_file = history_file.with_suffix('.tmp')
+            with open(temp_file, 'w', encoding='utf-8') as f:
+                json.dump(serialized_history, f, indent=2, ensure_ascii=False, default=str)
+            
+            # Rename temp file to actual file
+            if temp_file.exists():
+                temp_file.replace(history_file)
+                
+            logger.info(f"💾 Saved {len(serialized_history)} events for session {session_id} to {history_file}")
+        except Exception as e:
+            logger.error(f"❌ Failed to save session history for {session_id}: {e}", exc_info=True)
+
+    @classmethod
+    def load_history(cls, session_id: str) -> List[Dict[str, Any]]:
+        """
+        Load session history from disk
+        
+        Args:
+            session_id: Session ID
+            
+        Returns:
+            List of message dicts (needs to be converted back to ADK types by caller)
+        """
+        history_file = cls.HISTORY_DIR / f"{session_id}.json"
+        if not history_file.exists():
+            return []
+            
+        try:
+            with open(history_file, 'r', encoding='utf-8') as f:
+                history = json.load(f)
+            logger.info(f"📖 Loaded history for session {session_id} ({len(history)} messages)")
+            return history
+        except Exception as e:
+            logger.error(f"❌ Failed to load session history: {e}")
+            return []
+
+    @classmethod
+    def save_history_summary(cls, session_id: str, summary: Dict[str, Any]) -> Optional[Path]:
+        """
+        Save a truncated-history summary to disk.
+
+        Args:
+            session_id: Session ID
+            summary: Summary payload to persist
+
+        Returns:
+            Path to the summary file or None on failure
+        """
+        try:
+            if not cls.HISTORY_SUMMARY_DIR.exists():
+                cls.HISTORY_SUMMARY_DIR.mkdir(parents=True, exist_ok=True)
+
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            summary_file = cls.HISTORY_SUMMARY_DIR / f"{session_id}_{timestamp}.json"
+            temp_file = summary_file.with_suffix('.tmp')
+
+            with open(temp_file, 'w', encoding='utf-8') as f:
+                json.dump(summary, f, indent=2, ensure_ascii=False, default=str)
+
+            if temp_file.exists():
+                temp_file.replace(summary_file)
+
+            logger.info(f"Saved history summary for session {session_id} to {summary_file}")
+            return summary_file
+        except Exception as e:
+            logger.error(f"Failed to save history summary for {session_id}: {e}", exc_info=True)
+            return None
+
+    @classmethod
+    def save_evidence(cls, session_id: str, evidence_type: str, payload: Dict[str, Any], max_items: int = 5) -> None:
+        """Persist compact evidence snippets for downstream agents."""
+        if not session_id or not evidence_type or payload is None:
+            return
+
+        try:
+            if not cls.EVIDENCE_DIR.exists():
+                cls.EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
+
+            evidence_file = cls.EVIDENCE_DIR / f"{session_id}.json"
+            if evidence_file.exists():
+                try:
+                    with open(evidence_file, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                except Exception:
+                    data = {}
+            else:
+                data = {}
+
+            items = data.get("items", {})
+            entries = items.get(evidence_type, [])
+            entries.append({
+                "timestamp": datetime.now().isoformat(),
+                "payload": payload,
+            })
+            items[evidence_type] = entries[-max_items:]
+            data["items"] = items
+            data["updated_at"] = datetime.now().isoformat()
+
+            temp_file = evidence_file.with_suffix('.tmp')
+            with open(temp_file, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False, default=str)
+            if temp_file.exists():
+                temp_file.replace(evidence_file)
+        except Exception as e:
+            logger.warning(f"Failed to save evidence for {session_id}: {e}")
+
+    @classmethod
+    def load_evidence(cls, session_id: str) -> Dict[str, Any]:
+        """Load evidence snippets for a session."""
+        evidence_file = cls.EVIDENCE_DIR / f"{session_id}.json"
+        if not evidence_file.exists():
+            return {}
+        try:
+            with open(evidence_file, 'r', encoding='utf-8') as f:
+                return json.load(f) or {}
+        except Exception as e:
+            logger.warning(f"Failed to load evidence for {session_id}: {e}")
+            return {}
+
+
+# Initialize on module import
+SessionManager.initialize()
+

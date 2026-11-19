@@ -1,0 +1,1140 @@
+
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { Agent, ChatSession, Message, UserSettings, CrystalStructure, SessionFile } from '../types'
+import { forceSaveState, validateSessionData } from '../utils/storage'
+import { API_CONFIG } from '../constants'
+
+export interface PhononImage {
+  name: string
+  path?: string
+  url?: string
+  filename?: string
+  type: 'phonon_dispersion' | 'phonon_dos' | 'phonon' | 'band' | 'dos' | string
+  description?: string
+  base64?: string
+  timestamp?: string | number
+  // 🆕 原始数据 CSV 文件路径
+  dispersionCsvPath?: string  // 声子色散数据 CSV 路径
+  dosCsvPath?: string         // 声子 DOS 数据 CSV 路径
+}
+
+// 🆕 功能扣费记录
+export interface FeatureCharge {
+  feature_type: string  // 功能类型（如 'relaxation', 'phonon', 'kappa'）
+  photons: number  // 扣费光子数
+  success: boolean  // 扣费是否成功
+  error_message?: string  // 扣费失败原因（可选）
+  timestamp: string  // 扣费时间
+  conversation_id?: string  // 🆕 所属会话 ID（用于用户统计）
+}
+
+export interface BillingData {
+  session_total_tokens: number
+  session_total_photons: number
+  requests_count: number
+  current_tokens?: number  // 本次对话的 tokens
+  current_photons?: number  // 本次对话的光子
+  model_name?: string  // 使用的模型
+  charged?: boolean  // 🔧 新增：是否已扣费
+  billing_source?: string  // 🔧 新增：旧消息统计来源（兼容本地历史记录）
+  feature_charges?: FeatureCharge[]  // 🆕 功能扣费明细
+}
+
+// 🆕 用户计费统计
+export interface UserBillingStats {
+  user_id: string
+  total_tokens: number
+  total_photons_charged: number  // 🔧 修复：匹配后端字段名
+  total_requests: number  // 🔧 修复：匹配后端字段名
+  total_conversations: number  // 🔧 修复：匹配后端字段名
+  has_user_config?: boolean
+  billing_source?: string
+  total_feature_charges?: number  // 🆕 总扣费次数
+  success_charges_count?: number  // 🆕 成功扣费次数
+  failed_charges_count?: number  // 🆕 失败扣费次数
+  success_photons?: number  // 🆕 成功扣费的光子数
+  failed_photons?: number  // 🆕 失败扣费的光子数（应扣累计）
+  recent_feature_charges?: FeatureCharge[]  // 🆕 最近 10 条扣费明细
+}
+
+// 🆕 全局计费统计
+export interface GlobalBillingStats {
+  total_tokens: number
+  total_photons: number
+  request_count: number
+  user_count: number
+  conversation_count: number
+}
+
+interface AppState {
+  // Agents
+  agents: Agent[]
+  currentAgent: Agent | null
+
+  // Chat state
+  sessions: ChatSession[]
+  currentSession: ChatSession | null
+  messages: Message[]
+
+  // UI flags
+  sidebarOpen: boolean
+  rightPanelOpen: boolean  // 右侧面板状态
+
+  // Session scoped artefacts
+  currentStructure: CrystalStructure | null
+  structureList: CrystalStructure[]
+  currentSessionStructures: CrystalStructure[]
+  currentSessionFiles: SessionFile[]
+  
+  // 🆕 选中的结构（用于批量计算）
+  selectedStructureIds: string[]
+
+  // Papers (文献)
+  currentPapersCsvPath: string | null
+  currentPapersSessionId: string | null
+  currentPapersCount: number
+
+  // Phonon assets
+  phononImages: PhononImage[]
+  currentSessionPhononImages: PhononImage[]
+  showPhononVisualization: boolean
+  phononDisplayMode: 'fullscreen' | 'bottom' | 'panel'
+
+  // 🆕 UI 配置：控制对话框中的文件展示
+  uiConfig: {
+    showFilesInChat: boolean  // 是否在对话框中显示 CSV/图片等文件（右侧边栏始终显示）
+  }
+
+  // Settings and connectivity
+  settings: UserSettings
+  connected: boolean
+
+  // Loading indicator
+  isLoading: boolean
+  loadingMessage: string
+
+  // Billing data
+  billingData: BillingData | null
+  // 🆕 用户和全局计费统计
+  userBillingStats: UserBillingStats | null
+  globalBillingStats: GlobalBillingStats | null
+
+  // Actions
+  setAgents: (agents: Agent[]) => void
+  setCurrentAgent: (agent: Agent | null) => void
+
+  setSessions: (sessions: ChatSession[]) => void
+  setCurrentSession: (session: ChatSession | null) => void
+  addMessage: (message: Message) => void
+  updateMessage: (messageId: string, updates: Partial<Message>) => void
+  setMessages: (messages: Message[]) => void
+
+  setSidebarOpen: (open: boolean) => void
+  setRightPanelOpen: (open: boolean) => void  // 设置右侧面板状态
+
+  setCurrentStructure: (structure: CrystalStructure | null) => void
+  setStructureList: (structures: CrystalStructure[]) => void
+  addToStructureList: (structure: CrystalStructure) => void
+  clearStructureList: () => void
+  setCurrentSessionStructures: (structures: CrystalStructure[]) => void
+  addToCurrentSessionStructures: (structure: CrystalStructure) => void
+  removeFromCurrentSessionStructures: (structureId: string) => void
+  clearCurrentSessionStructures: () => void
+  setCurrentSessionFiles: (files: SessionFile[]) => void
+  addToCurrentSessionFiles: (file: SessionFile) => void
+  clearCurrentSessionFiles: () => void
+
+  // 🆕 选中结构的操作
+  setSelectedStructureIds: (ids: string[]) => void
+  toggleStructureSelection: (id: string) => void
+  selectAllStructures: () => void
+  clearSelectedStructures: () => void
+
+  setPhononImages: (images: PhononImage[]) => void
+  addPhononImage: (image: PhononImage) => void
+  clearPhononImages: () => void
+  setCurrentSessionPhononImages: (images: PhononImage[]) => void
+  addToCurrentSessionPhononImages: (image: PhononImage) => void
+  clearCurrentSessionPhononImages: () => void
+  setShowPhononVisualization: (show: boolean) => void
+  setPhononDisplayMode: (mode: 'fullscreen' | 'bottom' | 'panel') => void
+
+  setShowFilesInChat: (show: boolean) => void
+
+  setPapersData: (csvPath: string | null, sessionId: string | null, count: number) => void
+  clearPapersData: () => void
+
+  updateSettings: (settings: Partial<UserSettings>) => void
+
+  setConnected: (connected: boolean) => void
+
+  setIsLoading: (loading: boolean) => void
+  setLoadingMessage: (message: string) => void
+
+  setBillingData: (data: BillingData | null) => void
+  updateBillingData: (data: Partial<BillingData>) => void
+  // 🆕 用户和全局计费统计的 setter
+  setUserBillingStats: (data: UserBillingStats | null) => void
+  setGlobalBillingStats: (data: GlobalBillingStats | null) => void
+
+  createSession: (title: string, agentId: string) => ChatSession
+  deleteSession: (sessionId: string) => void
+  deleteAllSessions: () => void
+  clearSession: (sessionId: string) => void
+  updateSession: (sessionId: string, updates: Partial<ChatSession>) => void
+
+  forceSave: () => void
+}
+
+const MAX_SESSION_FILES = 20
+const MAX_SESSION_PHONON_IMAGES = 10
+
+const defaultSettings: UserSettings = {
+  theme: 'light',
+  language: 'zh',
+  defaultAgent: 'deep_research_agent',
+  autoSave: true,
+  notifications: true,
+  apiEndpoint: API_CONFIG.BASE_URL,
+  // 🆕 UI 配置默认值
+  leftSidebarOpen: true,     // 左侧边栏默认展开
+  rightSidebarOpen: true,    // 右侧边栏默认展开
+}
+
+const defaultAgents: Agent[] = [
+  {
+    id: 'deep_research_agent',
+    name: '文献研究助手',
+    description: '专门用于文献搜索、分析和研究的 AI 助手，可以帮您查找相关论文、分析研究趋势。',
+    type: 'literature',
+    capabilities: ['literature_search', 'paper_analysis', 'trend_analysis'],
+    status: 'active',
+  },
+  {
+    id: 'database_agent',
+    name: '数据库查询助手',
+    description: '专门用于材料数据库查询和数据检索的 AI 助手，可以帮您查找材料属性和实验数据。',
+    type: 'database',
+    capabilities: ['database_query', 'data_retrieval', 'property_search'],
+    status: 'active',
+  },
+  {
+    id: 'simulation_agent',
+    name: '仿真计算助手',
+    description: '专门用于分子建模和计算仿真的 AI 助手，可以帮您进行分子动力学模拟和量子化学计算。',
+    type: 'simulation',
+    capabilities: ['molecular_modeling', 'simulation', 'quantum_calculation'],
+    status: 'active',
+  },
+  {
+    id: 'experiment_plan_agent',
+    name: '实验方案推荐',
+    description: '结合文献、数据库与模拟结果，生成可执行的实验方案与验证路径。',
+    type: 'planning',
+    capabilities: ['experiment_design', 'validation_plan', 'risk_assessment'],
+    status: 'active',
+  },
+]
+
+const fixRestoredSessions = (sessions: ChatSession[]): ChatSession[] =>
+  sessions.map((session) => ({
+    ...session,
+    messages: session.messages || [],
+    structures: session.structures || [],
+    phononImages: session.phononImages || [],
+    files: session.files || [],
+    createdAt: session.createdAt ? new Date(session.createdAt) : new Date(),
+    updatedAt: session.updatedAt ? new Date(session.updatedAt) : new Date(),
+  }))
+
+export const useAppStore = create<AppState>()(
+  persist(
+    (set, get) => ({
+      agents: defaultAgents,
+      currentAgent: defaultAgents[2],  // 默认选择第三个 agent（仿真计算助手）
+
+      sessions: [],
+      currentSession: null,
+      messages: [],
+
+      sidebarOpen: true,  // 🆕 默认展开左侧边栏
+      rightPanelOpen: true,  // 🆕 默认展开右侧面板
+
+      currentStructure: null,
+      structureList: [],
+      currentSessionStructures: [],
+      currentSessionFiles: [],
+      selectedStructureIds: [],  // 🆕 选中的结构 ID
+
+      currentPapersCsvPath: null,
+      currentPapersSessionId: null,
+      currentPapersCount: 0,
+
+      phononImages: [],
+      currentSessionPhononImages: [],
+      showPhononVisualization: false,
+      phononDisplayMode: 'fullscreen',
+
+      uiConfig: {
+        showFilesInChat: false,  // 默认显示文件
+      },
+
+      settings: defaultSettings,
+
+      connected: false,
+
+      isLoading: false,
+      loadingMessage: '智能体正在思考...',
+
+      billingData: null,
+      userBillingStats: null,
+      globalBillingStats: null,
+
+      setAgents: (agents) => set({ agents }),
+      setCurrentAgent: (agent) => set({ currentAgent: agent }),
+
+      setSessions: (sessions) => set({ sessions }),
+
+      setCurrentSession: (session) => {
+        const state = get()
+        const { sessions, currentSession, currentSessionStructures, currentSessionPhononImages, currentSessionFiles, currentPapersCsvPath, currentPapersCount, agents } = state
+
+        if (currentSession) {
+          const idx = sessions.findIndex((s) => s.id === currentSession.id)
+          if (idx !== -1) {
+            const updated = {
+              ...sessions[idx],
+              structures: currentSessionStructures,
+              phononImages: currentSessionPhononImages,
+              files: currentSessionFiles,
+              // 🆕 保存文献数据到会话
+              papersCsvPath: currentPapersCsvPath,
+              papersCount: currentPapersCount,
+            }
+            const nextSessions = [...sessions]
+            nextSessions[idx] = updated
+            set({ sessions: nextSessions })
+          }
+        }
+
+        if (!session) {
+          set({
+            currentSession: null,
+            messages: [],
+            currentStructure: null,
+            currentSessionStructures: [],
+            currentSessionFiles: [],
+            currentSessionPhononImages: [],
+            currentPapersCsvPath: null,
+            currentPapersSessionId: null,
+            currentPapersCount: 0,
+          })
+          return
+        }
+
+        const latest = sessions.find((s) => s.id === session.id) || session
+        const restoredStructures = latest.structures || []
+        const restoredFiles = latest.files || []
+        const restoredPhonon = latest.phononImages || []
+
+        // 🆕 切换会话时，自动切换到对应的 Agent
+        let nextAgent = state.currentAgent
+        if (latest.agentId) {
+          const targetAgent = agents.find(a => a.id === latest.agentId)
+          if (targetAgent) {
+            console.log(`🔄 Switching agent to match session: ${targetAgent.name} (${targetAgent.id})`)
+            nextAgent = targetAgent
+          }
+        }
+
+        set({
+          currentSession: latest,
+          currentAgent: nextAgent,
+          messages: latest.messages || [],
+          currentStructure: restoredStructures.slice(-1)[0] ?? null,
+          currentSessionStructures: restoredStructures,
+          currentSessionFiles: restoredFiles,
+          currentSessionPhononImages: restoredPhonon,
+          // 🆕 恢复文献数据
+          currentPapersCsvPath: latest.papersCsvPath || null,
+          currentPapersSessionId: latest.id,
+          currentPapersCount: latest.papersCount || 0,
+        })
+
+        console.log('🔄 切换会话，恢复文献数据:', {
+          sessionId: latest.id,
+          csvPath: latest.papersCsvPath,
+          count: latest.papersCount
+        })
+      },
+
+      addMessage: (message) => {
+        const state = get()
+        const { currentSession, sessions, messages } = state
+        const updatedMessages = [...messages, message]
+
+        if (!currentSession) {
+          set({ messages: updatedMessages })
+          return
+        }
+
+        const updatedSession: ChatSession = {
+          ...currentSession,
+          messages: updatedMessages,
+          updatedAt: new Date(),
+        }
+
+        const nextSessions = sessions.map((s) => (s.id === currentSession.id ? updatedSession : s))
+
+        set({
+          messages: updatedMessages,
+          currentSession: updatedSession,
+          sessions: nextSessions,
+        })
+
+        setTimeout(() => forceSaveState(get()), 100)
+      },
+
+      updateMessage: (messageId, updates) => {
+        const state = get()
+        const { currentSession, sessions, messages } = state
+        const updatedMessages = messages.map((msg) => (msg.id === messageId ? { ...msg, ...updates } : msg))
+
+        if (!currentSession) {
+          set({ messages: updatedMessages })
+          return
+        }
+
+        const updatedSession: ChatSession = {
+          ...currentSession,
+          messages: updatedMessages,
+          updatedAt: new Date(),
+        }
+
+        const nextSessions = sessions.map((s) => (s.id === currentSession.id ? updatedSession : s))
+
+        set({
+          messages: updatedMessages,
+          currentSession: updatedSession,
+          sessions: nextSessions,
+        })
+      },
+
+      setMessages: (messages) => {
+        const state = get()
+        const { currentSession, sessions } = state
+
+        if (!currentSession) {
+          set({ messages })
+          return
+        }
+
+        const updatedSession: ChatSession = {
+          ...currentSession,
+          messages,
+          updatedAt: new Date(),
+        }
+        const nextSessions = sessions.map((s) => (s.id === currentSession.id ? updatedSession : s))
+
+        set({
+          messages,
+          currentSession: updatedSession,
+          sessions: nextSessions,
+        })
+      },
+
+      setSidebarOpen: (open) => set({ sidebarOpen: open }),
+      setRightPanelOpen: (open) => set({ rightPanelOpen: open }),
+
+      setCurrentStructure: (structure) => set({ currentStructure: structure }),
+      setStructureList: (structures) => set({ structureList: structures }),
+      addToStructureList: (structure) => {
+        const { structureList } = get()
+        set({ structureList: [...structureList, structure] })
+      },
+      clearStructureList: () => set({ structureList: [] }),
+
+      setCurrentSessionStructures: (structures) => {
+        const { currentStructure } = get()
+        set({ currentSessionStructures: structures })
+
+        // 如果当前没有选中的结构，自动选中第一个
+        if (!currentStructure && structures.length > 0) {
+          set({ currentStructure: structures[0] })
+        }
+
+        const { currentSession, sessions } = get()
+        if (currentSession) {
+          const nextSessions = sessions.map((s) =>
+            s.id === currentSession.id ? { ...s, structures } : s
+          )
+          set({ 
+            sessions: nextSessions,
+            currentSession: { ...currentSession, structures }
+          })
+        }
+      },
+
+      addToCurrentSessionStructures: (structure) => {
+        const { currentSessionStructures, currentStructure } = get()
+        // 🔧 修复：只有结构完全相同时才去重
+        // 比较：ID、文件路径、来源+化学式+晶格参数
+        const isDuplicate = currentSessionStructures.some(s => {
+          // 1. 相同ID，直接去重
+          if (s.id === structure.id) return true
+          
+          // 2. 相同文件路径，直接去重
+          if (s.cif_file_path && structure.cif_file_path && s.cif_file_path === structure.cif_file_path) return true
+          
+          // 3. 不同来源，不去重（Upload vs Relaxed 应该都保留）
+          if (s.source?.database !== structure.source?.database) return false
+          
+          // 4. 相同来源，比较化学式和晶格参数
+          if (s.formula !== structure.formula) return false
+          
+          // 5. 比较晶格参数（忽略空间群差异，因为同一结构可能有不同对称性分析）
+          const lat1 = s.latticeParameters
+          const lat2 = structure.latticeParameters
+          if (lat1 && lat2) {
+            const tolerance = 0.01
+            // 所有晶格参数必须相同才算重复
+            if (Math.abs((lat1.a || 0) - (lat2.a || 0)) > tolerance) return false
+            if (Math.abs((lat1.b || 0) - (lat2.b || 0)) > tolerance) return false
+            if (Math.abs((lat1.c || 0) - (lat2.c || 0)) > tolerance) return false
+            if (Math.abs((lat1.alpha || 0) - (lat2.alpha || 0)) > tolerance) return false
+            if (Math.abs((lat1.beta || 0) - (lat2.beta || 0)) > tolerance) return false
+            if (Math.abs((lat1.gamma || 0) - (lat2.gamma || 0)) > tolerance) return false
+            // 晶格参数完全相同，认为是重复（即使空间群不同）
+            return true
+          }
+          
+          return false
+        })
+
+        if (isDuplicate) return
+
+        const updatedStructures = [...currentSessionStructures, structure]
+        set({ currentSessionStructures: updatedStructures })
+
+        // 如果当前没有选中的结构，自动选中第一个
+        if (!currentStructure && updatedStructures.length > 0) {
+          set({ currentStructure: updatedStructures[0] })
+        }
+
+        get().setCurrentSessionStructures(updatedStructures)
+        setTimeout(() => forceSaveState(get()), 100)
+      },
+
+      removeFromCurrentSessionStructures: (structureId) => {
+        const { currentSessionStructures, currentStructure } = get()
+        const updatedStructures = currentSessionStructures.filter(s => s.id !== structureId)
+
+        // If the removed structure was the current one, set current to the last remaining structure
+        let newCurrentStructure = currentStructure
+        if (currentStructure?.id === structureId) {
+          newCurrentStructure = updatedStructures.length > 0 ? updatedStructures[updatedStructures.length - 1] : null
+        }
+
+        set({
+          currentSessionStructures: updatedStructures,
+          currentStructure: newCurrentStructure
+        })
+        get().setCurrentSessionStructures(updatedStructures)
+        setTimeout(() => forceSaveState(get()), 100)
+      },
+
+      clearCurrentSessionStructures: () => {
+        set({ currentSessionStructures: [] })
+        get().setCurrentSessionStructures([])
+      },
+
+      setCurrentSessionFiles: (files) => {
+        set({ currentSessionFiles: files })
+
+        const { currentSession, sessions } = get()
+        if (currentSession) {
+          const nextSessions = sessions.map((s) =>
+            s.id === currentSession.id ? { ...s, files } : s
+          )
+          set({
+            sessions: nextSessions,
+            currentSession: { ...currentSession, files },
+          })
+        }
+      },
+
+      addToCurrentSessionFiles: (file) => {
+        const { currentSessionFiles } = get()
+        const filtered = currentSessionFiles.filter((item) => item.id !== file.id)
+        const updated = [...filtered, file].slice(-MAX_SESSION_FILES)
+        get().setCurrentSessionFiles(updated)
+        setTimeout(() => forceSaveState(get()), 100)
+      },
+
+      clearCurrentSessionFiles: () => {
+        get().setCurrentSessionFiles([])
+        setTimeout(() => forceSaveState(get()), 100)
+      },
+
+      // 🆕 选中结构的操作
+      setSelectedStructureIds: (ids) => set({ selectedStructureIds: ids }),
+      
+      toggleStructureSelection: (id) => {
+        const { selectedStructureIds } = get()
+        if (selectedStructureIds.includes(id)) {
+          set({ selectedStructureIds: selectedStructureIds.filter(sid => sid !== id) })
+        } else {
+          set({ selectedStructureIds: [...selectedStructureIds, id] })
+        }
+      },
+      
+      selectAllStructures: () => {
+        const { currentSessionStructures } = get()
+        const allIds = currentSessionStructures.map(s => s.id).filter(Boolean) as string[]
+        set({ selectedStructureIds: allIds })
+      },
+      
+      clearSelectedStructures: () => set({ selectedStructureIds: [] }),
+
+      setPhononImages: (images) => set({ phononImages: images }),
+      addPhononImage: (image) => {
+        const { phononImages } = get()
+        set({ phononImages: [...phononImages, image] })
+      },
+      clearPhononImages: () => set({ phononImages: [] }),
+
+      setCurrentSessionPhononImages: (images) => {
+        const limited = images.slice(-MAX_SESSION_PHONON_IMAGES)
+        set({ currentSessionPhononImages: limited })
+
+        const { currentSession, sessions } = get()
+        if (currentSession) {
+          const nextSessions = sessions.map((s) =>
+            s.id === currentSession.id ? { ...s, phononImages: limited } : s
+          )
+          set({ 
+            sessions: nextSessions,
+            currentSession: { ...currentSession, phononImages: limited }
+          })
+        }
+      },
+
+      addToCurrentSessionPhononImages: (image) => {
+        const { currentSessionPhononImages } = get()
+        const updated = [...currentSessionPhononImages, image]
+        get().setCurrentSessionPhononImages(updated)
+        setTimeout(() => forceSaveState(get()), 100)
+      },
+
+      clearCurrentSessionPhononImages: () => {
+        get().setCurrentSessionPhononImages([])
+        setTimeout(() => forceSaveState(get()), 100)
+      },
+
+      setShowPhononVisualization: (show) => set({ showPhononVisualization: show }),
+      setPhononDisplayMode: (mode) => set({ phononDisplayMode: mode }),
+
+      setShowFilesInChat: (show) => {
+        set((state) => ({
+          uiConfig: {
+            ...state.uiConfig,
+            showFilesInChat: show,
+          },
+        }))
+      },
+
+      setPapersData: (csvPath, sessionId, count) => {
+        set({
+          currentPapersCsvPath: csvPath,
+          currentPapersSessionId: sessionId,
+          currentPapersCount: count,
+        })
+
+        // 🆕 同时保存到当前会话中（持久化）
+        const { currentSession, sessions } = get()
+        if (currentSession && currentSession.id === sessionId) {
+          const updatedSession = {
+            ...currentSession,
+            papersCsvPath: csvPath,
+            papersCount: count,
+            updatedAt: new Date()
+          }
+
+          const updatedSessions = sessions.map(s =>
+            s.id === sessionId ? updatedSession : s
+          )
+
+          set({
+            currentSession: updatedSession,
+            sessions: updatedSessions
+          })
+
+          console.log('💾 文献数据已保存到会话:', { sessionId, csvPath, count })
+          setTimeout(() => forceSaveState(get()), 100)
+        }
+      },
+
+      clearPapersData: () => {
+        set({
+          currentPapersCsvPath: null,
+          currentPapersSessionId: null,
+          currentPapersCount: 0,
+        })
+
+        // 🆕 同时清除当前会话中的文献数据
+        const { currentSession, sessions } = get()
+        if (currentSession) {
+          const updatedSession = {
+            ...currentSession,
+            papersCsvPath: null,
+            papersCount: 0,
+            updatedAt: new Date()
+          }
+
+          const updatedSessions = sessions.map(s =>
+            s.id === currentSession.id ? updatedSession : s
+          )
+
+          set({
+            currentSession: updatedSession,
+            sessions: updatedSessions
+          })
+
+          setTimeout(() => forceSaveState(get()), 100)
+        }
+      },
+
+      updateSettings: (settings) => set({ settings: { ...get().settings, ...settings } }),
+
+      setConnected: (connected) => set({ connected }),
+
+      setIsLoading: (loading) => set({ isLoading: loading }),
+      setLoadingMessage: (message) => set({ loadingMessage: message }),
+
+      setBillingData: (data) => set({ billingData: data }),
+      updateBillingData: (data) => {
+        const current = get().billingData
+        set({
+          billingData: current
+            ? { ...current, ...data }
+            : {
+              session_total_tokens: data.session_total_tokens || 0,
+              session_total_photons: data.session_total_photons || 0,
+              requests_count: data.requests_count || 0,
+              charged: data.charged ?? false,  // 🔧 修复：添加 charged 字段
+              billing_source: data.billing_source,  // 🔧 修复：添加 billing_source 字段
+              feature_charges: data.feature_charges || [],  // 🆕 添加 feature_charges 字段
+              current_tokens: data.current_tokens,
+              current_photons: data.current_photons,
+              model_name: data.model_name,
+            },
+        })
+      },
+
+      // 🆕 用户和全局计费统计的实现
+      setUserBillingStats: (data) => set({ userBillingStats: data }),
+      setGlobalBillingStats: (data) => set({ globalBillingStats: data }),
+
+      createSession: (title, agentId) => {
+        const newSession: ChatSession = {
+          id: `session_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`,
+          title,
+          messages: [],
+          structures: [],
+          phononImages: [],
+          files: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          agentId,
+        }
+
+        const sessions = [...get().sessions, newSession]
+
+        set({
+          sessions,
+          currentSession: newSession,
+          messages: [],
+          currentStructure: null,
+          currentSessionStructures: [],
+          currentSessionFiles: [],
+          currentSessionPhononImages: [],
+        })
+
+        // 🔧 修复：更新 localStorage 中的 session_id，确保计费配置查找正确
+        // 这样前端和后端使用的 session_id 就一致了
+        localStorage.setItem('researchmind_session_id', newSession.id)
+        console.log('🔧 [计费修复] 更新 localStorage session_id:', newSession.id)
+
+        setTimeout(() => forceSaveState(get()), 100)
+        return newSession
+      },
+
+      deleteSession: (sessionId) => {
+        const { sessions, currentSession } = get()
+        const filtered = sessions.filter((s) => s.id !== sessionId)
+        const deletingCurrent = currentSession?.id === sessionId
+
+        set({
+          sessions: filtered,
+          currentSession: deletingCurrent ? null : currentSession,
+          messages: deletingCurrent ? [] : get().messages,
+          currentStructure: deletingCurrent ? null : get().currentStructure,
+          currentSessionStructures: deletingCurrent ? [] : get().currentSessionStructures,
+          currentSessionFiles: deletingCurrent ? [] : get().currentSessionFiles,
+          currentSessionPhononImages: deletingCurrent ? [] : get().currentSessionPhononImages,
+        })
+      },
+
+      deleteAllSessions: () => {
+        set({
+          sessions: [],
+          currentSession: null,
+          messages: [],
+          currentStructure: null,
+          currentSessionStructures: [],
+          currentSessionFiles: [],
+          currentSessionPhononImages: [],
+        })
+      },
+
+      clearSession: (sessionId) => {
+        const { sessions, currentSession } = get()
+        const nextSessions = sessions.map((session) =>
+          session.id === sessionId
+            ? {
+              ...session,
+              messages: [],
+              structures: [],
+              phononImages: [],
+              files: [],
+              updatedAt: new Date(),
+            }
+            : session
+        )
+
+        const clearingCurrent = currentSession?.id === sessionId
+
+        set({
+          sessions: nextSessions,
+          currentSession: clearingCurrent
+            ? { ...currentSession!, messages: [], structures: [], phononImages: [], files: [], updatedAt: new Date() }
+            : currentSession,
+          messages: clearingCurrent ? [] : get().messages,
+          currentSessionStructures: clearingCurrent ? [] : get().currentSessionStructures,
+          currentSessionFiles: clearingCurrent ? [] : get().currentSessionFiles,
+          currentSessionPhononImages: clearingCurrent ? [] : get().currentSessionPhononImages,
+          currentStructure: clearingCurrent ? null : get().currentStructure,
+        })
+      },
+
+      updateSession: (sessionId, updates) => {
+        const nextSessions = get().sessions.map((session) =>
+          session.id === sessionId ? { ...session, ...updates, updatedAt: new Date() } : session
+        )
+
+        set({ sessions: nextSessions })
+
+        const { currentSession } = get()
+        if (currentSession?.id === sessionId) {
+          set({ currentSession: { ...currentSession, ...updates, updatedAt: new Date() } })
+        }
+      },
+
+      forceSave: () => {
+        forceSaveState(get())
+      },
+    }),
+    {
+      name: 'researchmind-app-store',
+      partialize: (state) => {
+        // 🔧 优化存储：只保存必要数据，移除大型对象（base64 图片等）
+        const optimizedSessions = state.sessions.map(session => ({
+          ...session,
+          messages: session.messages.map(msg => ({
+            ...msg,
+            // 移除消息中的 base64 图片数据
+            metadata: msg.metadata ? {
+              ...msg.metadata,
+              images: msg.metadata.images?.map(img => ({
+                ...img,
+                base64: undefined, // 不保存 base64 数据
+              })),
+            } : undefined,
+          })),
+          // 移除会话级别的大型数据
+          phononImages: session.phononImages?.map(img => ({
+            ...img,
+            base64: undefined, // 不保存 base64 数据
+          })),
+          // 🔧 修复：保留完整的结构数据，包括 CIF 内容
+          structures: session.structures,
+        }))
+
+        return {
+          sessions: optimizedSessions,
+          currentSession: state.currentSession ? {
+            ...state.currentSession,
+            messages: state.currentSession.messages.map(msg => ({
+              ...msg,
+              metadata: msg.metadata ? {
+                ...msg.metadata,
+                images: msg.metadata.images?.map(img => ({
+                  ...img,
+                  base64: undefined,
+                })),
+              } : undefined,
+            })),
+            phononImages: state.currentSession.phononImages?.map(img => ({
+              ...img,
+              base64: undefined,
+            })),
+            // 🔧 修复：保留完整的结构数据
+            structures: state.currentSession.structures,
+          } : null,
+          messages: state.messages.map(msg => ({
+            ...msg,
+            metadata: msg.metadata ? {
+              ...msg.metadata,
+              images: msg.metadata.images?.map(img => ({
+                ...img,
+                base64: undefined,
+              })),
+            } : undefined,
+          })),
+          settings: state.settings,
+          // 🔧 修复：保留完整的当前结构数据
+          currentStructure: state.currentStructure,
+          // 🔧 修复：保留完整的会话结构列表
+          currentSessionStructures: state.currentSessionStructures,
+          // 🔧 修复：保留完整的会话文件列表
+          currentSessionFiles: state.currentSessionFiles,
+          phononImages: [], // 不保存全局图片列表
+          // 🔧 修复：保留完整的会话声子图片列表（除 base64 外）
+          currentSessionPhononImages: state.currentSessionPhononImages.map(img => ({
+            ...img,
+            base64: undefined,
+          })),
+          showPhononVisualization: state.showPhononVisualization,
+          phononDisplayMode: state.phononDisplayMode,
+        }
+      },
+      // 🔧 存储恢复和错误处理（合并版本）
+      onRehydrateStorage: () => (state, error) => {
+        // 处理 Hydration 错误
+        if (error) {
+          console.error('❌ Hydration 错误:', error)
+          // 清除损坏的数据
+          try {
+            localStorage.removeItem('researchmind-app-store')
+            console.log('✅ 已清除损坏的存储数据')
+          } catch (e) {
+            console.error('清除存储失败:', e)
+          }
+          return
+        }
+
+        if (!state) return
+
+        console.log('🔄 恢复存储数据...')
+        console.log('📊 会话数:', state.sessions?.length || 0)
+        console.log('📊 当前会话:', state.currentSession?.id || 'null')
+
+        try {
+          if (state.sessions) {
+            if (!validateSessionData(state.sessions)) {
+              console.warn('⚠️ 会话数据验证失败，清空数据')
+              state.sessions = []
+              state.currentSession = null
+              state.messages = []
+              state.currentStructure = null
+              state.currentSessionStructures = []
+              state.currentSessionFiles = []
+              state.currentSessionPhononImages = []
+              return
+            }
+
+            state.sessions = fixRestoredSessions(state.sessions)
+
+            if (state.currentSession) {
+              // 有当前会话，尝试恢复
+              const restored = state.sessions.find((s) => s.id === state.currentSession?.id)
+              if (restored) {
+                console.log('✅ 恢复当前会话:', restored.id)
+                console.log('📊 结构数:', restored.structures?.length || 0)
+                console.log('📊 文件数:', restored.files?.length || 0)
+                console.log('📊 图片数:', restored.phononImages?.length || 0)
+                console.log('📚 文献数:', restored.papersCount || 0)
+
+                state.currentSession = restored
+                state.messages = restored.messages || []
+                state.currentStructure = restored.structures?.slice(-1)[0] ?? null
+                state.currentSessionStructures = restored.structures || []
+                state.currentSessionFiles = restored.files || []
+                state.currentSessionPhononImages = restored.phononImages || []
+
+                // 🆕 恢复文献数据
+                state.currentPapersCsvPath = restored.papersCsvPath || null
+                state.currentPapersSessionId = restored.id
+                state.currentPapersCount = restored.papersCount || 0
+              } else {
+                console.warn('⚠️ 当前会话不存在，清空当前会话数据')
+                state.currentSession = null
+                state.messages = []
+                state.currentStructure = null
+                state.currentSessionStructures = []
+                state.currentSessionFiles = []
+                state.currentSessionPhononImages = []
+                state.currentPapersCsvPath = null
+                state.currentPapersSessionId = null
+                state.currentPapersCount = 0
+              }
+            } else if (state.sessions.length > 0) {
+              // 没有当前会话，但有会话列表，恢复最后一个会话
+              const lastSession = state.sessions[state.sessions.length - 1]
+              console.log('🔄 没有当前会话，恢复最后一个会话:', lastSession.id)
+              console.log('📊 结构数:', lastSession.structures?.length || 0)
+              console.log('📊 文件数:', lastSession.files?.length || 0)
+              console.log('📊 图片数:', lastSession.phononImages?.length || 0)
+              console.log('📚 文献数:', lastSession.papersCount || 0)
+
+              state.currentSession = lastSession
+              state.messages = lastSession.messages || []
+              state.currentStructure = lastSession.structures?.slice(-1)[0] ?? null
+              state.currentSessionStructures = lastSession.structures || []
+              state.currentSessionFiles = lastSession.files || []
+              state.currentSessionPhononImages = lastSession.phononImages || []
+
+              // 🆕 恢复文献数据
+              state.currentPapersCsvPath = lastSession.papersCsvPath || null
+              state.currentPapersSessionId = lastSession.id
+              state.currentPapersCount = lastSession.papersCount || 0
+            } else {
+              // 没有任何会话
+              console.log('ℹ️ 没有任何会话')
+              state.messages = []
+              state.currentStructure = null
+              state.currentSessionStructures = []
+              state.currentSessionFiles = []
+              state.currentSessionPhononImages = []
+              state.currentPapersCsvPath = null
+              state.currentPapersSessionId = null
+              state.currentPapersCount = 0
+            }
+          } else {
+            console.log('ℹ️ 没有存储的会话数据')
+            state.sessions = []
+            state.currentSession = null
+            state.messages = []
+            state.currentStructure = null
+            state.currentSessionStructures = []
+            state.currentSessionFiles = []
+            state.currentSessionPhononImages = []
+            state.currentPapersCsvPath = null
+            state.currentPapersSessionId = null
+            state.currentPapersCount = 0
+          }
+        } catch (error) {
+          console.error('❌ 恢复存储数据时出错:', error)
+          // 清空数据以防止错误传播
+          state.sessions = []
+          state.currentSession = null
+          state.messages = []
+          state.currentStructure = null
+          state.currentSessionStructures = []
+          state.currentSessionFiles = []
+          state.currentSessionPhononImages = []
+          state.currentPapersCsvPath = null
+          state.currentPapersSessionId = null
+          state.currentPapersCount = 0
+        }
+
+        if (!Array.isArray(state.currentSessionStructures)) {
+          state.currentSessionStructures = []
+        }
+
+        if (!Array.isArray(state.currentSessionFiles)) {
+          state.currentSessionFiles = []
+        }
+
+        if (!Array.isArray(state.currentSessionPhononImages)) {
+          state.currentSessionPhononImages = []
+        }
+
+        if (!Array.isArray(state.phononImages)) {
+          state.phononImages = []
+        }
+
+        console.log('✅ Hydration 成功')
+      },
+      storage: {
+        getItem: (name) => {
+          try {
+            const str = localStorage.getItem(name)
+            if (!str) return null
+
+            // 尝试解析 JSON
+            const parsed = JSON.parse(str)
+
+            // 验证数据结构
+            if (parsed && typeof parsed === 'object' && parsed.state) {
+              return parsed
+            }
+
+            console.warn('⚠️ 存储数据格式不正确，返回 null')
+            return null
+          } catch (error) {
+            console.error('❌ 读取存储时出错:', error)
+            // 清除损坏的数据
+            try {
+              localStorage.removeItem(name)
+            } catch (e) {
+              // 忽略清除错误
+            }
+            return null
+          }
+        },
+        setItem: (name, value) => {
+          try {
+            localStorage.setItem(name, JSON.stringify(value))
+          } catch (error) {
+            console.error('❌ 保存存储时出错:', error)
+
+            // 如果是配额错误，尝试清理
+            if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+              console.warn('⚠️ 存储配额超限，尝试清理旧数据...')
+
+              // 导入清理函数
+              import('../utils/storage').then(({ cleanupOldSessions, clearAllStorage }) => {
+                try {
+                  // 先尝试清理旧会话
+                  cleanupOldSessions(3)
+
+                  // 再次尝试保存
+                  try {
+                    localStorage.setItem(name, JSON.stringify(value))
+                    console.log('✅ 清理后保存成功')
+                  } catch (retryError) {
+                    // 如果还是失败，清除所有数据
+                    console.error('❌ 清理后仍然失败，清除所有数据')
+                    clearAllStorage()
+                  }
+                } catch (cleanupError) {
+                  console.error('❌ 清理失败:', cleanupError)
+                  clearAllStorage()
+                }
+              })
+            }
+          }
+        },
+        removeItem: (name) => {
+          try {
+            localStorage.removeItem(name)
+          } catch (error) {
+            console.error('❌ 删除存储时出错:', error)
+          }
+        },
+      },
+    },
+  ),
+)
