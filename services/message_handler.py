@@ -104,13 +104,14 @@ class MessageHandler:
         logger.info(f"💬 [Client:{client_id}] [Agent:{agent_id}] Message: {content[:100]}...")
 
         # Delegate to agent coordinator
-        await agent_coordinator.process_chat_message(
+        import asyncio
+        asyncio.create_task(agent_coordinator.process_chat_message(
             client_id=client_id,
             websocket=websocket,
             content=content,
             agent_id=agent_id,
             session_id=session_id
-        )
+        ))
 
     async def handle_chat_with_attachments(
         self,
@@ -149,14 +150,15 @@ class MessageHandler:
             await self.send_error(websocket, "Session ID is required")
             return
 
-        await agent_coordinator.process_chat_message(
+        import asyncio
+        asyncio.create_task(agent_coordinator.process_chat_message(
             client_id=client_id,
             websocket=websocket,
             content=content or "",
             agent_id=agent_id,
             session_id=session_id,
             attachments=attachments
-        )
+        ))
 
     async def handle_upload_structure(
         self,
@@ -558,7 +560,11 @@ class MessageHandler:
         try:
             # 优先使用稳定键（仅 session_id），与 AgentCoordinator 保存逻辑一致
             from .hybrid_session_manager import HybridSessionManager
-            history = HybridSessionManager.load_history(session_id)
+            from .skill_runtime import context_for
+            from researchmind_skills.runtime.store import Store
+            history = Store(context_for(session_id)).get("history", [])
+            if not history:
+                history = HybridSessionManager.load_history(session_id)
 
             # 兼容旧键：client_id + session_id
             if not history:
@@ -570,6 +576,8 @@ class MessageHandler:
                 legacy_key = f"{client_id}_{agent_id}_{session_id}"
                 history = HybridSessionManager.load_history(legacy_key)
 
+            from researchmind_skills.runtime.history import normalize_history
+            history = normalize_history(history)
             await self.send_message(websocket, "history", {
                 "sessionId": session_id,
                 "history": history

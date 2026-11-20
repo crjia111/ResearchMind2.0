@@ -1,0 +1,10 @@
+{
+  "bundle": "simulation",
+  "skills": [
+    "crystal-generation",
+    "structure-optimization",
+    "phonon-analysis",
+    "thermal-conductivity"
+  ],
+  "version": "0.1.0"
+}

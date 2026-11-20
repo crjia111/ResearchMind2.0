@@ -42,12 +42,8 @@ from services.websocket_server import WebSocketServer
 from services.http_server import HTTPServer
 from services.agent_coordinator import AgentCoordinator
 from services.image_handler import ImageHandler
-from services.json_repair_patch import apply_json_repair_patch
-from services.database import init_db
 
-# Apply JSON repair patch for DeepSeek compatibility
-apply_json_repair_patch()
-logger.info("✅ JSON repair patch applied for LLM tool calls")
+from services.database import init_db
 
 # Initialize database
 try:
@@ -57,18 +53,8 @@ except Exception as e:
     logger.error(f"❌ Failed to initialize database: {e}")
     sys.exit(1)
 
-# Import agents
-try:
-    from agents.deep_research_agent.agent import root_agent as deep_research_agent
-    from agents.database_agent.agent import root_agent as database_agent
-    from agents.simulation_agent.agent import root_agent as simulation_agent
-    from agents.experiment_plan_agent.agent import root_agent as experiment_plan_agent
-    from agents.agent import research_coordinator
-    logger.info("✅ Agents imported successfully")
-except ImportError as e:
-    logger.error(f"❌ Failed to import agents: {e}")
-    logger.error("Please ensure all dependencies are installed: uv sync")
-    sys.exit(1)
+# AgentScope agents are created lazily per local session.
+from researchmind_skills.adapters.agentscope.factory import ROLE_SKILLS
 
 
 async def start_http_server(http_server: HTTPServer):
@@ -97,13 +83,7 @@ async def main():
     logger.info("")
 
     # Initialize agents
-    agents = {
-        "research_coordinator": research_coordinator,
-        "deep_research_agent": deep_research_agent,
-        "database_agent": database_agent,
-        "simulation_agent": simulation_agent,
-        "experiment_plan_agent": experiment_plan_agent,
-    }
+    agents = {role: role for role in ROLE_SKILLS}
 
     # Initialize agent coordinator
     agent_coordinator = AgentCoordinator(agents)

@@ -1,3 +1,5 @@
+> **0.2 migration:** portable scientific Skills with optional AgentScope 2.0.12. Default local startup no longer starts MCP servers. See [installation, configuration and validation](docs/portable-skills.md). Python 3.11–3.12; use the updated uv.lock. The older architecture descriptions below are retained as historical context.
+
 <div align="center">
 
 # ResearchMind · 智能科研助手

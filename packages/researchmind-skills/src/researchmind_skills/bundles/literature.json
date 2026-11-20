@@ -1,0 +1,10 @@
+{
+  "bundle": "literature",
+  "skills": [
+    "literature-search",
+    "paper-analysis",
+    "research-report",
+    "literature-knowledge"
+  ],
+  "version": "0.1.0"
+}

@@ -90,6 +90,8 @@ class HTTPServer:
 
         # Setup routes
         self._setup_routes()
+        from .skill_api import router as skill_router
+        self.app.include_router(skill_router)
 
         # Setup upload endpoints
         self._setup_upload_endpoints()
@@ -198,7 +200,7 @@ class HTTPServer:
                 }
             }
 
-        @self.app.get("/api/health", response_model=HealthResponse)
+        @self.app.get("/api/runtime-health", response_model=HealthResponse)
         async def health_check():
             """Health check endpoint"""
             # Check if agents are available
@@ -411,148 +413,6 @@ class HTTPServer:
         async def cif_operation_alias(request: CIFConversionRequest):
             """Legacy endpoint without /api prefix for backward compatibility"""
             return await cif_operation(request)
-
-        # 🆕 MCP Tool Call Endpoint
-        @self.app.post("/api/mcp/call_tool")
-        async def call_mcp_tool(request: Request):
-            """
-            Call MCP tool directly from frontend
-
-            This endpoint allows the frontend to call MCP tools directly
-            for operations like paper selection that don't need agent coordination.
-
-            Request body:
-            {
-                "tool_name": "list_papers_from_csv",
-                "arguments": {
-                    "csv_file_path": "papers/session_xxx/all_papers.csv",
-                    "session_id": "session_xxx"
-                }
-            }
-            """
-            try:
-                body = await request.json()
-                tool_name = body.get('tool_name')
-                arguments = body.get('arguments', {})
-
-                if not tool_name:
-                    raise HTTPException(status_code=400, detail="tool_name is required")
-
-                # Import paper search tools directly
-                import sys
-                paper_search_path = os.path.join(
-                    os.path.dirname(os.path.dirname(__file__)),
-                    'mcp_servers', 'paper_search'
-                )
-                if paper_search_path not in sys.path:
-                    sys.path.insert(0, paper_search_path)
-
-                # Map tool names to implementation functions
-                if tool_name == 'list_papers_from_csv':
-                    from modules.paper_manager.export_tools import read_papers_from_csv
-
-                    csv_file_path = arguments.get('csv_file_path')
-                    session_id = arguments.get('session_id')
-                    fields = arguments.get('fields')
-
-                    if not csv_file_path or not session_id:
-                        raise HTTPException(
-                            status_code=400,
-                            detail="csv_file_path and session_id are required"
-                        )
-
-                    # Default fields (包含 url 和 topic 字段)
-                    if fields is None:
-                        fields = ["paper_id", "title", "authors", "published", "source", "score", "abstract", "url", "topic"]
-
-                    try:
-                        # Read papers from CSV
-                        all_papers = read_papers_from_csv(csv_file_path)
-
-                        if not all_papers:
-                            return {
-                                'status': 'error',
-                                'error': f'No papers found in CSV file: {csv_file_path}',
-                                'csv_file_path': csv_file_path
-                            }
-
-                        # Simplify papers (only return requested fields)
-                        simplified_papers = []
-                        for paper in all_papers:
-                            simplified = {field: paper.get(field) for field in fields if field in paper}
-
-                            # Truncate abstract to save tokens
-                            if 'abstract' in simplified and simplified['abstract']:
-                                simplified['abstract'] = simplified['abstract'][:300] + '...' if len(simplified['abstract']) > 300 else simplified['abstract']
-
-                            simplified_papers.append(simplified)
-
-                        return {
-                            'status': 'success',
-                            'session_id': session_id,
-                            'csv_file_path': csv_file_path,
-                            'total_papers': len(all_papers),
-                            'papers': simplified_papers,
-                            'message': f'Successfully loaded {len(all_papers)} papers from CSV'
-                        }
-                    except Exception as e:
-                        logger.error(f"Failed to read papers from CSV: {e}", exc_info=True)
-                        return {
-                            'status': 'error',
-                            'error': str(e),
-                            'csv_file_path': csv_file_path
-                        }
-
-                elif tool_name == 'select_papers':
-                    # This is a simple state management operation
-                    # We'll store it in a global dict for now
-                    if not hasattr(call_mcp_tool, '_paper_selections'):
-                        call_mcp_tool._paper_selections = {}
-
-                    session_id = arguments.get('session_id')
-                    paper_ids = arguments.get('paper_ids', [])
-                    mode = arguments.get('mode', 'replace')
-
-                    if not session_id:
-                        raise HTTPException(status_code=400, detail="session_id is required")
-
-                    # Get or create selection
-                    if session_id not in call_mcp_tool._paper_selections:
-                        call_mcp_tool._paper_selections[session_id] = {
-                            'selected_ids': [],
-                            'csv_file_path': None,
-                            'all_papers': []
-                        }
-
-                    selection = call_mcp_tool._paper_selections[session_id]
-
-                    # Update selection based on mode
-                    if mode == 'replace':
-                        selection['selected_ids'] = paper_ids
-                    elif mode == 'add':
-                        selection['selected_ids'] = list(set(selection['selected_ids'] + paper_ids))
-                    elif mode == 'remove':
-                        selection['selected_ids'] = [pid for pid in selection['selected_ids'] if pid not in paper_ids]
-
-                    return {
-                        'status': 'success',
-                        'session_id': session_id,
-                        'selected_count': len(selection['selected_ids']),
-                        'selected_ids': selection['selected_ids'],
-                        'message': f'Successfully updated selection ({len(selection["selected_ids"])} papers selected)'
-                    }
-
-                else:
-                    raise HTTPException(
-                        status_code=404,
-                        detail=f"Tool '{tool_name}' not supported. Supported tools: list_papers_from_csv, select_papers"
-                    )
-
-            except HTTPException:
-                raise
-            except Exception as e:
-                logger.error(f"MCP tool call failed: {e}", exc_info=True)
-                raise HTTPException(status_code=500, detail=str(e))
 
         # 🔧 修复：移除 /api/download 路由，让静态文件挂载处理
         # 原因：FastAPI 的路由（@app.get）优先于挂载（app.mount），
@@ -844,130 +704,6 @@ class HTTPServer:
                     status_code=500,
                     detail=f"Upload failed: {str(e)}"
                 )
-
-        @self.app.post("/api/upload/documents")
-        async def upload_documents(
-            files: List[UploadFile] = File(...),
-            session_id: Optional[str] = Query(None),
-            topic: Optional[str] = Query(None),
-            client_id: Optional[str] = Query(None),
-        ):
-            """Upload and ingest documents (PDF/DOC/TXT/MD) into paper entries.
-
-            Uses paper_search ingestion to extract text (PDF via PyPDF2 if available),
-            persists session metadata, and returns CSV + per-file download links.
-
-            Args:
-                files: Files to upload
-                session_id: Session ID (optional, will be generated if not provided)
-                topic: Topic for the session (optional)
-                client_id: Client ID for WebSocket notification (optional)
-            """
-            if not files:
-                raise HTTPException(status_code=400, detail="No files provided")
-
-            try:
-                from mcp_servers.paper_search.modules.paper_manager.uploaded_documents import ingest_uploaded_documents
-                from mcp_servers.paper_search.server import get_download_url
-
-                norm_files: List[Dict[str, Any]] = []
-                for f in files:
-                    content_bytes = await f.read()
-                    if not content_bytes:
-                        continue
-                    import base64
-                    b64 = base64.b64encode(content_bytes).decode("utf-8")
-                    norm_files.append({
-                        "filename": f.filename,
-                        "encoding": "base64",
-                        "mime_type": f.content_type,
-                        "content": b64,
-                    })
-
-                if not norm_files:
-                    raise HTTPException(status_code=400, detail="All files are empty")
-
-                import uuid
-                if not session_id:
-                    session_id = "upload_" + uuid.uuid4().hex[:8]
-                topic = topic or "uploaded_documents"
-
-                logger.info(f"📤 Processing document upload: {len(norm_files)} files, session_id={session_id}")
-
-                result = ingest_uploaded_documents(files=norm_files, session_id=session_id, topic=topic)
-                if result.get("status") != "success":
-                    raise HTTPException(status_code=500, detail=result.get("error", "Ingestion failed"))
-
-                payload: Dict[str, Any] = {
-                    "status": "success",
-                    "session_id": result.get("session_id"),
-                    "topic": result.get("topic"),
-                    "papers": result.get("papers", []),
-                    "uploaded_files": [],
-                }
-
-                # Build file metadata for WebSocket notification
-                file_metadata: Dict[str, Any] = {}
-
-                csv_path = (result.get("csv_result") or {}).get("file_path")
-                if csv_path:
-                    try:
-                        csv_url = get_download_url(csv_path)
-                        payload["csv_download_url"] = csv_url
-                        payload["csv_file_path"] = csv_path
-                        # Add to file_metadata for WebSocket
-                        file_metadata["csv_download_url"] = csv_url
-                        file_metadata["csv_file_path"] = csv_path
-                        logger.info(f"📄 Generated CSV summary: {csv_url}")
-                    except Exception as e:
-                        logger.warning(f"Failed to generate CSV download URL: {e}")
-                        payload["csv_file_path"] = csv_path
-
-                for item in result.get("uploaded_files", []):
-                    saved_path = item.get("saved_path")
-                    download_url = None
-                    if saved_path:
-                        try:
-                            download_url = get_download_url(saved_path)
-                        except Exception:
-                            download_url = None
-                    payload["uploaded_files"].append({
-                        "paper_id": item.get("paper_id"),
-                        "filename": item.get("filename"),
-                        "file_path": saved_path,
-                        "download_url": download_url,
-                    })
-
-                # 🆕 Send file_metadata via WebSocket if client_id is provided
-                if client_id and file_metadata:
-                    try:
-                        from services.websocket_server import WebSocketServer
-                        ws_server = WebSocketServer.get_instance()
-                        if ws_server:
-                            websocket = ws_server.connected_clients.get(client_id)
-                            if websocket:
-                                from services.message_handler import MessageHandler
-                                await MessageHandler.send_message(websocket, "file_metadata", {
-                                    "agentId": "upload",
-                                    "sessionId": session_id,
-                                    "metadata": file_metadata,
-                                    "timestamp": datetime.now().isoformat()
-                                })
-                                logger.info(f"✅ Sent file_metadata via WebSocket to client {client_id}")
-                            else:
-                                logger.warning(f"⚠️ WebSocket not found for client {client_id}")
-                        else:
-                            logger.warning("⚠️ WebSocket server instance not available")
-                    except Exception as e:
-                        logger.warning(f"⚠️ Failed to send file_metadata via WebSocket: {e}")
-
-                logger.info(f"✅ Document upload completed: {len(payload['uploaded_files'])} files processed")
-                return payload
-            except HTTPException:
-                raise
-            except Exception as e:
-                logger.error(f"Failed to ingest documents: {e}", exc_info=True)
-                raise HTTPException(status_code=500, detail=str(e))
 
         @self.app.post("/api/upload/structures", response_model=UploadResponse)
         async def upload_multiple_structures(

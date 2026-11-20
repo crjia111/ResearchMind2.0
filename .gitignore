@@ -314,3 +314,10 @@ data/
 
 # Required for reproducible frontend installs (npm ci)
 !ui/package-lock.json
+
+# Versioned portable skill resources are release assets, not runtime data.
+!packages/researchmind-skills/src/researchmind_skills/skill_assets/**/skill.json
+!packages/researchmind-skills/src/researchmind_skills/bundles/*.json
+!packages/researchmind-skills/src/researchmind_skills/schemas/*.json
+
+!.env.skills.example

@@ -1,4 +1,4 @@
-"""Start the local backend, MCP servers and UI; manage only our child processes."""
+"""Start the local AgentScope backend and UI; manage only our child processes."""
 
 import argparse
 import os
@@ -43,8 +43,7 @@ def load_local_config(env_file=None):
 def endpoints(env):
     return [(name, env[f"{prefix}_HOST"], int(env[f"{prefix}_PORT"])) for name, prefix in (
         ("HTTP API", "RESEARCHMIND_HTTP"), ("WebSocket", "RESEARCHMIND_WS"),
-        ("Paper Search MCP", "PAPER_SEARCH_MCP"), ("Simulation MCP", "SIMULATION_MCP"),
-        ("Database MCP", "DATABASE_MCP"), ("UI", "VITE_FRONTEND"),
+        ("UI", "VITE_FRONTEND"),
     )]
 
 
@@ -106,6 +105,7 @@ def main():
     parser = argparse.ArgumentParser(description="Run ResearchMind locally without login.")
     parser.add_argument("--check", action="store_true", help="Check local configuration and available ports without starting services")
     parser.add_argument("--env-file", help="Use an alternative local environment file")
+    parser.add_argument("--stop-file", help="Gracefully stop all managed children when this file appears")
     args = parser.parse_args()
     children, logs = [], []
     try:
@@ -123,9 +123,6 @@ def main():
         log_dir = Path(env.get("RESEARCHMIND_LOG_DIR") or ROOT / "data/logs")
         log_dir.mkdir(parents=True, exist_ok=True)
         services = [
-            ("database", [sys.executable, "mcp_servers/database_call/server.py"], ROOT),
-            ("paper_search", [sys.executable, "mcp_servers/paper_search/server.py"], ROOT),
-            ("simulation", [sys.executable, "mcp_servers/simulation/server.py"], ROOT),
             ("backend", [sys.executable, "main.py"], ROOT),
             ("frontend", [npm, "run", "dev", "--", "--host", env["VITE_FRONTEND_HOST"],
                           "--port", env["VITE_FRONTEND_PORT"]], ROOT / "ui"),
@@ -142,6 +139,8 @@ def main():
         pending = endpoints(env)
         deadline = time.monotonic() + 180
         while True:
+            if args.stop_file and Path(args.stop_file).exists():
+                return 0
             for (name, _, _), child in zip(services, children):
                 if child.poll() is not None:
                     raise RuntimeError(f"{name} exited with code {child.returncode}; see {log_dir / f'{name}.log'}")

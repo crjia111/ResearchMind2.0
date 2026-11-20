@@ -59,7 +59,7 @@ def main():
         env = os.environ.copy()
         env["RESEARCHMIND_LOG_DIR"] = str(temp / "logs")
         with open(temp / "launcher.log", "w+") as log:
-            child = subprocess.Popen([sys.executable, "-m", "services.launcher", "--env-file", str(config)],
+            child = subprocess.Popen([sys.executable, "-m", "services.launcher", "--env-file", str(config), "--stop-file", str(temp / "stop")],
                                      cwd=ROOT, env=env, stdout=log, stderr=subprocess.STDOUT)
             try:
                 deadline = time.monotonic() + 190
@@ -84,7 +84,7 @@ def main():
                 asyncio.run(check_websocket(ports[-1]))
                 print("PASS: real UI, API proxy, WebSocket proxy and local stats work without credentials", flush=True)
             finally:
-                child.terminate()
+                (temp / "stop").touch()
                 child.wait(timeout=20)
             for port in ports:
                 with socket.socket() as sock:

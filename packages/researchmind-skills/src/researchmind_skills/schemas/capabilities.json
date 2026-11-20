@@ -1,0 +1,1692 @@
+{
+  "papers.list": {
+    "operation": "papers.list",
+    "skills": [
+      "literature-search",
+      "paper-analysis",
+      "research-report",
+      "literature-knowledge"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "topic": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.topics": {
+    "operation": "papers.topics",
+    "skills": [
+      "literature-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.filter": {
+    "operation": "papers.filter",
+    "skills": [
+      "literature-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "topic": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "topic"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.selection.update": {
+    "operation": "papers.selection.update",
+    "skills": [
+      "literature-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "paper_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "paper_ids"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.selection.get": {
+    "operation": "papers.selection.get",
+    "skills": [
+      "literature-search",
+      "paper-analysis",
+      "research-report",
+      "literature-knowledge"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.selection.clear": {
+    "operation": "papers.selection.clear",
+    "skills": [
+      "literature-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.plan": {
+    "operation": "papers.plan",
+    "skills": [
+      "literature-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.search": {
+    "operation": "papers.search",
+    "skills": [
+      "literature-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1
+        },
+        "max_results": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "arxiv",
+              "tavily",
+              "semantic_scholar"
+            ]
+          },
+          "minItems": 1
+        },
+        "year_from": {
+          "type": "integer",
+          "minimum": 1900,
+          "maximum": 2200
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.search_by_author": {
+    "operation": "papers.search_by_author",
+    "skills": [
+      "literature-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "max_results": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "author"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.import_uploads": {
+    "operation": "papers.import_uploads",
+    "skills": [
+      "literature-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "artifact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "artifact_ids"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.info": {
+    "operation": "papers.info",
+    "skills": [
+      "literature-search",
+      "paper-analysis",
+      "research-report",
+      "literature-knowledge"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "paper_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "paper_id"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.web_search": {
+    "operation": "papers.web_search",
+    "skills": [
+      "literature-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1
+        },
+        "max_results": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.news_search": {
+    "operation": "papers.news_search",
+    "skills": [
+      "literature-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1
+        },
+        "max_results": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.download": {
+    "operation": "papers.download",
+    "skills": [
+      "paper-analysis",
+      "research-report",
+      "literature-knowledge"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.content.get": {
+    "operation": "papers.content.get",
+    "skills": [
+      "paper-analysis",
+      "research-report",
+      "literature-knowledge"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "paper_id": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.content.batch_get": {
+    "operation": "papers.content.batch_get",
+    "skills": [
+      "paper-analysis",
+      "research-report",
+      "literature-knowledge"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "paper_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "paper_ids"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.content.read": {
+    "operation": "papers.content.read",
+    "skills": [
+      "paper-analysis",
+      "research-report",
+      "literature-knowledge"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "artifact_id"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.content.read_segment": {
+    "operation": "papers.content.read_segment",
+    "skills": [
+      "paper-analysis",
+      "research-report",
+      "literature-knowledge"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        }
+      },
+      "required": [
+        "artifact_id"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.content.find": {
+    "operation": "papers.content.find",
+    "skills": [
+      "paper-analysis",
+      "research-report",
+      "literature-knowledge"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "search_term": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context_length": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        }
+      },
+      "required": [
+        "artifact_id",
+        "search_term"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.analyze": {
+    "operation": "papers.analyze",
+    "skills": [
+      "paper-analysis"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "paper_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "instruction": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "paper_ids"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": true,
+    "dependency": null
+  },
+  "papers.export_csv": {
+    "operation": "papers.export_csv",
+    "skills": [
+      "literature-search",
+      "paper-analysis",
+      "research-report",
+      "literature-knowledge"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "papers.report": {
+    "operation": "papers.report",
+    "skills": [
+      "research-report"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "topic": {
+          "type": "string",
+          "minLength": 1
+        },
+        "paper_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "topic"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": true,
+    "dependency": null
+  },
+  "papers.index": {
+    "operation": "papers.index",
+    "skills": [
+      "literature-knowledge"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "paper_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "collection_name": {
+          "type": "string"
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "arxiv"
+          ]
+        }
+      },
+      "required": [
+        "paper_ids"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": true,
+    "dependency": "chromadb"
+  },
+  "papers.semantic_search": {
+    "operation": "papers.semantic_search",
+    "skills": [
+      "literature-knowledge"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "minLength": 1
+        },
+        "collection_name": {
+          "type": "string"
+        },
+        "top_k": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": "chromadb"
+  },
+  "papers.clean_csv": {
+    "operation": "papers.clean_csv",
+    "skills": [],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "backup": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "artifact_id"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "materials.query_mp": {
+    "operation": "materials.query_mp",
+    "skills": [
+      "materials-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "formula": {
+          "type": "string",
+          "minLength": 1
+        },
+        "num_return": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "formula"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "materials.query_oqmd": {
+    "operation": "materials.query_oqmd",
+    "skills": [
+      "materials-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "formula": {
+          "type": "string",
+          "minLength": 1
+        },
+        "num_return": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "formula"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "materials.query_cod": {
+    "operation": "materials.query_cod",
+    "skills": [
+      "materials-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "formula": {
+          "type": "string",
+          "minLength": 1
+        },
+        "num_return": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "formula"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "materials.query_aflow": {
+    "operation": "materials.query_aflow",
+    "skills": [
+      "materials-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "formula": {
+          "type": "string",
+          "minLength": 1
+        },
+        "num_return": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "formula"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "materials.search": {
+    "operation": "materials.search",
+    "skills": [
+      "materials-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "formula": {
+          "type": "string",
+          "minLength": 1
+        },
+        "num_return": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "mp",
+              "oqmd",
+              "cod",
+              "aflow"
+            ]
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "formula"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "materials.recommend": {
+    "operation": "materials.recommend",
+    "skills": [
+      "materials-search"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "formula": {
+          "type": "string",
+          "minLength": 1
+        },
+        "num_return": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "mp",
+              "oqmd",
+              "cod",
+              "aflow"
+            ]
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "formula"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "diagnostics.materials": {
+    "operation": "diagnostics.materials",
+    "skills": [],
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "diagnostics.simulation": {
+    "operation": "diagnostics.simulation",
+    "skills": [],
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  },
+  "simulation.validate_cif": {
+    "operation": "simulation.validate_cif",
+    "skills": [
+      "crystal-generation",
+      "structure-optimization",
+      "phonon-analysis",
+      "thermal-conductivity"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "cif_content": {
+          "type": "string"
+        },
+        "artifact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": "ase"
+  },
+  "simulation.energy": {
+    "operation": "simulation.energy",
+    "skills": [
+      "structure-optimization"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "cif_content": {
+          "type": "string"
+        },
+        "device": {
+          "type": "string",
+          "enum": [
+            "cpu",
+            "cuda"
+          ]
+        },
+        "artifact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": true,
+    "dependency": "mattersim"
+  },
+  "simulation.relax": {
+    "operation": "simulation.relax",
+    "skills": [
+      "structure-optimization",
+      "phonon-analysis"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "cif_content": {
+          "type": "string"
+        },
+        "device": {
+          "type": "string",
+          "enum": [
+            "cpu",
+            "cuda"
+          ]
+        },
+        "max_steps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "fmax": {
+          "type": "number",
+          "minimum": 1e-06
+        },
+        "artifact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": true,
+    "dependency": "mattersim"
+  },
+  "simulation.phonon": {
+    "operation": "simulation.phonon",
+    "skills": [
+      "phonon-analysis"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "cif_content": {
+          "type": "string"
+        },
+        "device": {
+          "type": "string",
+          "enum": [
+            "cpu",
+            "cuda"
+          ]
+        },
+        "supercell_matrix": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "amplitude": {
+          "type": "number",
+          "minimum": 1e-06
+        },
+        "relax_first": {
+          "type": "boolean"
+        },
+        "artifact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": true,
+    "dependency": "mattersim"
+  },
+  "simulation.kappa": {
+    "operation": "simulation.kappa",
+    "skills": [
+      "thermal-conductivity"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "cif_content": {
+          "type": "string"
+        },
+        "device": {
+          "type": "string",
+          "enum": [
+            "cpu",
+            "cuda"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "kappa_p",
+            "kappa_mtp"
+          ]
+        },
+        "temperature": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5000
+        },
+        "artifact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": true,
+    "dependency": "torch"
+  },
+  "simulation.generate": {
+    "operation": "simulation.generate",
+    "skills": [
+      "crystal-generation"
+    ],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "composition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "device": {
+          "type": "string",
+          "enum": [
+            "cpu",
+            "cuda"
+          ]
+        },
+        "num_samples": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "top_k": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "max_new_tokens": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20000
+        },
+        "spacegroup": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "composition"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": true,
+    "dependency": "torch"
+  },
+  "simulation.cache.clear": {
+    "operation": "simulation.cache.clear",
+    "skills": [],
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "dry_run": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "operation",
+        "request_id",
+        "status",
+        "data",
+        "artifacts",
+        "error",
+        "usage"
+      ]
+    },
+    "schema_version": "1.0",
+    "long_running": false,
+    "dependency": null
+  }
+}

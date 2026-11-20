@@ -161,7 +161,7 @@ const ChatPage: React.FC = () => {
       .map((item, idx) => {
         const roleRaw = item?.role || item?.author || ''
         const role = roleRaw === 'model' ? 'assistant' : roleRaw
-        const parts = Array.isArray(item?.parts) ? item.parts : []
+        const parts = Array.isArray(item?.content_blocks) ? item.content_blocks : (Array.isArray(item?.parts) ? item.parts : [{ text: typeof item?.content === 'string' ? item.content : '' }])
         const content = parts
           .map((part: any) => part?.text || part?.content || '')
           .filter((text: string) => text && typeof text === 'string')

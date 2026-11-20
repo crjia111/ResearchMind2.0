@@ -27,7 +27,7 @@ def test_http_works_without_credentials():
     assert client.get("/api/usage/global").status_code == 200
     assert client.get("/api/auth/me").status_code == 404
     assert client.post("/api/billing/charge", json={}).status_code == 404
-    assert not any(route.path.startswith(("/api/auth", "/api/billing")) for route in app.routes)
+    assert not any(path.startswith(("/api/auth", "/api/billing")) for path in app.openapi()["paths"])
 
 
 @pytest.mark.asyncio
