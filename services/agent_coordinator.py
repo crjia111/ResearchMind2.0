@@ -4,23 +4,25 @@ import asyncio
 import json
 import logging
 from collections import defaultdict
-from researchmind_skills.api import Runtime
 from researchmind_skills.runtime.store import Store
-from researchmind_skills.adapters.agentscope.factory import create_agent, ROLE_SKILLS
-from researchmind_skills.adapters.agentscope.events import normalized_event
 from .skill_runtime import context_for, configured_model
 from .session_manager import SessionManager
 from .message_handler import MessageHandler
 from .usage_stats import get_usage_service
 from .local_context import LOCAL_USER_ID
+from .agent_runtime import get_runtime
 
 logger = logging.getLogger(__name__)
 
 
 class AgentCoordinator:
-    def __init__(self, agents=None):
-        self.agents = agents or {role: role for role in ROLE_SKILLS}
-        self.runtime = Runtime()
+    def __init__(self, agents=None, agent_runtime=None, scientific_runtime=None):
+        from researchmind_skills.api import Runtime
+
+        self.runtime = scientific_runtime or Runtime()
+        self.agent_runtime = agent_runtime or get_runtime(scientific_runtime=self.runtime)
+        runtime_agents = self.agent_runtime.capabilities().agent_ids
+        self.agents = agents or {role: role for role in runtime_agents}
         self.active_tasks = {}
         self.instances = {}
         self.locks = defaultdict(asyncio.Lock)
@@ -159,32 +161,19 @@ class AgentCoordinator:
                 model = configured_model()
                 state = None
                 saved = store.get("agent-state:" + agent_id)
-                if saved:
-                    from agentscope.state import AgentState
-
-                    state = AgentState.model_validate(saved["state"])
-                agent = create_agent(
-                    agent_id, self.runtime, context, model, state=state
+                if saved and (
+                    saved.get("runtime_id") == self.agent_runtime.runtime_id
+                    or saved.get("adapter") == "agentscope-2.0.12"
+                ):
+                    state = saved.get("state")
+                agent = self.agent_runtime.create_session(
+                    agent_id, context, model, state=state
                 )
                 if state is None:
                     from researchmind_skills.runtime.history import normalize_history
-                    from agentscope.message import UserMsg, AssistantMsg
 
                     old = normalize_history(SessionManager.load_history(session_id))
-                    for message in old[-16:]:
-                        if message["content"] and message["role"] in (
-                            "user",
-                            "assistant",
-                        ):
-                            cls = UserMsg if message["role"] == "user" else AssistantMsg
-                            agent.state.context.append(
-                                cls(
-                                    name="user"
-                                    if message["role"] == "user"
-                                    else agent_id,
-                                    content=message["content"],
-                                )
-                            )
+                    agent.restore_history(old[-16:])
                 self.instances[key] = agent
                 references = []
                 for attachment in attachments or []:
@@ -213,8 +202,6 @@ class AgentCoordinator:
                     if references
                     else ""
                 )
-                from agentscope.message import UserMsg
-
                 await MessageHandler.send_message(
                     websocket,
                     "status",
@@ -227,10 +214,8 @@ class AgentCoordinator:
                 text = []
                 tokens = 0
                 tool_calls = []
-                async for event in agent.reply_stream(
-                    UserMsg(name="user", content=prompt)
-                ):
-                    normal = normalized_event(event)
+                async for event in agent.run(prompt):
+                    normal = event.to_dict()
                     if normal["type"] == "text_delta":
                         text.append(normal["text"])
                     elif normal["type"] == "usage":
@@ -246,14 +231,16 @@ class AgentCoordinator:
                         "agent_event",
                         {"agentId": agent_id, "sessionId": session_id, "event": normal},
                     )
-                store.set(
-                    "agent-state:" + agent_id,
-                    {
-                        "schema_version": "1.0",
-                        "adapter": "agentscope-2.0.12",
-                        "state": agent.state.model_dump(mode="json"),
-                    },
-                )
+                agent_state = agent.export_state()
+                if agent_state is not None:
+                    store.set(
+                        "agent-state:" + agent_id,
+                        {
+                            "schema_version": "1.0",
+                            "runtime_id": self.agent_runtime.runtime_id,
+                            "state": agent_state,
+                        },
+                    )
                 history = store.get("history", [])
                 history.extend(
                     [
@@ -284,7 +271,7 @@ class AgentCoordinator:
                     websocket, "status", {"status": "stopped", "sessionId": session_id}
                 )
             except Exception as exc:
-                logger.exception("AgentScope request failed")
+                logger.exception("Agent runtime request failed")
                 await MessageHandler.send_error(websocket, str(exc))
             finally:
                 self.active_tasks.pop(key, None)
@@ -322,4 +309,8 @@ class AgentCoordinator:
         return sum(k[0] == client_id for k in self.instances)
 
     def get_session_info(self, client_id, agent_id, session_id=None):
-        return {"agent_id": agent_id, "session_id": session_id, "runtime": "agentscope"}
+        return {
+            "agent_id": agent_id,
+            "session_id": session_id,
+            "runtime": self.agent_runtime.runtime_id,
+        }

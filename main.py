@@ -54,7 +54,7 @@ except Exception as e:
     sys.exit(1)
 
 # AgentScope agents are created lazily per local session.
-from researchmind_skills.adapters.agentscope.factory import ROLE_SKILLS
+from services.agent_runtime import runtime_info
 
 
 async def start_http_server(http_server: HTTPServer):
@@ -83,11 +83,25 @@ async def main():
     logger.info("")
 
     # Initialize agents
-    agents = {role: role for role in ROLE_SKILLS}
+    from researchmind_skills.api import Runtime
+    from services.agent_runtime import get_runtime
+
+    scientific_runtime = Runtime()
+    agent_runtime = get_runtime(scientific_runtime=scientific_runtime)
+    agents = {role: role for role in agent_runtime.capabilities().agent_ids}
 
     # Initialize agent coordinator
-    agent_coordinator = AgentCoordinator(agents)
-    logger.info(f"✅ Agent coordinator initialized with {len(agents)} agents")
+    await agent_runtime.connect()
+    agent_coordinator = AgentCoordinator(
+        agents,
+        agent_runtime=agent_runtime,
+        scientific_runtime=scientific_runtime,
+    )
+    logger.info(
+        "✅ Agent coordinator initialized with %s agents via %s",
+        len(agents),
+        runtime_info(agent_runtime)["runtime_id"],
+    )
 
     # Initialize HTTP server
     http_server = HTTPServer()
@@ -131,6 +145,8 @@ async def main():
     except Exception as e:
         logger.error(f"❌ Server error: {e}", exc_info=True)
         sys.exit(1)
+    finally:
+        agent_runtime.close()
 
 
 if __name__ == "__main__":

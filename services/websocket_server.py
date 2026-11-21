@@ -161,7 +161,17 @@ class WebSocketServer:
             })
 
             # Send agents list
-            await self.message_handler.send_agent_list(websocket)
+            agent_runtime = getattr(self.agent_coordinator, "agent_runtime", None)
+            if agent_runtime is None:
+                await self.message_handler.send_agent_list(websocket)
+            else:
+                from .agent_runtime import runtime_info
+
+                await self.message_handler.send_agent_list(
+                    websocket,
+                    agent_runtime.capabilities().agent_ids,
+                    runtime_info(agent_runtime),
+                )
             
             session_required_types = {
                 "chat",

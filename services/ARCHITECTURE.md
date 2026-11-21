@@ -1,6 +1,9 @@
 # Services Layer Architecture
 
 > ResearchMind 后端服务层架构详解
+>
+> 本文包含迁移前的服务图示。当前 Agent Runtime 入口见
+> [agent-runtime-migration.md](../docs/agent-runtime-migration.md)。
 
 ## 📖 架构概览
 

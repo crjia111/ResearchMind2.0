@@ -1,5 +1,10 @@
 # ResearchMind System Architecture
 
+> **Historical architecture note:** this document describes the former Google
+> ADK implementation and is retained for migration context. The current agent
+> runtime boundary and execution flow are documented in
+> [docs/agent-runtime-migration.md](../docs/agent-runtime-migration.md).
+
 ## 系统概览
 
 ResearchMind 是一个基于 Google ADK (Agent Development Kit) 的多代理系统，采用分层架构设计，通过 MCP (Model Context Protocol) 连接各个功能模块。

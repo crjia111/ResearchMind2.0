@@ -39,6 +39,11 @@
 
 ## 🚀 系统架构 (System Architecture)
 
+> ResearchMind2.0 adopts a runtime boundary inspired by Open Science. Agent
+> execution is selected through `RESEARCHMIND_AGENT_RUNTIME`, while materials
+> science capabilities remain in portable skills and MCP services. See
+> [agent-runtime-migration.md](docs/agent-runtime-migration.md).
+
 ### 核心功能模块 (Core Functional Modules)
 
 | 智能体 (Agent)                               | 功能特色 (Key Features)                                                                                                                            | 数据源 / 能力 (Data Sources / Capabilities)                                                                                             |

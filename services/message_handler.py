@@ -352,25 +352,28 @@ class MessageHandler:
         logger.error(f"❌ Error sent to client: {error_message}")
 
     @staticmethod
-    async def send_agent_list(websocket: Any):
+    async def send_agent_list(websocket: Any, agent_ids=None, runtime=None):
         """
         Send available agents list to client
 
         Args:
             websocket: WebSocket connection
         """
+        available = agent_ids or agent_config.AGENTS.keys()
         agents_list = [
             {
                 "id": agent_id,
-                "name": config["name"],
-                "icon": config["icon"],
-                "description": config["description"]
+                "name": config.get("name", agent_id),
+                "icon": config.get("icon", "🤖"),
+                "description": config.get("description", "Agent provided by the selected runtime"),
             }
-            for agent_id, config in agent_config.AGENTS.items()
+            for agent_id in available
+            for config in [agent_config.AGENTS.get(agent_id, {})]
         ]
 
         await MessageHandler.send_message(websocket, "agents_list", {
-            "agents": agents_list
+            "agents": agents_list,
+            "runtime": runtime,
         })
         logger.info(f"📋 Sent {len(agents_list)} agents to client")
 

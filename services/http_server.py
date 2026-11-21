@@ -219,6 +219,17 @@ class HTTPServer:
                 agents_available=agents_available
             )
 
+        @self.app.get("/api/agent-runtime")
+        async def agent_runtime_info():
+            """Expose the selected runtime and its discoverable capabilities."""
+            from .agent_runtime import runtime_info
+
+            return {
+                "status": "ready",
+                "runtime": runtime_info(),
+                "timestamp": datetime.now().isoformat(),
+            }
+
         # Compatibility: alias without /api prefix
         @self.app.get("/health", response_model=HealthResponse)
         async def health_check_alias():
