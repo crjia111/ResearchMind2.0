@@ -1,0 +1,48 @@
+// Open Science Desktop — the server core.
+//
+// Everything here runs with or without a window: workspace layout, the bundled
+// OpenCode sidecar, the opencode profile and config, projects, run provenance,
+// and the HTTP gateway that re-exposes all of it (plus the real web client) to
+// LAN / CLI clients.
+//
+// The one rule that keeps this crate honest: **it must never depend on Tauri.**
+// A Tauri app cannot start where there is no display — tao calls `gtk::init()`
+// on Linux — so anything that lives here is reachable from `osd server` on a
+// headless machine, and anything that does not, is not.
+pub mod agent_accounts;
+pub mod agent_keys;
+pub mod artifact_file;
+pub mod audit;
+pub mod browser_mcp_proxy;
+pub mod debug_log;
+pub mod env;
+pub mod examples;
+pub mod gateway;
+pub mod git_snapshot;
+pub mod harness;
+pub mod history_backup;
+mod ledger;
+pub mod model_catalog;
+pub mod model_prices;
+pub mod model_probe;
+pub mod opencode_config;
+pub mod opencode_v2;
+pub mod project;
+pub mod provenance;
+pub mod runs;
+pub mod runs_index;
+pub mod runtime;
+pub mod screens;
+pub mod session_find;
+pub mod session_sync;
+pub mod settings_requests;
+pub mod specialists;
+pub mod system_proxy;
+pub mod terminal_read;
+pub mod termd;
+pub mod usage;
+pub mod usage_pricing;
+pub mod web_accounts;
+pub mod which;
+
+pub use env::Env;

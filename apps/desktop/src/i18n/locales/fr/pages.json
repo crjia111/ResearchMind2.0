@@ -1,0 +1,206 @@
+{
+  "notebooks": {
+    "title": "Notebooks",
+    "openJupyterLab": "Ouvrir JupyterLab",
+    "openJupyterLabTitle": "Ouvrir JupyterLab complet (même environnement et fichiers) dans votre navigateur",
+    "newNotebook": "Nouveau notebook",
+    "pythonNotebook": "Notebook Python",
+    "rNotebook": "Notebook R",
+    "description": "Tous les notebooks Jupyter de vos dossiers de session, du plus récent au plus ancien. Les cellules s'exécutent sur le noyau Python ou R local dans le propre dossier du notebook ; l'agent travaille sur les mêmes fichiers.",
+    "createsIn": "Les nouveaux notebooks sont créés dans",
+    "empty": {
+      "tauri": "Aucun notebook pour le moment. Créez-en un, ou demandez à l'agent d'en produire un.",
+      "web": "Les notebooks sont disponibles dans l'application de bureau."
+    },
+    "toast": {
+      "openingJupyterLab": "Ouverture de JupyterLab dans votre navigateur…",
+      "setUpJupyterFirst": "Configurez d'abord Jupyter — Paramètres → Serveurs MCP → Jupyter.",
+      "couldNotOpenJupyterLab": "Impossible d'ouvrir JupyterLab",
+      "couldNotCreateNotebook": "Impossible de créer le notebook"
+    },
+    "editor": {
+      "backAria": "Retour aux notebooks",
+      "languageR": "R",
+      "languagePython": "Python",
+      "saved": "Enregistré",
+      "unsaved": "Non enregistré",
+      "openJupyterLabAria": "Ouvrir dans JupyterLab",
+      "historyAria": "Historique",
+      "historyTitle": "Historique — chaque version enregistrée avec son code et sa conversation",
+      "reloadAria": "Recharger depuis le disque",
+      "reloadTitle": "Recharger (récupérer les modifications de l'agent)",
+      "closeAria": "Fermer l'inspecteur",
+      "stopCellTitle": "Arrêter — redémarre le noyau de ce notebook (les variables sont réinitialisées)",
+      "stopLabel": "Arrêter",
+      "runLabel": "Exécuter",
+      "addCellLabel": "Ajouter une cellule",
+      "askAgent": "Interroger l'agent sur cette cellule",
+      "askAgentAria": "Interroger l'agent sur la cellule {{n}}",
+      "askAgentIntro": "À propos de la cellule [{{n}}] de `{{file}}` :",
+      "askAgentOutput": "Sortie :",
+      "askAgentSent": "Cellule ajoutée à la zone de saisie",
+      "countTitle": "Numéro d'exécution — [*] pendant l'exécution, [n] ensuite",
+      "interrupted": "Interrompu — le noyau a redémarré ; les variables ont été réinitialisées.",
+      "desktopOnlyKernel": "Le noyau local nécessite l'app de bureau."
+    }
+  },
+  "files": {
+    "loading": "Chargement…",
+    "folderEmpty": "Ce dossier est vide.",
+    "explorerUnavailableWeb": "L'explorateur de fichiers est disponible dans l'application de bureau.",
+    "selectFilePrompt": "Sélectionnez un fichier pour le prévisualiser ici.",
+    "pane": {
+      "subtitle": "le dossier de cette session",
+      "closeAria": "Fermer les fichiers"
+    },
+    "contextMenu": {
+      "copyPath": "Copier le chemin",
+      "copyRelativePath": "Copier le chemin relatif",
+      "relativePathLabel": "Chemin relatif",
+      "openInDefaultApp": "Ouvrir dans l'application par défaut"
+    },
+    "linked": {
+      "tag": "Lié",
+      "unlink": "Délier",
+      "unlinkTitle": "Délier ce dossier ?",
+      "unlinkBody": "Le lien quitte le projet. Le dossier vers lequel il pointe et tous ses fichiers restent où ils sont ; l’agent redemandera avant de les utiliser.",
+      "outsideBase": "Ce dossier n’est plus dans le dossier de travail : {{path}}"
+    }
+  },
+  "skills": {
+    "title": "Compétences et agents",
+    "subtitle": "Tout ce que l’agent peut utiliser, chargé en direct depuis OpenCode.",
+    "install": {
+      "sectionTitle": "Installer une compétence",
+      "placeholder": "Collez un SKILL.md, ou une URL / description que l'agent transformera en compétence",
+      "starting": "Démarrage…",
+      "cta": "Installer la compétence",
+      "hintConnected": "Un SKILL.md collé est installé directement ; tout le reste ouvre une session d'agent. Les compétences installées sont disponibles dans tous les espaces de travail.",
+      "hintDisconnected": "Connectez d'abord le runtime.",
+      "installed": "« {{name}} » installée — disponible dans tous les espaces de travail.",
+      "agentPrompt": "L'utilisateur a saisi ceci dans le champ d'installation de compétences :\n\n---\n{{input}}\n---\n\nAide-le patiemment à l'installer : détermine de quelle compétence il s'agit (récupérer l'URL, la chercher, ou lui demander si c'est ambigu), puis enregistre-la comme fichier de compétence dans .opencode/skills/<name>/SKILL.md à l'intérieur de cet espace de travail — jamais en dehors ; l'application la rend ensuite disponible dans tous les espaces de travail. La compétence customize-opencode documente le format. Réponds enfin avec le nom de la compétence installée.",
+      "echo": "Aide-moi à installer cette compétence :\n\n{{input}}",
+      "adoptFailed": "La skill a été écrite mais n'a pas pu être déplacée dans votre profil ; elle disparaîtra au remplacement du dossier de cette session : {{detail}}"
+    },
+    "environment": {
+      "sectionTitle": "Environnement scientifique",
+      "detectionUnavailable": "La détection de l'environnement s'exécute dans l'application de bureau.",
+      "found": "trouvé",
+      "notFound": "introuvable",
+      "appManaged": "géré par l'app",
+      "note": "OpenCode exécute le code avec ce qui est installé ici (p. ex. Python via son outil shell). uv est fourni avec l'application, et Jupyter peut être géré par l'application dans Réglages → Connecteurs. Python et R ne sont pas intégrés : installez-les, ou un Science Pack, pour activer l'analyse."
+    },
+    "agentsSection": {
+      "heading": "Agents",
+      "empty": "Aucun agent signalé.",
+      "agentMode": {
+        "primary": "principal",
+        "subagent": "sous-agent",
+        "all": "tous"
+      }
+    },
+    "skillsListSection": {
+      "heading": "Compétences",
+      "empty": "Aucune compétence chargée pour le moment.",
+      "source": {
+        "builtin": "intégré",
+        "project": "projet",
+        "user": "utilisateur"
+      }
+    },
+    "disconnected": "Connectez le runtime pour lister les compétences et agents qu'il a chargés.",
+    "search": "Rechercher skills et agents",
+    "noMatch": "Rien ne correspond à « {{query}} ».",
+    "specialists": {
+      "heading": "Spécialistes",
+      "hint": "Vos propres sous-agents. L’agent principal leur confie le travail qui correspond à leur description.",
+      "new": "Nouveau spécialiste",
+      "emptyTitle": "Aucun spécialiste pour l’instant",
+      "emptyBody": "Un spécialiste est un assistant dédié à une tâche, avec ses propres instructions et limité aux skills et connecteurs que vous choisissez — par exemple un relecteur statistique qui n’utilise que vos skills R.",
+      "newTitle": "Nouveau spécialiste",
+      "editTitle": "Modifier {{id}}",
+      "close": "Fermer",
+      "untitled": "Spécialiste sans nom",
+      "kind": "Spécialiste",
+      "name": "Nom",
+      "namePlaceholder": "ex. Stats reviewer",
+      "idHint": "Enregistré sous un identifiant court tiré du nom.",
+      "idPreview": "Enregistré sous {{id}}",
+      "idTaken": "Un agent nommé {{id}} existe déjà.",
+      "color": "Couleur",
+      "colors": {
+        "ink": "Encre",
+        "gray": "Gris",
+        "red": "Rouge",
+        "orange": "Orange",
+        "yellow": "Jaune",
+        "green": "Vert",
+        "aqua": "Turquoise",
+        "blue": "Bleu",
+        "violet": "Violet",
+        "magenta": "Magenta"
+      },
+      "whenToUse": "Quand l’utiliser",
+      "whenToUseHint": "L’agent principal s’appuie sur ce texte pour décider quand lui confier du travail. Indiquez la tâche et la situation.",
+      "whenToUsePlaceholder": "ex. Relit les analyses statistiques en R ou Python : choix des tests, hypothèses, comparaisons multiples.",
+      "whenToUseRequired": "Indiquez quand l’utiliser.",
+      "instructions": "Instructions",
+      "instructionsHint": "Remplace le prompt système par défaut pour ce spécialiste. La mémoire du projet et la liste des skills restent incluses. Laissez vide pour garder le prompt par défaut.",
+      "instructionsPlaceholder": "Comment travailler, quoi vérifier, comment rendre compte.",
+      "capabilities": "Capacités",
+      "capabilitiesHint": "Ce qu’il peut utiliser. Les règles d’approbation s’appliquent toujours à tout ce qu’il exécute.",
+      "skills": "Skills",
+      "skillsAll": "Tous les skills",
+      "skillsSome": "Seulement la sélection",
+      "skillsFilter": "Filtrer les skills",
+      "skillsSelected": "{{count}} sélectionné(s)",
+      "skillsNoMatch": "Aucun skill ne correspond.",
+      "skillsNone": "Aucune sélection : ce spécialiste n’utilise aucun skill.",
+      "skillMissing": "N’est plus installé",
+      "connectors": "Connecteurs",
+      "connectorsHint": "Les connecteurs ajoutés plus tard sont activés jusqu’à ce que vous les désactiviez ici.",
+      "connectorsLoading": "Lecture des connecteurs…",
+      "noConnectors": "Aucun connecteur configuré. Ajoutez-en dans Réglages › Connecteurs.",
+      "connectorCollision": "Désactiver {{blocked}} désactiverait aussi {{other}}. Désactivez les deux, ou laissez {{blocked}} activé.",
+      "modelDefault": "Modèle par défaut",
+      "create": "Créer le spécialiste",
+      "save": "Enregistrer",
+      "saving": "Enregistrement et redémarrage du runtime…",
+      "delete": "Supprimer",
+      "deleting": "Suppression…",
+      "deleteTitle": "Supprimer {{id}} ?",
+      "deleteBody": "L’agent principal ne pourra plus lui confier de travail. Les sessions passées conservent ce qu’il a fait.",
+      "discardTitle": "Abandonner les modifications ?",
+      "discardBody": "Vos modifications de ce spécialiste seront perdues.",
+      "discard": "Abandonner",
+      "created": "{{id}} créé. L’agent principal peut maintenant lui confier du travail.",
+      "saved": "{{id}} enregistré.",
+      "deleted": "{{id}} supprimé.",
+      "idEmpty": "Le nom doit contenir au moins une lettre ou un chiffre : il devient l’identifiant.",
+      "model": "Modèle",
+      "modelDefaultNamed": "Modèle par défaut ({{model}})",
+      "modelUnlisted": "{{model}} (absent du catalogue)",
+      "icon": "Icône",
+      "iconLetter": "Initiale"
+    },
+    "showAll": "Tout afficher ({{count}})",
+    "showFewer": "Afficher moins",
+    "detail": {
+      "close": "Fermer",
+      "loading": "Lecture de SKILL.md…",
+      "unreadable": "Impossible de lire le fichier de cette compétence.",
+      "empty": "Ce SKILL.md ne contient rien d’autre que sa description.",
+      "reveal": "Afficher dans le dossier"
+    }
+  },
+  "notFound": {
+    "title": "404 — Introuvable",
+    "hint": "Cette page n'existe pas.",
+    "backLink": "Retour à l'espace de travail"
+  },
+  "notify": {
+    "completeTitle": "Tour terminé",
+    "failedTitle": "Tour échoué",
+    "interruptedTitle": "Tour interrompu"
+  }
+}

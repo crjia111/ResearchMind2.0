@@ -1,3 +1,0 @@
-"""
-Simulation Agent package initialization.
-"""

@@ -1,295 +1,532 @@
-> **0.2 migration:** portable scientific Skills with optional AgentScope 2.0.12. Default local startup no longer starts MCP servers. See [installation, configuration and validation](docs/portable-skills.md). Python 3.11–3.12; use the updated uv.lock. The older architecture descriptions below are retained as historical context.
-
 <div align="center">
 
-# ResearchMind · 智能科研助手
-**Your AI Partner in Materials Science**
+[![Open Science Desktop — Local-first AI research workbench](./docs/assets/banner.webp)](https://github.com/ai4s-research/open-science)
+
+# Open Science Desktop
+
+**Local-first, model-agnostic AI research workbench for macOS, Windows & Linux.**
+
+Formerly Open Science. An open-source desktop alternative to Claude Science and
+similar AI-for-science workbenches — built with Tauri, MCP, agent skills, and
+reproducible artifacts. It connects agents, notebooks, files, figures, reports,
+runs, and review into one auditable desktop workflow.
+
+<p>
+  <b>English</b> ·
+  <a href="./README.zh.md">简体中文</a> ·
+  <a href="./README.ja.md">日本語</a> ·
+  <a href="./README.es.md">Español</a> ·
+  <a href="./README.de.md">Deutsch</a> ·
+  <a href="./README.fr.md">Français</a> ·
+  <a href="./README.ko.md">한국어</a>
+</p>
+
+<p>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+  <a href="https://doi.org/10.5281/zenodo.21351225"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21351225-1682D4" alt="DOI"></a>
+  <a href="https://internscience.github.io/ResearchClawBench-Home/"><img src="https://img.shields.io/badge/%F0%9F%8F%86%20%231-ResearchClawBench-FFB300" alt="#1 on ResearchClawBench"></a>
+  <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue" alt="Platforms">
+  <img src="https://img.shields.io/badge/i18n-7%20languages-5B8DEF" alt="7 interface languages">
+  <img src="https://img.shields.io/badge/built%20with-Tauri%202%20%2B%20React-24C8DB" alt="Built with Tauri + React">
+  <img src="https://img.shields.io/badge/runtime-OpenCode-success" alt="OpenCode runtime">
+  <a href="https://discord.gg/fWNMDKcd5P"><img src="https://img.shields.io/badge/Join-Discord-5865F2" alt="Join Discord"></a>
+  <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+  <a href="https://linux.do"><img src="https://img.shields.io/badge/Join-linux.do-orange" alt="linux.do"></a>
+</p>
 
 </div>
 
 ---
 
-**[English](#english-version) | [中文版](#中文版)**
+## News
+
+- **2026-11-16** — 🛟 **Steadier turns on slow machines and networks.** A busy runtime keeps its running turns instead of being restarted under them; a turn whose runtime died stops spinning; a send with photos gets time to land and goes out once; a failed message can be retried or edited; Kimi's coding plan goes direct; browser control works again. Plus fixes for terminals, file history and Windows. *(v0.7.3)*
+- **2026-11-07** — 🧠 **OpenCode 2, and more from every agent.** The bundled runtime moves to OpenCode 2, with your OpenCode 1 history backed up first; a model's reasoning shows in the thread; ACP agents bring their own slash commands, context usage and task list; DeepSeek Harness joins the catalog. Plus sharper CJK text in terminals and a window that keeps its size. *(v0.7.2)*
+- **2026-10-29** — 🖥️ **Terminals that stay, agents side by side.** Terminals now run outside the app and survive updates, relaunches and crashes; Claude Code, Codex and pi run as conversations beside OpenCode, and a session moves between terminal and conversation in one click. Plus several accounts per agent, theme variants, new models on slow networks, and Chinese punctuation that goes in on the first press. *(v0.7.1)*
+- **2026-10-26** — 🌐 **The workbench from any browser, and agents that talk to each other.** Splits, Screens and terminals now work over Remote Access, on a phone too, with name-and-password accounts; define your own Specialists with their own instructions, skills, connectors and model; and agents read and message each other's conversations and terminals through `osd`. Plus queued messages while the agent works, and a no-root Linux install. *(v0.7.0)*
+- **2026-10-04** — 🖱️ **Computer Use, terminals and editors.** The agent can now operate desktop apps like ImageJ, Origin and instrument software; panes hold terminals, files and a code editor, where Claude Code / Codex resume after a relaunch; plus find (⌘F), jump to any session or project (⌘J), and Linux ARM64 for DGX Spark. *(v0.6.0)*
+- **2026-08-18** — 🖥️ **Runs without a screen, and the terminal command comes with it.** `osd server` starts the whole workbench — workspace, agent runtime, and the *same* web UI — on a machine with no display, and `osd session send … --wait` drives it from a script or another agent. `osd` ships inside the desktop installer and puts itself on your PATH on first launch; on a server the archive needs nothing installed. Models, keys and approvals are all configurable from the terminal (`osd model`, `osd auth`, `osd approval`).
+- **2026-08-13** — 🔌 **Speaks the Agent Client Protocol, both directions.** Drive Codex, Gemini CLI, Claude Code, or any other ACP agent from inside this app — with its own models, history, and your MCP connectors — or drive Open Science itself from Zed, JetBrains, or Neovim. *(v0.4.0)*
+- **2026-08-01** — 🗂️ **Projects, memory, and full history.** Group sessions into named projects (import an existing repo *in place*, no copying), give the agent persistent global and project memory, and reach every past conversation through a searchable history with archive, restore, and export. *(v0.3.1)*
+- **2026-07-24** — 🪟 **Split-pane tiling.** Tile sessions side by side, drag panes to re-dock them, keep several independent Screens, and run a different model in each pane. *(v0.3.0)*
+- **2026-07-21** — 🌐 **Access from anywhere — even your phone.** A token-authenticated gateway serves the *real* desktop UI to a CLI, a browser on your LAN, or your phone (loopback by default; LAN is opt-in). Start a run at your desk and read the finished figure and report on your phone. *(v0.2.3)*
+- **2026-07-21** — 🧭 **Browser control.** The agent can drive your own Chrome — profile and logins intact — to read the live web the way you do, or an isolated private browser on demand. *(v0.2.3)*
+- **2026-07-09** — 🎉 **#1 on ResearchClawBench.** Open Science Desktop ranks #1 by scored-task average on [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/), an end-to-end benchmark for autonomous scientific research agents (Pass@1 leaderboard).
 
 ---
 
-## 📖 概述 (Overview)
+## Contents
 
-**ResearchMind** 是一款基于**多智能体架构**的AI研究助手，专为材料科学研究领域深度定制。应用集成了四大核心功能模块，为研究人员提供从文献调研、数据查询、仿真计算到实验规划的**一站式科研解决方案**。
+- [✨ What it does](#what-it-does)
+- [🎬 See it in action](#see-it-in-action)
+- [🧪 Current capabilities](#current-capabilities)
+- [🔌 Skills and connectors](#skills-and-connectors)
+- [📦 Install](#install)
+- [🖥️ Headless & CLI (`osd`)](#headless--cli-osd)
+- [🚀 Build from source](#build-from-source)
+- [🔒 Safety and privacy](#safety-and-privacy)
+- [🗂️ Repository layout](#repository-layout)
+- [📌 Status](#status)
+- [🤝 Contributing](#contributing)
+- [📖 Citation](#citation)
+- [⚖️ License](#license)
 
-**ResearchMind** is an AI research assistant built on a **multi-agent architecture**, specifically tailored for the field of materials science. It integrates four core functional modules to provide researchers with a **one-stop solution** for everything from literature review and data queries to simulation and experimental planning.
+## What it does
 
----
+**Runs the whole research loop** — from a broad direction to a finished paper:
+exploration, literature survey, hypothesis, experiment code, analysis, figures, and
+write-up, in one continuous, auditable session.
 
-## ✨ 核心优势 (Core Advantages)
+- **Autonomous research agents** — the bundled `ai4s-agent` chains specialist skills
+  end to end (explore → survey → experiment → write), and each stage drops a real,
+  inspectable artifact into your workspace, not just a chat reply.
+- **Everything traces back** — figures, tables, reports, notebooks, and run outputs
+  link to the exact code, inputs, environment, model output, and conversation that
+  produced them.
+- **Local-first and yours** — sessions, data, provenance, notebooks, and run records
+  live in local folders on your machine. Nothing leaves by default.
+- **Model-agnostic runtime** — the UI talks through `packages/sdk` to a bundled,
+  pinned OpenCode sidecar. Bring your own model; providers, skills, and MCP servers
+  stay pluggable.
+- **Reproducible by construction** — local, SSH/Slurm, Modal, and notebook-batch runs
+  are captured as reproducible run records, not loose terminal scrollback.
+- **Reach it from anywhere** — a built-in, token-authenticated gateway serves the
+  *real* desktop UI to a browser on your LAN or phone (or, with a tunnel, from
+  anywhere) — kick off a run at your desk and check on it from your phone over lunch.
+  Off by default; loopback-only until you opt in, and API keys never leave the machine.
+- **Drives your own browser** — the agent can control your real Chrome, with your
+  profile and logins intact, to read the live web the way you do — or an isolated
+  private browser when you'd rather it not.
+- **Plan before it acts** — `/plan` lays out an execution plan before touching a
+  file, and `/goal` fixes the objective, constraints, and acceptance criteria the
+  agent then works toward.
+- **Built for long projects** — named projects group their sessions, two layers of
+  persistent memory (global and per-project) carry what matters between them, and a
+  long conversation compacts itself as it approaches the model's context window.
+- **Work several threads at once** — tile panes side by side, keep independent
+  Screens, and give each pane its own model.
+- **Extensible** — agent skills, MCP servers and one-click science connectors,
+  `/` commands, `!` shell mode, and a model-agnostic SDK.
 
-- 🧠 **深度智能 (Deep Intelligence)**: 结合深度学习与大型语言模型，能够理解复杂的科研问题，并提供精准的分析与解答。
-- 🧩 **模块化设计 (Modular Design)**: 灵活的多智能体架构，可根据研究需求调用最合适的智能体，精准满足不同研究场景。
-- ⚡ **高效执行 (Efficient Execution)**: 自动规划并并行执行复杂的科研任务，从文献检索到数据分析，大幅提升科研效率。
-- 🌐 **多源整合 (Multi-Source Integration)**: 无缝对接多个权威学术数据库和计算平台，打破信息孤岛，提供全面的数据支持。
+## See it in action
 
----
+**One prompt -> a publication-grade figure, and every point traces to the exact code
+and inputs that made it.** No black boxes: open any artifact to see its generating
+script, its data files, and the conversation that produced it.
 
-- 🧠 **Deep Intelligence**: Combines deep learning and large language models to understand complex scientific problems, providing precise analysis and answers.
-- 🧩 **Modular Design**: A flexible multi-agent architecture that invokes the most suitable agent for your research needs, perfectly fitting various scenarios.
-- ⚡ **Efficient Execution**: Automatically plans and executes complex research tasks in parallel, from literature searches to data analysis, dramatically boosting your research efficiency.
-- 🌐 **Multi-Source Integration**: Seamlessly connects with multiple authoritative academic databases and computing platforms, breaking down information silos to provide comprehensive data support.
+![A rendered cross-species atlas figure beside its generating script and input files in the artifact inspector](./docs/assets/showcase-provenance.webp)
 
----
+**Literature -> a verifiable report.** Fan the search out across sources, draft a
+manuscript rendered as a PDF, and gate it on a citation review — DOIs resolved,
+unsourced numbers and figure/code inconsistencies flagged — before anything ships.
 
-## 🚀 系统架构 (System Architecture)
+![A protein-language-model literature survey compiled into a PDF manuscript, with a citation reviewer confirming every DOI resolves](./docs/assets/showcase-literature.webp)
 
-> ResearchMind2.0 adopts a runtime boundary inspired by Open Science. Agent
-> execution is selected through `RESEARCHMIND_AGENT_RUNTIME`, while materials
-> science capabilities remain in portable skills and MCP services. See
-> [agent-runtime-migration.md](docs/agent-runtime-migration.md).
+**Drives your own Chrome.** The agent reads the live web through your real browser
+profile — logins and all — then turns what it finds into a figure and a sortable CSV.
 
-### 核心功能模块 (Core Functional Modules)
+![The agent driving the user's own Chrome via open-science-browser to harvest bioRxiv preprints into a chart and CSV](./docs/assets/showcase-browser.webp)
 
-| 智能体 (Agent)                               | 功能特色 (Key Features)                                                                                                                            | 数据源 / 能力 (Data Sources / Capabilities)                                                                                             |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| 📚 **文献研究 (Literature Research)**        | 智能论文搜索、多源信息整合、深度内容分析、生成综合报告。                                                                                             | **数据源**: ArXiv, Tavily, Semantic Scholar, etc.                                                                                        |
-| 📊 **数据库查询 (Database Query)**           | 跨库智能检索、结构与性质查询、数据比对分析。                                                                                                       | **数据库**: Materials Project, OQMD, COD, AFLOW                                                                                          |
-| 🔬 **仿真计算 (Simulation & Calculation)** | 上传结构文件进行计算、支持多种物理性质分析、提供专业的可视化。                                                                                       | **计算能力**: 热导率 (Thermal Conductivity), 能量属性 (Energy Properties), 声子谱 (Phonon Spectrum)                                        |
-| 🧪 **实验规划 (Experiment Planning)**        | 综合多源信息，制定科学严谨的实验方案与验证路径。                                                                                                     | **能力**: 方案生成, 风险评估, 多智能体协同 (Plan Generation, Risk Assessment, Synergy)                                                    |
+**Research from anywhere — even your phone.** A built-in authenticated gateway serves
+the *real* desktop UI to a browser on your LAN (or a tunnel), so you can kick off a run
+at your desk and read the finished figure and report on your phone.
+
+<table align="center">
+  <tr>
+    <td align="center" width="33%"><img src="./docs/assets/showcase-mobile-home.webp" width="240" alt="The workbench in a phone browser: the new-session screen with starter analyses"><br><sub>New session</sub></td>
+    <td align="center" width="33%"><img src="./docs/assets/showcase-mobile-run.webp" width="240" alt="A completed dose-response analysis — script, results, figure, and report — on a phone"><br><sub>A finished analysis</sub></td>
+    <td align="center" width="33%"><img src="./docs/assets/showcase-mobile-reproduce.webp" width="240" alt="Reproducing an scVI benchmark, with its ARI-vs-epoch figure, viewed on a phone"><br><sub>A reproduced benchmark</sub></td>
+  </tr>
+</table>
+
+<details>
+<summary><b>More screenshots</b></summary>
 
 <br>
 
-| Agent                                        | Key Features                                                                                                                                       | Data Sources / Capabilities                                                                                                              |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| 📚 **Literature Research**                   | Smart paper search, multi-source information integration, deep content analysis, and comprehensive report generation.                                | **Data Sources**: ArXiv, Tavily, Semantic Scholar, etc.                                                                                  |
-| 📊 **Database Query**                        | Cross-database smart retrieval, structure and property queries, and comparative data analysis.                                                     | **Databases**: Materials Project, OQMD, COD, AFLOW                                                                                       |
-| 🔬 **Simulation & Calculation**              | Upload structure files for calculation, supports various physical property analyses, and provides professional visualizations.                       | **Capabilities**: Thermal Conductivity, Energy Properties, Phonon Spectrum                                                               |
-| 🧪 **Experiment Planning**                   | Synthesizes multi-source info to create rigorous experimental plans and verification paths.                                                          | **Capabilities**: Plan Generation, Risk Assessment, Multi-Agent Collaboration                                                            |
+![Reproducing an scVI integration benchmark on a remote A100 with a pinned environment, execution log, and provenance](./docs/assets/showcase-remote.webp)
 
----
+![An 8-arm scVI hyperparameter sweep table beside a live analysis notebook sharing the agent's kernel](./docs/assets/showcase-experiment.webp)
 
-## 📖 最佳实践指南 (Best Practices Guide)
+</details>
 
-#### 🔬 **示例1：材料热导率研究 (Example 1: Researching Thermal Conductivity)**
+## Current capabilities
 
-- **选择功能**: **仿真计算助手 (Simulation & Calculation Agent)**
-- **操作流程**:
-  1. 在左侧功能区选择“仿真计算助手”。
-  2. 上传您的 `CIF` 晶体结构文件。
-  3. 在输入框中输入指令:
-    > "计算这个结构的热导率和声子谱"
-- **预期输出**:
-  - ✅ **精确计算**: 获得材料的热导率精确计算结果。
-  - ✅ **专业图像**: 生成声子谱图像，并附带专业分析。
-  - ✅ **实时可视化**: 在右侧展示区实时查看晶体结构与生成的声子谱图。
+**The research loop, as skills.** One meta-skill runs the full pipeline; each stage
+is a self-contained skill that produces a real, gradeable artifact — runnable on any
+model OpenCode supports:
 
----
+| Skill | Role | Primary output |
+| --- | --- | --- |
+| `ai4s-agent` | Runs the four skills below, in order | The full research package |
+| `research-explorer` | Turn a broad direction into concrete topics | `research_exploration.md`, `topic_matrix.md`, `literature_pre_survey.md` |
+| `literature-survey` | Write a literature survey | 6–20 pp PDF, 60+ real citations, LaTeX source, taxonomy figures |
+| `experiment-suite` | Build an experiment package | Design doc, runnable code, `results.json` with provenance, figures, report |
+| `paper-writer` | Write a research paper | 8–14 pp PDF, 200+ citations, 4–8 figures, tables |
+| `mindmap-render` | Render a mindmap | Image generated from a `topic_matrix.md` |
+| `integrity-auditor` | Audit a paper's integrity | Image / numerical / logical findings, 4-level evidence grading, `audit_report.md` |
 
-- **Select Agent**: **Simulation & Calculation Agent**
-- **Workflow**:
-  1. Choose "Simulation & Calculation Agent" from the left-hand function panel.
-  2. Upload your `CIF` crystal structure file.
-  3. Enter the command in the input box:
-    > "Calculate the thermal conductivity and phonon spectrum for this structure"
-- **Expected Output**:
-  - ✅ **Precise Calculation**: Get accurate thermal conductivity results for your material.
-  - ✅ **Professional Graphics**: Generate a phonon spectrum image with expert analysis.
-  - ✅ **Live Visualization**: View the crystal structure and the generated phonon spectrum in real-time in the right-side display area.
+These ship in the `ai4s-skills` pack alongside first-party review skills and the
+office/document skills below.
 
----
+### Platform
 
-#### ⚗️ **示例2：晶体结构查询 (Example 2: Querying Crystal Structures)**
-
-- **选择功能**: **数据库查询助手 (Database Query Agent)**
-- **操作流程**:
-  1. 选择“数据库查询助手”。
-  2. 输入您想查询的材料，例如:
-    > "查询NaCl的晶体结构"
-- **预期输出**:
-  - ✅ **智能检索**: 智能体将自动轮询所有可用数据库 (Materials Project, OQMD, COD, AFLOW)。
-  - ✅ **快速响应**: 返回首个成功命中的查询结果，并展示其详细信息和3D结构。
-
----
-
-- **Select Agent**: **Database Query Agent**
-- **Workflow**:
-  1. Choose "Database Query Agent".
-  2. Enter the material you want to query, for example:
-    > "Find the crystal structure of NaCl"
-- **Expected Output**:
-  - ✅ **Smart Retrieval**: The agent will automatically query all available databases (Materials Project, OQMD, COD, AFLOW).
-  - ✅ **Fast Response**: It will return the first successful match, displaying its detailed information and 3D structure.
-
----
-
-#### 📜 **示例3：学术论文调研 (Example 3: Conducting a Literature Review)**
-
-- **选择功能**: **文献研究助手 (Literature Research Agent)**
-- **操作流程**:
-  1. 选择“文献研究助手”。
-  2. 输入您的研究主题，例如:
-    > "生成一份关于大语言模型在材料科学中应用的详细报告"
-- **预期输出**:
-  - ✅ **并行检索**: 同时从 ArXiv, Tavily 等多个来源检索相关文献。
-  - ✅ **深度分析**: 对每篇关键论文进行深度剖析，提取核心观点和方法。
-  - ✅ **综合报告**: 生成一份结构清晰、内容详实的综合报告。
-  - ✅ **数据文件**: 提供一个包含所有引用文献、摘要和链接的 `CSV` 文件，方便您进一步分析。
-
----
-
-- **Select Agent**: **Literature Research Agent**
-- **Workflow**:
-  1. Choose "Literature Research Agent".
-  2. Enter your research topic, for example:
-    > "Generate a detailed report on the application of large language models in materials science"
-- **Expected Output**:
-  - ✅ **Parallel Search**: Simultaneously retrieves literature from multiple sources like ArXiv and Tavily.
-  - ✅ **In-depth Analysis**: Conducts a deep analysis of each key paper, extracting core ideas and methodologies.
-  - ✅ **Comprehensive Report**: Generates a well-structured and detailed summary report.
-  - ✅ **Data File**: Provides a `CSV` file containing all cited literature, abstracts, and links for your further analysis.
-
----
-
-#### 🧪 **示例4：实验方案规划 (Example 4: Experimental Plan Planning)**
-
-- **选择功能**: **实验规划智能体 (Experiment Plan Agent)**
-- **操作流程**:
-  1. 选择“实验规划智能体”。
-  2. 输入您的研究目标，例如:
-    > "设计一个提高石墨烯/环氧树脂复合材料热导率的实验方案"
-- **预期输出**:
-  1. ✅ **综合调研**: 自动调用文献和数据库智能体获取背景信息。
-  2. ✅ **方案生成**: 输出包含材料制备、表征测试、数据记录的完整实验流程。
-  3. ✅ **风险评估**: 提示潜在的实验风险并给出应对策略。
-
----
-
-- **Select Agent**: **Experiment Plan Agent**
-- **Workflow**:
-  1. Choose "Experiment Plan Agent".
-  2. Enter your research goal, for example:
-    > "Design an experimental plan to improve the thermal conductivity of graphene/epoxy composites"
-- **Expected Output**:
-  1. ✅ **Comprehensive Survey**: Automatically calls literature and database agents for background info.
-  2. ✅ **Plan Generation**: Outputs a complete experimental flow covering preparation, characterization, and data recording.
-  3. ✅ **Risk Assessment**: Highlights potential risks and suggests mitigation strategies.
-
----
-
-## 🏠 本地运行 (Local Operation)
-
-项目采用本地单用户模式，打开网页即可使用，无需平台账号、Cookie、AccessKey 或登录认证。平台扣费、光子配额和邀请奖励功能已移除；模型与科研数据库的第三方 API 仍需按所用功能配置，费用由相应服务商决定。
-
-ResearchMind runs locally without a platform account or login. Configure your model and research API providers as needed; their own usage fees still apply.
-
----
-
-## 🎓 学术引用 (Academic Citation)
-
-如果您在研究中使用了本应用的热导率计算功能，请引用以下论文。
-
-If you use the thermal conductivity calculation feature of this application in your research, please cite the following paper.
-
-**BibTeX 格式:**
-```bibtex
-@article{Liu2025PINK,
-  author  = {Liu, Yujie and Wang, Xiaoying and Gao, Zhibin},
-  title   = {{PINK: physical-informed machine learning for lattice thermal conductivity}},
-  journal = {Journal of Materials Informatics},
-  year    = {2025},
-  volume  = {5},
-  pages   = {12},
-  doi     = {10.20517/jmi.2024.86}
-}
-```
-
-**BibTeX 格式:**
-```bibtex
-@article{Liu2025PINK,
-  author  = {Liu, Yujie and Wang, Xiaoying and Gao, Zhibin},
-  title   = {{PINK: physical-informed machine learning for lattice thermal conductivity}},
-  journal = {Journal of Materials Informatics},
-  year    = {2025},
-  volume  = {5},
-  pages   = {12},
-  doi     = {10.20517/jmi.2024.86}
-}
-```
-
----
----
-
-# <a name="developer-guide"></a> 👨‍💻 开发者指南 (Developer Guide)
-
-## 🚀 本地启动 (Local Quick Start)
-
-运行环境：Python 3.10–3.12（推荐 3.11）、Node.js 18+、uv。仿真依赖较大，首次安装需要下载 PyTorch 和材料计算库。当前 PyTorch 依赖采用 CUDA 12.4 构建，推荐使用 Linux / WSL2；macOS 不支持当前 CUDA 依赖组合。
-
-### Linux / WSL2
-
-```bash
-cd /home/jcr/projects/ResearchMind-master
-# 首次配置；已有 .env 时请编辑现有文件。
-cp -n .env.example .env
-uv sync --python 3.11
-bash start_linux.sh
-```
-
-本项目位于 WSL Ubuntu 中，请在 Ubuntu 终端运行以上命令。也可以从 Windows PowerShell 启动：
-
-```powershell
-wsl -d Ubuntu -- bash -lc 'cd /home/jcr/projects/ResearchMind-master && bash start_linux.sh'
-```
-
-### Windows 原生目录
-
-在 Windows 本地目录中安装 Python、Node.js 和 uv 后运行：
-
-```powershell
-.\start_windows.ps1
-```
-
-也可双击 `start_windows.bat`。WSL 中的 Linux 虚拟环境与 Windows 虚拟环境不能共用。
-
-### 配置模型及科研 API
-
-在项目根目录 `.env` 中配置你的 OpenAI 兼容服务：
-
-```dotenv
-MODEL_USE=openai/your-model-name
-OPENAI_API_KEY=your-provider-api-key
-OPENAI_BASE_URL=https://your-provider.example/v1
-```
-
-`MODEL_USE` 使用 LiteLLM 的模型标识；如果使用其他服务商，请按其要求调整模型前缀。`TAVILY_API_KEY`、`MP_API_KEY` 等只在对应检索功能中需要。未配置模型 API 时可以打开界面、管理本地会话，发送 AI 请求前需完成配置。
-
-### 本地访问与数据
-
-| 服务 | 默认地址 |
+| Area | Current state |
 | --- | --- |
-| 前端 | http://localhost:50010 |
-| 后端 API | http://127.0.0.1:50002/api |
-| API 文档 | http://127.0.0.1:50002/docs |
-| WebSocket | ws://127.0.0.1:50003/ws |
-| 文献 MCP | http://127.0.0.1:50004/sse |
-| 仿真 MCP | http://127.0.0.1:50005/sse |
-| 数据库 MCP | http://127.0.0.1:50006/sse |
+| Desktop shell | Tauri 2 + React + TypeScript + Vite, with macOS, Windows, and Linux desktop builds. |
+| Runtime | Bundled OpenCode sidecar, auto-started by the app, isolated from the user's own OpenCode config/data. |
+| Projects | Named project workspaces that group their sessions; import an existing folder in place (never copied) or adopt one already inside the workspace; move an existing session into a project. |
+| Sessions | Multi-session chat/history, dated workspace folders, searchable history with archive/restore/export, `@` file and `#` conversation references, `/` commands, and `!` shell mode. |
+| Layout | N-ary split-pane tiling with drag-to-dock, independent Screens, per-pane model and reasoning effort, and cross-screen pane drag. |
+| Agent modes | `/plan` for plan-then-execute, `/goal` for objective and acceptance criteria, live subagent status in its own panel, and Stop that reflects the runtime's real server state. |
+| Memory | Global and per-project memory layers, switchable, plus automatic context compaction as a conversation approaches the model's window. |
+| Remote compute | Register machines from your `~/.ssh/config`, probe them, and submit, track, or cancel jobs from the app. |
+| Appearance | Light, Warm, and Dark themes with per-theme accents, and UI zoom. |
+| Files | Global and per-session file browsing, context menu actions, external open/reveal, copy path, and local preview server. |
+| Headless & CLI | `osd server` runs the workbench with no window — same workspace, same runtime, same web UI, served from one self-contained directory — and `osd` drives it (or a running desktop app) from a terminal: sessions, projects, runs, files, approvals, `--wait`, `--json`. |
+| Remote access | Token-authenticated gateway that serves the real UI to a CLI, a LAN web browser, or your phone (loopback by default, LAN opt-in); read-only vs full access modes; copy a link with the token embedded to connect in one tap. API keys never cross the wire. |
+| Editor interop (ACP) | Speaks the Agent Client Protocol in both directions: run any ACP agent (Codex, Gemini CLI, Claude Code, …) as the runtime behind the ordinary UI, with its own model and reasoning selectors, history replay, and this app's MCP connectors; or let an external editor (Zed, JetBrains, Neovim, …) drive Open Science, reusing the gateway token. |
+| Browser control | The agent drives your own Chrome — profile and login state preserved — reading pages through the accessibility tree, or an isolated/private browser on demand. |
+| Computer use | The agent reads and drives apps on your own screen through the platform's accessibility API — native research software included — acting on named elements rather than guessing at pixels, and reporting whether each action could actually be verified. On macOS the Accessibility permission is held by a separate helper, not by the whole app; Screen Recording, which only optional screenshots need, is granted to Open Science itself because macOS attributes screen capture to the app that started the request. |
+| Notebooks | Real `.ipynb` files, Python and R notebook creation, local kernel execution, managed Jupyter environment via bundled `uv`, and an Open JupyterLab action. |
+| Runs | Append-only run logs, global SQLite run index, search/facets/pagination, local/remote surfaces, output links, logs, and reproduce prompts. |
+| Provenance | `.openscience/provenance.jsonl` tracks file versions and links produced artifacts back to the run or edit that created them. |
+| Review | Traceability, statistics-integrity, domain-check, large-file, publication-figure, remote-compute, and Modal run skills are bundled as first-party skills. |
+| Viewers | PDF, image, video, HTML, Markdown, code, CSV/TSV tables with charts, DOCX, XLSX, PPTX, molecules, 3D meshes, genome tracks, FITS, DOS/DOSCAR, EIGENVAL bands, qcode, anomaly maps, and phase files. |
+| Models | OpenCode provider catalog, OAuth/API-key provider flows, custom OpenAI-compatible endpoints, and local/provider-specific options supported by OpenCode. |
+| Interface languages | English, Simplified Chinese, Japanese, Spanish, German, French, and Korean. Portuguese (Brazil) and Arabic are registered but not selectable yet. |
 
-前端通过 Vite 将 `/api` 和 `/ws` 转发到本地后端，无需 Nginx。保持 `VITE_API_URL=/api`、`VITE_WS_URL=/ws`，并清空旧的 `VITE_API_PORT` / `VITE_WS_PORT` 代理端口配置。服务默认绑定 `127.0.0.1`。
+## Skills and connectors
 
-会话、上传文件与计算结果存储于 `.env` 指定的本地路径，默认位于项目 `data/`。Redis 是可选缓存，不可用时自动使用文件存储。Token 统计接口为只读的 `/api/usage/*`；没有认证、扣费或充值接口。旧数据库表和历史文件不会被自动删除。
+Bundled skills are fetched for builds and releases instead of being committed into
+git history:
 
-### 停止、检查与日志
+- `ai4s-skills` pack from `ai4s-research/ai4s-skills`.
+- Office/document skills from the Apache-2.0 `anthropics/skills` repository:
+  `docx`, `pdf`, `pptx`, and `xlsx`.
+- First-party core skills in `runtime/skills/core/`:
+  `traceability-review`, `stats-integrity`, `domain-check`, `large-file`,
+  `publication-figures`, `remote-compute`, and `modal-run`.
 
-在启动终端按 `Ctrl+C` 停止所有托管服务；Linux / WSL 也可运行 `bash stop_linux.sh`。如果仍在使用旧启动器，请先在原启动终端停止旧服务，再运行新启动器。
+One-click science MCP connectors currently include:
+
+- Literature search: arXiv, PubMed, Crossref, Semantic Scholar, bioRxiv/medRxiv.
+- Biomedical databases: PubMed, ClinicalTrials.gov, MyVariant/ClinVar.
+- Materials Project.
+- FRED economic data.
+- Space weather.
+- Open-Meteo weather and climate.
+- USGS water data.
+
+You can also add any local or remote MCP server from Settings. See
+[`docs/CONNECT_YOUR_TOOLS.md`](./docs/CONNECT_YOUR_TOOLS.md).
+
+For a neutral positioning note, see
+[`Open Science Desktop vs OpenScience`](./docs/open-science-desktop-vs-openscience.md).
+
+## Install
+
+Download the latest installer from the
+[Releases page](https://github.com/ai4s-research/open-science/releases/latest).
+
+- **macOS**: `.dmg` / `.app`, Apple Silicon and Intel, macOS 13 Ventura or later.
+- **Windows**: NSIS `.exe`, Windows 10/11 x64 — installs per user, no admin needed. A `.msi` is also published for IT-managed deployment; pick one format and stay on it.
+- **Linux**: `.deb` and `.rpm` on x86_64 Linux.
+
+The macOS packages are Developer ID signed, notarized, and stapled, so they open
+normally — no `xattr` workaround needed. Windows and Linux builds are not signed yet.
+
+**Windows**: if SmartScreen appears, choose **More info -> Run anyway**.
+
+**Linux**:
 
 ```bash
-bash start_linux.sh --check
-# 可选：使用另一份本地配置（例如不同的端口和数据目录）
-bash start_linux.sh --env-file /path/to/local.env
+sudo apt install ./Open.Science_*.deb
+# or
+sudo rpm -i Open.Science-*.rpm
 ```
 
-端口被占用时启动器会退出并提示修改配置。日志位于 `data/logs/`，包括 `backend.log`、`database.log`、`paper_search.log`、`simulation.log`、`frontend.log`。子服务退出时启动器会报告错误并停止其余托管服务。
-
-### 开发验证
+No root? This installs everything under your home directory — `osd` by
+default, the desktop app with `--desktop` (which needs WebKitGTK 4.1 already on
+the system). `--uninstall` removes it again.
 
 ```bash
-.venv/bin/python -m pytest tests/test_local_runtime.py -o addopts=''
-cd ui && npm run build
+curl -fsSL https://raw.githubusercontent.com/ai4s-research/open-science/master/scripts/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/ai4s-research/open-science/master/scripts/install.sh | sh -s -- --desktop
 ```
+
+## Headless & CLI (`osd`)
+
+A research machine usually has no screen. `osd` is the same workbench without
+one: the same workspace layout, the same agent runtime, the same projects, and
+the same web UI — served over HTTP instead of drawn in a window.
+
+**On a server, take the archive.** `osd-<version>-<target>` from Releases
+unpacks and runs with nothing installed — verified on a bare Ubuntu container
+with no packages added at all.
+
+```bash
+# Configure the machine (works before any server is running)
+./osd auth set anthropic --key sk-…       # stays on this machine, never on the wire
+./osd model set anthropic/claude-opus-4-5 # the default for every turn
+./osd server --lan                        # prints its URL and access token
+```
+
+Keys never have to touch a file: the agent runtime inherits this process's
+environment, so `ANTHROPIC_API_KEY=sk-… ./osd server` needs no `auth set` at
+all. A self-hosted or proxied endpoint goes in the same command
+(`--base-url https://my-gateway.internal/v1`), and `osd auth ls` prints provider
+names only — no key is ever printed by anything. Changing a key needs a restart;
+the CLI says so rather than leaving you to wonder.
+
+Open the printed URL and you get the real desktop UI in a browser, phone
+included. Or drive it from a terminal — on the same machine, over SSH, or from
+your laptop:
+
+```bash
+osd project new "Reef survey"
+id=$(osd session new --project "Reef survey")
+osd session send "$id" "Fit the 2015–2024 bleaching trend and write report.md" \
+    --model anthropic/claude-sonnet-4-5 --wait
+osd fs ls figures/
+osd fs get report.md --output ./report.md
+```
+
+On Windows the same commands work in PowerShell; only the shell's own syntax
+differs:
+
+```powershell
+$id = osd session new --project "Reef survey"
+osd session send $id "Fit the 2015-2024 bleaching trend and write report.md" --wait
+```
+
+**On your own machine it is already installed.** The desktop installer carries
+`osd`, and the app puts it on your PATH the first time it starts, so a new
+terminal has the command with nothing to set up. It writes one small wrapper
+(`~/.local/bin/osd`, or `~/bin` when a terminal already searches that) — never a
+symlink, because `osd` finds its runtime next to its real executable. If that
+folder is not on PATH, the app adds it to your login profile and Settings →
+Remote Access says which file it touched. Nothing else on your shell is changed.
+
+`--wait` returns when the turn is finished, not when it was accepted, and fails
+loudly if it produced no reply. `--json` prints the API's own response for
+scripts.
+
+### Concurrency and per-project setup
+
+Parallel work does not need a second server, or a second workspace: one
+`osd server` already runs many sessions at once. The gateway is
+thread-per-connection and nothing on the session path holds a global lock —
+what keeps one session's work out of another's is the folder each one is pinned
+to. `osd session new --project NAME` runs a session in a per-project folder of
+the workspace (created with `osd project new NAME`), and
+`osd session new --directory DIR` pins one to any other folder.
+
+Per-project MCP follows the folder too: an MCP server declared in
+`<folder>/.opencode/opencode.json` applies only to sessions working in that
+folder, and every session shares the same sidecar. One caching rule makes the
+ordering matter: a folder's opencode configuration is read once, the first time
+the sidecar uses that folder, and cached from then on. Write that configuration
+before any session is pointed at the folder: `osd session new --project NAME`
+(or `--directory DIR`) already reads and caches it, before a single turn has
+run, so "before the first turn" is already too late. Changing it afterwards
+takes effect only after a server restart, and until then the session runs,
+reports success, and used the previous configuration.
+
+None of this needs a second installation of the workbench.
+
+### Isolated state directories (--state-dir)
+
+`osd server --state-dir DIR` — or `OSD_STATE_DIR=DIR` — keeps everything one
+instance writes (session database, sidecar config, workspace record, logs)
+under DIR instead of the platform data directory. Nothing else changes: the
+default workspace still resolves to your real Documents folder, and the desktop
+app is unaffected, because it never goes through the headless override.
+
+This is NOT a way to get more concurrency — one server already runs many
+sessions at once (above). It is for genuinely separate installations on one
+machine: an unattended shard next to the desktop app, a benchmark cluster.
+
+Credentials stay per instance and are never copied: a fresh DIR has none, so
+the first server started there prints a note and the one-liner that adds
+one — `OSD_STATE_DIR=DIR osd auth set <provider> --key …` — or you export the
+provider's own variable (`ANTHROPIC_API_KEY=…`) before starting and the sidecar
+inherits it.
+
+### Which model, and who approves what
+
+`osd model` shows the default, `osd model ls` lists what the runtime can
+actually serve (the providers this machine has credentials for, current one
+marked), and `osd model set <provider/model>` changes it — over the gateway, so
+it works against a remote server too. Any single turn can override it with
+`osd session send --model … --agent … --effort …`.
+
+Approvals still apply: the agent asks before running commands, deleting files,
+installing dependencies or reaching the network. Without a window, `--wait` names
+what is waiting and offers both answers — `osd permission ls` /
+`osd permission allow <id>` in the terminal, or the gateway URL it prints, which
+carries the token so a browser on your laptop or phone can approve it.
+
+For a machine with nobody watching, opt out explicitly:
+
+```bash
+osd approval            # what has to be asked today
+osd approval set full   # never ask — commands, deletions, installs, network
+```
+
+`full` is a deliberate choice, not a default: the agent stays confined to the
+workspace, but nothing pauses for you. `osd approval set approve` puts every
+rule back. `osd approval set full` rewrites the runtime's own config on this
+machine, so it has to run on the machine itself — over SSH, not through
+`--gateway`: the gateway deliberately refuses config writes, and says so rather
+than silently doing nothing.
+
+### As a service
+
+`osd server` is an ordinary foreground process, so systemd runs it as-is. This
+unit was run end to end on Ubuntu — enable, restart, crash, stop:
+
+```ini
+# /etc/systemd/system/osd.service
+[Unit]
+Description=Open Science Desktop (headless)
+After=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Environment=HOME=/home/ubuntu
+ExecStart=/opt/osd/osd server --port 4788
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+```
+
+`sudo systemctl enable --now osd` and the printed URL and token land in
+`journalctl -u osd`. A unit is also the tidiest way to run it: systemd stops the
+whole cgroup, so the agent runtime never survives the server, however it dies.
+
+With no `--gateway` given, `osd` talks to a gateway already running on the same
+machine — including the desktop app's — so with the app open, `osd session ls`
+just works. Otherwise point it anywhere with `osd login --gateway <url> --token
+<token>`.
+
+What is *not* there without a desktop: local Jupyter kernels, native file
+dialogs, and the OS file manager — the web UI hides those rather than offering
+controls that would fail. Two more are worth knowing: **provenance and run
+records are written by the desktop client**, so a headless server keeps the
+workspace's file history through git snapshots but does not append to
+`provenance.jsonl` or the run index.
+
+## Build from source
+
+Prerequisites:
+
+- Node.js >= 20
+- pnpm 9
+- Rust toolchain
+- macOS, Windows, or Linux system dependencies required by Tauri
+
+```bash
+git clone https://github.com/ai4s-research/open-science
+cd open-science
+pnpm install
+
+# Fetch pinned sidecars and bundled skills. These are git-ignored.
+bash scripts/dev/fetch-opencode.sh
+bash scripts/dev/fetch-uv.sh
+bash scripts/dev/fetch-skills.sh
+
+# The osd terminal client is bundled too — it is ours, so it is built, not fetched.
+bash scripts/dev/build-osd-sidecar.sh $(rustc -vV | sed -n 's/host: //p')
+
+# Run in development or build installers.
+pnpm --filter @ai4s/desktop tauri dev
+pnpm --filter @ai4s/desktop tauri build
+```
+
+Useful checks:
+
+```bash
+pnpm test
+pnpm typecheck
+pnpm lint
+```
+
+## Safety and privacy
+
+- Workspace files, raw data, session history, provenance, notebooks, and run records
+  stay local by default.
+- Command execution, file deletion, dependency installation, and remote connections
+  are human-approved flows in the desktop app.
+- Provider credentials are written to app-private runtime config, not to the
+  workspace, provenance, git, exports, or global OpenCode config.
+- Settings includes a plain-language data-flow view explaining what can be sent to
+  the selected model provider.
+
+## Repository layout
+
+| Path | Purpose |
+| --- | --- |
+| `apps/desktop/` | Tauri + React desktop app. |
+| `packages/sdk/` | `OpenCodeClient`; keeps the UI from calling OpenCode directly. |
+| `packages/shared/` | Shared domain types and chart palette. |
+| `packages/ui/` | Shared UI package. |
+| `runtime/skills/core/` | First-party scientific skills. |
+| `runtime/skills/external/` | Build-fetched external skills. |
+| `runtime/harness/` | Runtime harness knowledge and operator context. |
+| `runtime/mcp/` | MCP runtime notes/configuration. |
+| `examples/` | Built-in example workspaces. |
+| `crates/osd-core/` | The server core — workspace, sidecar, gateway. No Tauri, so it runs headless. |
+| `crates/osd-cli/` | `osd`: the headless server and its client. |
+| `scripts/dev/` | Sidecar, `uv`, skill fetchers, and focused regression probes. |
+| `docs/` | Product, technical, operator, connector, and research notes. |
+
+## Status
+
+The project is a working desktop MVP in active development. The most reliable current
+implementation log is [`PROGRESS.md`](./PROGRESS.md). Product and architecture notes
+live in [`docs/PRD.md`](./docs/PRD.md) and
+[`docs/TECHNICAL_DESIGN.md`](./docs/TECHNICAL_DESIGN.md), but those documents include
+target design as well as historical status notes.
+
+Near-term work is focused on Windows code signing, auto-update, broader
+Windows/Linux verification, richer connector hardening, and continued
+reproducibility review. macOS releases are already signed and notarized.
+
+## Contributing
+
+Issues and PRs are welcome. Keep changes minimal and verifiable, follow
+[`AGENTS.md`](./AGENTS.md), and run the checks before opening a PR. For discussion,
+join the [Open Science Discord](https://discord.gg/fWNMDKcd5P) or the
+[linux.do](https://linux.do) community.
+
+## Citation
+
+If you use Open Science Desktop in your research, please cite it:
+
+```bibtex
+@software{open_science_desktop,
+  author  = {{The Open Science Desktop Contributors}},
+  title   = {Open Science Desktop: a local-first, model-agnostic AI research workbench},
+  year    = {2026},
+  version = {0.7.3},
+  doi     = {10.5281/zenodo.24286110},
+  url     = {https://github.com/ai4s-research/open-science},
+  license = {MIT}
+}
+```
+
+GitHub's **"Cite this repository"** button (top of the repo page, generated from
+[`CITATION.cff`](./CITATION.cff)) provides the same reference in APA and BibTeX.
+
+## License
+
+[MIT](./LICENSE). Bundled third-party skills and connectors keep their own licenses.
+
+Computer use is a port of the design and native providers from [Orca](https://github.com/stablyai/orca) (MIT) — an accessibility-tree-first approach, with an explicit verified/unverified result on every action, that is simply the right way to build this. Our thanks to that team for doing it well and giving it away.
+
+> Open Science Desktop is beta research tooling. Treat outputs as drafts: verify numbers,
+> citations, code, and conclusions before publication or decision-making.

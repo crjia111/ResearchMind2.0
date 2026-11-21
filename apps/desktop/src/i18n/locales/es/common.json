@@ -1,0 +1,25 @@
+{
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "remove": "Quitar"
+  },
+  "runtime": {
+    "compact": {
+      "busy": "Espera a que termine el turno actual antes de comprimir.",
+      "error": "No se pudo comprimir el contexto.",
+      "done": "Contexto comprimido. La siguiente respuesta usará la conversación comprimida."
+    }
+  },
+  "linkMenu": {
+    "openFile": "Abrir archivo",
+    "openDefault": "Abrir con la app predeterminada",
+    "reveal": "Mostrar en la carpeta",
+    "openLink": "Abrir enlace",
+    "copyLink": "Copiar enlace",
+    "copyPath": "Copiar ruta",
+    "copied": "Copiado",
+    "click": "Clic",
+    "showInFiles": "Mostrar en Archivos"
+  }
+}

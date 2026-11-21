@@ -1,0 +1,232 @@
+{
+  "sidebar": {
+    "collapse": "Collapse sidebar",
+    "collapseTitle": "Collapse sidebar ({{shortcut}})",
+    "expand": "Expand sidebar",
+    "expandTitle": "Expand sidebar ({{shortcut}})",
+    "settings": "Settings",
+    "searchAria": "Search sessions",
+    "searchPlaceholder": "Search session names",
+    "searchClear": "Clear search",
+    "searchResultsAria": "Search results",
+    "searchNoMatches": "No matching sessions"
+  },
+  "items": {
+    "new": "New",
+    "notebooks": "Notebooks",
+    "files": "Files",
+    "runs": "Runs",
+    "skills": "Skills",
+    "projects": "Projects"
+  },
+  "projects": {
+    "heading": "Projects",
+    "new": "New project",
+    "importedBadge": "imported",
+    "menuScratch": "Start from scratch",
+    "menuExisting": "Use an existing folder",
+    "importTitle": "Import existing folder",
+    "importSubtitle": "Choose how Open Science Desktop should use “{{name}}”.",
+    "importCopy": "Copy into workspace",
+    "importCopyHint": "Creates a managed duplicate and leaves the original untouched, but uses extra disk space.",
+    "importInPlace": "Use in place",
+    "importInPlaceHint": "Works directly on the original files without a duplicate. macOS may ask you to allow access to the selected folder.",
+    "nameTitle": "Name project",
+    "nameSubtitle": "Keep it short and recognizable",
+    "namePlaceholder": "Project name",
+    "newSessionAria": "New session in {{name}}",
+    "noSessions": "No sessions yet.",
+    "renameHint": "Double-click to rename",
+    "pageSearch": "Search projects",
+    "colName": "Name",
+    "colSources": "Sources",
+    "colUpdated": "Updated",
+    "noResults": "No projects match.",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "rename": "Rename",
+    "remove": "Remove",
+    "more": "More",
+    "removeTitle": "Remove {{name}}?",
+    "removeBody": "This removes the project from the sidebar. Files on disk will not be deleted.",
+    "removeCopyBody": "This deletes the managed copy from the workspace. The original source folder is kept, but existing sessions will no longer have their workspace files.",
+    "seeAll": "All projects",
+    "openFolder": "Open {{path}}",
+    "newSession": "New session",
+    "openFolderLabel": "Open folder"
+  },
+  "history": {
+    "heading": "Sessions",
+    "empty": "No conversations yet.",
+    "exampleTag": "example",
+    "deleteAria": "Delete {{title}}",
+    "running": "Working",
+    "seeAll": "All sessions",
+    "renameHint": "Double-click to rename",
+    "pageHeading": "All sessions",
+    "pageSearch": "Search conversations",
+    "noResults": "No conversations match.",
+    "rename": "Rename",
+    "moveTo": "Add to project",
+    "moveToNone": "No projects yet",
+    "rowActions": "Actions for {{title}}",
+    "groups": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "week": "Previous 7 days",
+      "month": "Previous 30 days",
+      "older": "Older"
+    },
+    "showArchived": "Show archived",
+    "archivedBadge": "archived",
+    "archive": "Archive",
+    "archiveTitle": "Archive this session?",
+    "archiveBody": "“{{title}}” leaves the sidebar. Nothing is deleted — find it under All sessions → Show archived, where Restore brings it back.",
+    "restore": "Restore",
+    "loadMore": "Load more",
+    "loading": "Loading…",
+    "export": "Export",
+    "exportProgress": "Exported {{count}}…",
+    "exportTitle": "Export conversations?",
+    "exportBody": "Every conversation is written as a Markdown file into a folder you choose, newest first, with an index. Nothing is deleted or changed.",
+    "exportBodyFiltered": "Conversations matching “{{query}}” are written as Markdown files into a folder you choose, with an index. Nothing is deleted or changed.",
+    "exportConfirm": "Choose a folder",
+    "exportDone_one": "Exported {{count}} conversation.",
+    "exportDone_other": "Exported {{count}} conversations.",
+    "exportDonePartial_one": "Exported {{count}} conversation; {{failed}} could not be read.",
+    "exportDonePartial_other": "Exported {{count}} conversations; {{failed}} could not be read.",
+    "draft": "New session",
+    "moved": "Moved to “{{project}}”.",
+    "moveBusy": "Stop this session before moving it — a running turn keeps writing into its current folder.",
+    "moveFailed": "Could not move the session: {{detail}}",
+    "movedLinked": "Moved to “{{project}}”. Its folder is in the project as “{{link}}”.",
+    "moving": "Moving…"
+  },
+  "confirmDelete": {
+    "sessionTitle": "Delete session?",
+    "sessionBody": "\"{{title}}\" and its messages will be deleted. This cannot be undone.",
+    "exampleTitle": "Hide example?",
+    "exampleBody": "\"{{title}}\" will be hidden from the sidebar.",
+    "deleteAction": "Delete",
+    "hideAction": "Hide"
+  },
+  "status": {
+    "usage": {
+      "title": "Usage",
+      "refresh": "Refresh",
+      "tokens": "tokens",
+      "today": "today",
+      "days7": "7d",
+      "resetsIn": "Resets in {{duration}}",
+      "asOf": "as of {{age}} ago",
+      "otherAccount": "Nearly used up. Start a new conversation on another account to keep going.",
+      "resetCredits": "Free resets: {{count}}"
+    },
+    "awake": {
+      "title": "Keep awake",
+      "active": "Active",
+      "inactive": "Inactive",
+      "mode": {
+        "on": "On",
+        "auto": "Auto",
+        "off": "Off"
+      },
+      "hint": {
+        "on": "Keep this computer awake continuously",
+        "auto": "Stay awake while an agent is working",
+        "off": "Let the computer sleep normally"
+      }
+    },
+    "resources": {
+      "title": "Resources",
+      "memory": "Memory",
+      "processes": "Processes",
+      "note": "This app and everything it started.",
+      "cpu": "{{n}}% CPU",
+      "terminal": "Terminal",
+      "app": "Workbench",
+      "kernel": "Kernel"
+    },
+    "ports": {
+      "title": "Ports",
+      "empty": "Nothing this app started is listening.",
+      "public": "public",
+      "openTitle": "Open {{url}}"
+    },
+    "hosts": {
+      "title": "Hosts",
+      "empty": "No machines in your ~/.ssh/config.",
+      "count": "{{count}} host",
+      "count_other": "{{count}} hosts",
+      "status": {
+        "connected": "connected",
+        "connecting": "connecting",
+        "prompt": "waiting for you",
+        "failed": "failed",
+        "disconnected": "not connected"
+      },
+      "connect": "Connect",
+      "hint": "click to open a shell",
+      "openShell": "Open a shell on {{host}}",
+      "unreachable": "could not be reached",
+      "cores": "{{n}} cores",
+      "disk": "{{free}} free of {{total}}"
+    }
+  },
+  "commandPalette": {
+    "ariaLabel": "Command palette",
+    "placeholder": "Type a command…",
+    "noResults": "No results.",
+    "actions": {
+      "newSession": "New session",
+      "analyzeData": "Analyze my data (new workflow)",
+      "auditReport": "Audit a report (traceability review)",
+      "openNotebooks": "Open notebooks",
+      "manageSkills": "Manage skills",
+      "openSettings": "Open settings",
+      "toggleTheme": "Switch theme (light / warm / dark)"
+    }
+  },
+  "rowMenu": {
+    "sessionLabel": "Session actions",
+    "projectLabel": "Project actions",
+    "exampleLabel": "Example actions"
+  },
+  "jump": {
+    "ariaLabel": "Jump to",
+    "placeholder": "Search projects, screens, sessions…",
+    "noResults": "No matches",
+    "sections": {
+      "actions": "Actions",
+      "projects": "Projects",
+      "screens": "Screens",
+      "panes": "Open panes",
+      "sessions": "Sessions",
+      "recent": "Recent",
+      "newIn": "New session in…"
+    },
+    "actions": {
+      "newSession": "New session in {{project}}",
+      "newTerminal": "New terminal in {{project}}"
+    },
+    "projectDetail_one": "{{count}} session · {{ago}}",
+    "projectDetail_other": "{{count}} sessions · {{ago}}",
+    "projectEmpty": "No sessions yet",
+    "hints": {
+      "open": "open",
+      "beside": "open beside",
+      "close": "close"
+    }
+  },
+  "newPicker": {
+    "title": "New session",
+    "search": "Search projects…",
+    "current": "Current",
+    "newProject": "New project…",
+    "hintCreate": "create",
+    "hintQuick": "new here, without asking"
+  },
+  "web": {
+    "manyTabs": "Open in {{count}} tabs. A browser allows only a few connections to one address, so more tabs make all of them slower — close the ones you don't need."
+  }
+}

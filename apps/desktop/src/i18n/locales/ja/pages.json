@@ -1,0 +1,206 @@
+{
+  "notebooks": {
+    "title": "ノートブック",
+    "openJupyterLab": "JupyterLab を開く",
+    "openJupyterLabTitle": "同じ環境とファイルで、ブラウザで完全な JupyterLab を開く",
+    "newNotebook": "新規ノートブック",
+    "pythonNotebook": "Python ノートブック",
+    "rNotebook": "R ノートブック",
+    "description": "セッションフォルダ全体の Jupyter ノートブックを新しい順に表示します。セルはノートブック自身のフォルダ内のローカル Python または R カーネルで実行され、エージェントも同じファイルを操作します。",
+    "createsIn": "新しいノートブックの作成先:",
+    "empty": {
+      "tauri": "まだノートブックがありません。作成するか、エージェントに作成を依頼してください。",
+      "web": "ノートブックはデスクトップアプリで利用可能です。"
+    },
+    "toast": {
+      "openingJupyterLab": "ブラウザで JupyterLab を開いています…",
+      "setUpJupyterFirst": "先に Jupyter を設定してください — 設定 → MCP サーバー → Jupyter。",
+      "couldNotOpenJupyterLab": "JupyterLab を開けませんでした",
+      "couldNotCreateNotebook": "ノートブックを作成できませんでした"
+    },
+    "editor": {
+      "backAria": "ノートブック一覧に戻る",
+      "languageR": "R",
+      "languagePython": "Python",
+      "saved": "保存済み",
+      "unsaved": "未保存",
+      "openJupyterLabAria": "JupyterLab で開く",
+      "historyAria": "履歴",
+      "historyTitle": "履歴 — 記録された各バージョンのコードと会話",
+      "reloadAria": "ディスクから再読み込み",
+      "reloadTitle": "再読み込み（エージェントの変更を取り込む）",
+      "closeAria": "インスペクターを閉じる",
+      "stopCellTitle": "停止 — このノートブックのカーネルを再起動します（変数はリセットされます）",
+      "stopLabel": "停止",
+      "runLabel": "実行",
+      "addCellLabel": "セルを追加",
+      "askAgent": "このセルについてエージェントに聞く",
+      "askAgentAria": "セル {{n}} についてエージェントに聞く",
+      "askAgentIntro": "`{{file}}` のセル [{{n}}] について:",
+      "askAgentOutput": "出力:",
+      "askAgentSent": "入力欄に追加しました",
+      "countTitle": "実行番号 — 実行中は [*]、実行後は [n]",
+      "interrupted": "中断しました — カーネルを再起動したため、変数はリセットされました。",
+      "desktopOnlyKernel": "ローカルカーネルはデスクトップアプリでのみ使えます。"
+    }
+  },
+  "files": {
+    "loading": "読み込み中…",
+    "folderEmpty": "このフォルダは空です。",
+    "explorerUnavailableWeb": "ファイルエクスプローラーはデスクトップアプリで利用可能です。",
+    "selectFilePrompt": "ファイルを選択するとここにプレビューが表示されます。",
+    "pane": {
+      "subtitle": "このセッションのフォルダ",
+      "closeAria": "ファイルを閉じる"
+    },
+    "contextMenu": {
+      "copyPath": "パスをコピー",
+      "copyRelativePath": "相対パスをコピー",
+      "relativePathLabel": "相対パス",
+      "openInDefaultApp": "デフォルトのアプリで開く"
+    },
+    "linked": {
+      "tag": "関連",
+      "unlink": "関連付けを解除",
+      "unlinkTitle": "このフォルダーの関連付けを解除しますか？",
+      "unlinkBody": "プロジェクトからリンクが削除されます。リンク先のフォルダーとファイルはそのまま残ります。AI が使う前には再度確認します。",
+      "outsideBase": "このフォルダーは作業フォルダーの外にあります：{{path}}"
+    }
+  },
+  "skills": {
+    "title": "スキル & エージェント",
+    "subtitle": "エージェントが使えるすべての機能。OpenCode からライブで読み込みます。",
+    "install": {
+      "sectionTitle": "スキルをインストール",
+      "placeholder": "SKILL.md を貼り付けるか、エージェントに作らせる URL / 説明を貼り付けてください",
+      "starting": "開始中…",
+      "cta": "スキルをインストール",
+      "hintConnected": "貼り付けた SKILL.md はそのままインストールされます。それ以外はエージェントのセッションが開きます。インストールしたスキルはすべてのワークスペースで使えます。",
+      "hintDisconnected": "先にランタイムに接続してください。",
+      "installed": "「{{name}}」をインストールしました — すべてのワークスペースで使えます。",
+      "agentPrompt": "ユーザーがスキルのインストール欄に次の内容を入力しました：\n\n---\n{{input}}\n---\n\n根気よくインストールを手伝ってください：まずどのスキルを指しているかを特定し（URL の取得、検索、曖昧な場合はユーザーへの確認）、次にスキルファイルとして .opencode/skills/<name>/SKILL.md に保存します。必ずこのワークスペース内に保存し、外には書き込まないでください（その後アプリがすべてのワークスペースで使えるようにします）。形式は customize-opencode スキルに説明があります。最後にインストールしたスキル名を返答してください。",
+      "echo": "このスキルのインストールを手伝ってください：\n\n{{input}}",
+      "adoptFailed": "スキルは書き込まれましたが、プロファイルへ移動できませんでした。このセッションのフォルダーが置き換わると消えます: {{detail}}"
+    },
+    "environment": {
+      "sectionTitle": "科学計算環境",
+      "detectionUnavailable": "環境検出はデスクトップアプリで実行されます。",
+      "found": "検出済み",
+      "notFound": "未検出",
+      "appManaged": "アプリ管理",
+      "note": "OpenCode はここにインストールされているものを使ってコードを実行します（例: シェルツール経由の Python）。uv はアプリに同梱されており、Jupyter は「設定 → コネクタ」でアプリが管理できます。Python と R はバンドルされていません。分析を有効にするには、それらまたは Science Pack をインストールしてください。"
+    },
+    "agentsSection": {
+      "heading": "エージェント",
+      "empty": "エージェントが報告されていません。",
+      "agentMode": {
+        "primary": "プライマリ",
+        "subagent": "サブエージェント",
+        "all": "すべて"
+      }
+    },
+    "skillsListSection": {
+      "heading": "スキル",
+      "empty": "まだスキルが読み込まれていません。",
+      "source": {
+        "builtin": "組み込み",
+        "project": "プロジェクト",
+        "user": "ユーザー"
+      }
+    },
+    "disconnected": "読み込まれたスキルとエージェントを一覧表示するには、ランタイムに接続してください。",
+    "search": "スキルとエージェントを検索",
+    "noMatch": "「{{query}}」に一致するものはありません。",
+    "specialists": {
+      "heading": "スペシャリスト",
+      "hint": "自分で定義するサブエージェント。説明に合う作業はメインエージェントが任せます。",
+      "new": "新しいスペシャリスト",
+      "emptyTitle": "スペシャリストはまだありません",
+      "emptyBody": "スペシャリストは特定の仕事に絞ったヘルパーです。専用の指示を持ち、選んだスキルとコネクタだけを使います。例：R のスキルだけを使う統計レビュアー。",
+      "newTitle": "新しいスペシャリスト",
+      "editTitle": "{{id}} を編集",
+      "close": "閉じる",
+      "untitled": "名前のないスペシャリスト",
+      "kind": "スペシャリスト",
+      "name": "名前",
+      "namePlaceholder": "例：統計レビュー",
+      "idHint": "名前から短い ID を作って保存します。",
+      "idPreview": "{{id}} として保存",
+      "idTaken": "{{id}} という名前のエージェントがすでにあります。",
+      "color": "色",
+      "colors": {
+        "ink": "インク",
+        "gray": "グレー",
+        "red": "赤",
+        "orange": "オレンジ",
+        "yellow": "黄",
+        "green": "緑",
+        "aqua": "アクア",
+        "blue": "青",
+        "violet": "紫",
+        "magenta": "マゼンタ"
+      },
+      "whenToUse": "使う場面",
+      "whenToUseHint": "メインエージェントはこれを読んで作業を任せるか判断します。作業内容と状況を書いてください。",
+      "whenToUsePlaceholder": "例: R や Python の統計解析をレビューする（検定の選択、前提条件、多重比較）。",
+      "whenToUseRequired": "使う場面を書いてください。",
+      "instructions": "指示",
+      "instructionsHint": "このスペシャリストの既定のシステムプロンプトを置き換えます。プロジェクトのメモリとスキル一覧は引き続き含まれます。空欄なら既定のままです。",
+      "instructionsPlaceholder": "進め方、確認すること、報告のしかた。",
+      "capabilities": "機能",
+      "capabilitiesHint": "使ってよいもの。実行する操作にはすべて承認ルールが適用されます。",
+      "skills": "スキル",
+      "skillsAll": "すべてのスキル",
+      "skillsSome": "選択したものだけ",
+      "skillsFilter": "スキルを絞り込む",
+      "skillsSelected": "{{count}} 件選択",
+      "skillsNoMatch": "一致するスキルはありません。",
+      "skillsNone": "未選択：このスペシャリストはスキルを使いません。",
+      "skillMissing": "インストールされていません",
+      "connectors": "コネクタ",
+      "connectorsHint": "後から追加したコネクタは、ここでオフにするまでオンです。",
+      "connectorsLoading": "コネクタを読み込み中…",
+      "noConnectors": "コネクタが設定されていません。設定 › コネクタ で追加できます。",
+      "connectorCollision": "{{blocked}} をオフにすると {{other}} もオフになります。両方オフにするか、{{blocked}} をオンのままにしてください。",
+      "modelDefault": "デフォルトのモデル",
+      "create": "スペシャリストを作成",
+      "save": "保存",
+      "saving": "保存してランタイムを再起動しています…",
+      "delete": "削除",
+      "deleting": "削除しています…",
+      "deleteTitle": "{{id}} を削除しますか？",
+      "deleteBody": "メインエージェントはこのスペシャリストに作業を任せられなくなります。過去のセッションの内容は残ります。",
+      "discardTitle": "変更を破棄しますか？",
+      "discardBody": "このスペシャリストへの変更は失われます。",
+      "discard": "破棄",
+      "created": "{{id}} を作成しました。メインエージェントが作業を任せられます。",
+      "saved": "{{id}} を保存しました。",
+      "deleted": "{{id}} を削除しました。",
+      "idEmpty": "名前には文字か数字を 1 つ以上含めてください。ID になります。",
+      "model": "モデル",
+      "modelDefaultNamed": "デフォルトのモデル（{{model}}）",
+      "modelUnlisted": "{{model}}（カタログにありません）",
+      "icon": "アイコン",
+      "iconLetter": "頭文字"
+    },
+    "showAll": "すべて表示（{{count}}）",
+    "showFewer": "折りたたむ",
+    "detail": {
+      "close": "閉じる",
+      "loading": "SKILL.md を読み込んでいます…",
+      "unreadable": "このスキルのファイルを読み込めませんでした。",
+      "empty": "この SKILL.md には説明以外の内容がありません。",
+      "reveal": "フォルダで表示"
+    }
+  },
+  "notFound": {
+    "title": "404 — 見つかりません",
+    "hint": "このページは存在しません。",
+    "backLink": "ワークスペースに戻る"
+  },
+  "notify": {
+    "completeTitle": "ターン完了",
+    "failedTitle": "ターン失敗",
+    "interruptedTitle": "ターン中断"
+  }
+}

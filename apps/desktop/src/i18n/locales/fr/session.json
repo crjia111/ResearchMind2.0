@@ -1,0 +1,705 @@
+{
+  "notFound": {
+    "title": "Session introuvable",
+    "hint": "Choisissez une session dans la barre latérale."
+  },
+  "group": {
+    "defaultName": "Écran {{n}}",
+    "newTab": "Nouvel écran",
+    "close": "Fermer l'écran",
+    "renameHint": "Double-cliquez pour renommer",
+    "splitRight": "Diviser à droite — ouvrir une nouvelle session à côté",
+    "splitDown": "Diviser en bas — ouvrir une nouvelle session en dessous",
+    "closePane": "Fermer ce volet",
+    "confirmClose": {
+      "title": "Fermer ce volet ?",
+      "body": "Cela retire uniquement le volet de cet écran. La session, l’historique de conversation et les fichiers de l’espace de travail sont conservés.",
+      "action": "Fermer le volet"
+    },
+    "confirmCloseScreen": {
+      "title": "Fermer cet écran ?",
+      "body": "Cela supprime l’écran et tous ses volets. Les sessions, l’historique de conversation et les fichiers de l’espace de travail sont conservés.",
+      "action": "Fermer l’écran"
+    },
+    "zoom": "Zoom de ce volet",
+    "rename": "Renommer l’écran",
+    "tabMenu": "Actions de l’écran",
+    "runAgent": "Lancer un agent",
+    "newNotebook": "Nouveau notebook",
+    "newMarkdown": "Nouveau Markdown",
+    "sourceMenu": "Quels écrans afficher",
+    "sourceDesktop": "Écrans du bureau",
+    "sourceDesktopHint": "Ceux de la fenêtre du bureau, en direct : un changement ici apparaît là-bas et inversement.",
+    "sourceOwn": "Mes propres écrans",
+    "sourceOwnHint": "Conservés dans ce navigateur. La fenêtre du bureau n’est pas affectée.",
+    "splitRightShort": "Diviser à droite",
+    "splitDownShort": "Diviser en bas",
+    "defaultProject": "Par défaut",
+    "projectMenu": "Changer de projet",
+    "panes": "Volets de cet écran"
+  },
+  "composer": {
+    "placeholder": {
+      "default": "Posez n'importe quelle question",
+      "arguments": "Arguments (facultatif) — Entrée pour exécuter",
+      "shell": "Exécuter une commande shell dans le dossier de l'espace de travail",
+      "plan": "Décrivez quoi planifier — aucun fichier ne sera modifié"
+    },
+    "commandsAria": "Commandes",
+    "source": {
+      "skill": "compétence",
+      "mcp": "mcp"
+    },
+    "file": {
+      "removeAria": "Supprimer {{name}}",
+      "previewAria": "Aperçu de {{name}}",
+      "preview": {
+        "empty": "Fichier vide",
+        "none": "Aperçu indisponible",
+        "unreadable": "Impossible de lire ce fichier dans l'espace de travail",
+        "lines_other": "{{count}} lignes"
+      }
+    },
+    "attach": {
+      "addAria": "Ajouter des fichiers",
+      "title": "Ajouter des fichiers locaux à l'espace de travail"
+    },
+    "command": {
+      "chipTitle": "Exécute cette commande — saisissez des arguments, ou appuyez sur Retour arrière pour modifier le nom",
+      "removeAria": "Supprimer la commande"
+    },
+    "shellMode": {
+      "badge": "shell",
+      "title": "S'exécute directement dans le dossier de l'espace de travail de la session"
+    },
+    "stop": {
+      "aria": "Arrêter",
+      "title": "Interrompre ce tour (Échap)"
+    },
+    "send": {
+      "aria": "Envoyer"
+    },
+    "approval": {
+      "aria": "Mode d'approbation",
+      "title": "Comment les actions de l'agent sont approuvées",
+      "menuAria": "Modes d'approbation",
+      "menuTitle": "Comment les actions de l'agent doivent-elles être approuvées ?",
+      "approve": {
+        "label": "Approuver pour moi",
+        "description": "Demande avant de supprimer, d'installer ou de se connecter à distance"
+      },
+      "full": {
+        "label": "Accès complet",
+        "description": "Exécute toutes les commandes sans demander"
+      }
+    },
+    "error": {
+      "paste": "Impossible d'enregistrer le collage : {{message}}",
+      "addFiles": "Impossible d'ajouter les fichiers : {{message}}",
+      "imageNotSent": "Impossible de lire {{names}} — le message est parti sans l'image."
+    },
+    "model": {
+      "aria": "Changer de modèle",
+      "title": "Modèle et effort de raisonnement",
+      "search": "Rechercher des modèles…",
+      "none": "Choisir un modèle",
+      "empty": "Aucun modèle. Connectez un fournisseur.",
+      "noResults": "Aucun modèle correspondant",
+      "favorite": "Favori",
+      "manage": "Gérer les fournisseurs…",
+      "close": "Fermer",
+      "filter": {
+        "all": "Tous",
+        "favorites": "Favoris",
+        "recent": "Récents",
+        "new": "Nouveaux"
+      },
+      "reasoning": "Effort de raisonnement",
+      "reasoningDefault": "Défaut du modèle",
+      "faster": "Plus rapide",
+      "smarter": "Plus intelligent",
+      "followingAgent": "Suit l'agent {{agent}}",
+      "followAgent": "Suivre l'agent {{agent}}",
+      "useDefault": "Utiliser le modèle par défaut global",
+      "unknownContextTitle": "Fenêtre de contexte inconnue",
+      "unknownContextBody": "La compaction automatique reste désactivée pour ce modèle : la conversation grossit sans limite et les tours longs finissent par se bloquer. Définissez la fenêtre dans Réglages → Agents.",
+      "retiredTitle": "Modèle retiré par son fournisseur",
+      "retiredBody": "{{model}} est toujours configuré, mais le fournisseur ne le sert plus : chaque tour échoue. Choisissez un autre modèle ci-dessus.",
+      "newBadge": "Nouveau",
+      "catalog": {
+        "updated": "Mis à jour il y a {{ago}}",
+        "updatedNow": "Mis à jour à l’instant",
+        "checking": "Recherche de nouveaux modèles",
+        "loading": "Chargement des nouveaux modèles",
+        "upToDate": "À jour",
+        "added_one": "{{count}} nouveau modèle",
+        "added_other": "{{count}} nouveaux modèles",
+        "waiting_one": "{{count}} nouveau modèle après cette réponse",
+        "waiting_other": "{{count}} nouveaux modèles après cette réponse",
+        "failed": {
+          "timeout": "Délai de mise à jour dépassé",
+          "proxy": "Le proxy a refusé la mise à jour",
+          "offline": "Connexion impossible pour la mise à jour",
+          "server": "Erreur du serveur de mise à jour",
+          "invalid": "Mise à jour incomplète"
+        },
+        "retry": "Réessayer",
+        "staleTitle_one": "La liste des modèles date de {{count}} jour",
+        "staleTitle_other": "La liste des modèles date de {{count}} jours",
+        "staleBody": "Les dernières mises à jour ont échoué. Les modèles récents apparaîtront dès qu’une mise à jour passera.",
+        "proxySettings": "Réglages du proxy",
+        "noMatch": "0 résultat pour {{query}}",
+        "listAge": "Liste des modèles mise à jour il y a {{ago}}",
+        "checkNow": "Rechercher de nouveaux modèles"
+      }
+    },
+    "reference": {
+      "filesAria": "Fichiers de l’espace de travail",
+      "sessionsAria": "Conversations précédentes",
+      "scanning": "Lecture de l’espace de travail…",
+      "chipTitle": "Cette conversation sera citée pour l’agent",
+      "removeAria": "Retirer la référence à {{title}}"
+    },
+    "compact": {
+      "confirmTitle": "Compacter le contexte ?",
+      "confirmBody": "Les échanges précédents sont remplacés par un résumé afin que la prochaine réponse s'exécute dans un contexte borné. La conversation d'origine complète reste stockée localement.",
+      "confirmAction": "Compacter",
+      "empty": "Pas encore de conversation à compacter",
+      "justCompacted": "Compacté à l'instant — rien de nouveau depuis",
+      "small": "Seulement {{used}} de contexte utilisé ; le compactage commence à {{threshold}}"
+    },
+    "builtin": {
+      "plan": "Mode plan : explorer et rédiger un plan avant de modifier des fichiers. /plan off pour quitter",
+      "compact": "Compresser le contexte : résumer la conversation antérieure"
+    },
+    "planMode": {
+      "label": "Mode plan",
+      "title": "L'agent explore et rédige un plan ; il ne modifie aucun fichier. Maj+Tab ou /plan off pour quitter",
+      "exitAria": "Quitter le mode plan"
+    },
+    "todos": {
+      "title": "Tâches",
+      "done": "{{count}} terminées",
+      "active": "{{count}} en cours",
+      "pending": "{{count}} à faire",
+      "status": {
+        "completed": "Terminée",
+        "in_progress": "En cours",
+        "pending": "À faire",
+        "cancelled": "Annulée"
+      }
+    },
+    "queue": {
+      "aria": "Messages en attente",
+      "edit": "Modifier le message en attente",
+      "save": "Enregistrer",
+      "cancelEdit": "Annuler la modification",
+      "remove": "Retirer le message en attente",
+      "steer": "Intervenir maintenant",
+      "sendNow": "Envoyer maintenant",
+      "add": "Mettre en attente",
+      "addTitle": "Envoyer après ce tour (Entrée) · Cmd/Ctrl+Entrée intervient maintenant"
+    },
+    "busyCommand": "Attendez la fin de ce tour avant de lancer une commande.",
+    "agent": {
+      "aria": "Agent",
+      "title": "Agent et modèle",
+      "locked": "Un autre agent dans une nouvelle conversation",
+      "manage": "Gérer les agents",
+      "optionsLoading": "Lecture des modèles de {{agent}}…",
+      "optionsNone": "{{agent}} ne propose aucun modèle au choix.",
+      "optionsFailed": "{{agent}} n’a pas démarré : {{error}}",
+      "more": "Plus d’agents…",
+      "accountAria": "Compte",
+      "defaultAccount": "Compte par défaut"
+    }
+  },
+  "localCommand": {
+    "newDescription": "Nouvelle conversation dans ce dossier",
+    "clearDescription": "Effacer le contexte ; les messages précédents restent visibles au-dessus",
+    "clearedLabel": "Contexte effacé",
+    "clearedHint": "Le modèle ne voit plus les messages ci-dessus",
+    "openEarlier": "Ouvrir cette session",
+    "olderCleared_one": "{{count}} conversation effacée plus ancienne",
+    "olderCleared_other": "{{count}} conversations effacées plus anciennes",
+    "showOlder": "Afficher"
+  },
+  "starters": {
+    "newSession": "Nouvelle session",
+    "heading": "Que devrions-nous explorer ?",
+    "subheading": "Décrivez votre analyse ci-dessous — ou partez de l'un de ces exemples.",
+    "subheadingNoCards": "Décrivez votre analyse ci-dessous.",
+    "demo": {
+      "title": "Exécuter une analyse de démonstration, de bout en bout",
+      "description": "Simuler un jeu de données, ajuster un modèle, et produire une figure et un rapport traçable."
+    },
+    "analyze": {
+      "title": "Analyser mes données",
+      "description": "Indiquez à l'agent un fichier que vous avez ajouté ; obtenez des figures et un rapport en retour."
+    },
+    "audit": {
+      "title": "Auditer un rapport pour sa traçabilité",
+      "description": "Vérifier les citations, les chiffres non sourcés et la cohérence entre figures et code."
+    },
+    "example-climate": {
+      "title": "Explorer un exemple : tendances climatiques",
+      "description": "Données réelles NASA GISTEMP — tendance, comparaison décennale, figure et rapport."
+    },
+    "error": {
+      "setup": "Impossible de configurer l'exemple : {{message}}"
+    }
+  },
+  "live": {
+    "starting": {
+      "bodyWeb": "En attente de la réponse de l'application hôte. Laissez cette page ouverte — la connexion se fera d'elle-même dès que l'hôte sera joignable.",
+      "title": "Démarrage du runtime local…",
+      "body": "Le runtime d'agent intégré démarre. Au premier lancement, macOS peut demander l'autorisation d'accéder à vos dossiers — accordez-la et l'opération se termine d'elle-même.",
+      "upgrading": "Mise à niveau de l'historique des conversations pour le nouveau moteur ({{done}} sur {{total}}). Cette opération n'a lieu qu'une fois."
+    },
+    "runtime": {
+      "title": "Runtime OpenCode",
+      "bodyPrefix": "L'application de bureau exécute automatiquement un OpenCode intégré. Dans le navigateur, démarrez-en un avec",
+      "bodySuffix": " puis connectez-vous."
+    },
+    "connect": "Connecter",
+    "latest": "Plus récent",
+    "subagentFallback": "un sous-agent",
+    "header": {
+      "expandSidebarAria": "Développer la barre latérale",
+      "expandSidebarTitle": "Développer la barre latérale ({{shortcut}})",
+      "rename": "Renommer la session…",
+      "untitled": "Session sans titre",
+      "paneMenu": "Actions de la session"
+    },
+    "filesToggle": {
+      "default": "Fichiers",
+      "title": "Parcourir le dossier de cette session à côté du chat"
+    },
+    "runsToggle": {
+      "label": "Exécutions",
+      "title": "Les exécutions d'expériences de cette session — à côté du chat"
+    },
+    "notebook": {
+      "chooseTitle": "Choisir un notebook",
+      "openTitle": "Ouvrir {{path}} — l'agent travaille sur ce notebook dans cette session"
+    },
+    "connBadge": {
+      "title": "OpenCode · {{status}}",
+      "status": {
+        "ready": "prêt",
+        "connecting": "connexion…",
+        "error": "erreur",
+        "offline": "hors ligne"
+      }
+    },
+    "status": {
+      "paused": "En pause — l'agent attend votre réponse ci-dessous",
+      "startingSession": "Démarrage de la session dans son dossier…",
+      "retrying": "Erreur du fournisseur — nouvelle tentative (essai {{attempt}})",
+      "limitReached": "Limite du fournisseur atteinte — attendre n'y changera rien",
+      "working": "En cours…",
+      "step": "étape {{count}}"
+    },
+    "review": {
+      "queued": "Révision en arrière-plan en attente…",
+      "running": "Révision de ce point de contrôle en arrière-plan…",
+      "cancelAria": "Arrêter la révision en arrière-plan",
+      "cancelTitle": "Arrêter cette révision"
+    },
+    "placeholder": {
+      "starting": "Démarrage du runtime…",
+      "disconnected": "Connectez-vous pour discuter",
+      "waiting": "En attente de la réponse…",
+      "readOnly": "Accès en lecture seule — consultation uniquement",
+      "queue": "Entrée met en attente pour après, Cmd/Ctrl+Entrée intervient maintenant",
+      "steerQueue": "Cmd/Ctrl+Entrée envoie maintenant tous les messages en attente",
+      "compacting": "Compression du contexte…"
+    }
+  },
+  "tool": {
+    "status": {
+      "pending": "En attente",
+      "running": "En cours",
+      "waiting-approval": "En attente",
+      "success": "Réussite",
+      "warning": "Avertissement",
+      "failed": "Échec"
+    },
+    "verb": {
+      "Ran": "Exécuté",
+      "Created": "Créé",
+      "Edited": "Modifié",
+      "Read": "Lu",
+      "Searched": "Recherché",
+      "Listed": "Listé",
+      "Fetched": "Récupéré"
+    },
+    "group": {
+      "phrase": {
+        "ran_one": "a exécuté une commande",
+        "ran_other": "a exécuté {{count}} commandes",
+        "created_one": "a créé un fichier",
+        "created_other": "a créé {{count}} fichiers",
+        "edited_one": "a modifié un fichier",
+        "edited_other": "a modifié {{count}} fichiers",
+        "read_one": "a lu un fichier",
+        "read_other": "a lu {{count}} fichiers",
+        "searched_one": "a effectué une recherche",
+        "searched_other": "a effectué {{count}} recherches",
+        "listed": "a listé des fichiers",
+        "fetched_one": "a récupéré une page",
+        "fetched_other": "a récupéré {{count}} pages",
+        "default_one": "a exécuté une étape",
+        "default_other": "a exécuté {{count}} étapes"
+      },
+      "callCount_one": "{{count}} appel d’outil",
+      "callCount_other": "{{count}} appels d’outils"
+    },
+    "process": {
+      "thinking": "Analyse terminée",
+      "read": "Fichiers lus",
+      "write": "Fichiers écrits",
+      "search": "Code recherché",
+      "edit": "Fichiers modifiés",
+      "commands": "Commandes exécutées",
+      "webFetch": "Pages web consultées",
+      "tools": "Outils appelés",
+      "joinTwo": "{{first}} et {{second}}",
+      "comma": ", ",
+      "sharedPrefix": "",
+      "more": "{{title}}, etc."
+    }
+  },
+  "artifact": {
+    "kind": {
+      "figure": "figure",
+      "script": "script",
+      "report": "rapport",
+      "table": "tableau",
+      "notebook": "notebook",
+      "model": "modèle",
+      "data": "données"
+    },
+    "via": "· via {{tool}}",
+    "open": "Ouvrir",
+    "maximize": "Agrandir",
+    "collapse": "Replier",
+    "expand": "Déplier"
+  },
+  "figure": {
+    "downloadAria": "Télécharger la figure",
+    "addAnnotationAria": "Ajouter une annotation",
+    "annotationAria": "Annotation {{index}} : {{note}}",
+    "notePlaceholder": "Ajouter une note…",
+    "noteAria": "Note d'annotation",
+    "send": "Envoyer"
+  },
+  "reviewer": {
+    "heading": "Réviseur",
+    "badge": {
+      "warn": "Avertissement",
+      "ok": "OK",
+      "error": "Erreur"
+    },
+    "checkTag": {
+      "citation": "citation",
+      "number": "chiffre",
+      "figure": "figure ↔ code",
+      "domain": "domaine",
+      "integrity": "intégrité"
+    },
+    "findingCount_one": "· {{count}} constat",
+    "findingCount_other": "· {{count}} constats",
+    "dismissedCount": "· {{count}} ignorés",
+    "dismissAria": "Ignorer le constat : {{title}}",
+    "dismissTitle": "Ignorer ce constat",
+    "allDismissed": "Tous les constats ont été ignorés."
+  },
+  "interaction": {
+    "question": {
+      "heading": "L'agent a besoin de votre réponse",
+      "customPlaceholder": "Ou saisissez votre propre réponse…",
+      "other": "Autre chose…"
+    },
+    "permission": {
+      "heading": "L'agent demande une autorisation :"
+    },
+    "askedBy": "Demandé par {{origin}}",
+    "skip": "Passer",
+    "submit": "Envoyer",
+    "reject": "Rejeter",
+    "alwaysAllow": "Toujours autoriser",
+    "allowOnce": "Autoriser une fois"
+  },
+  "turn": {
+    "worked": "Terminé",
+    "workedFor": "Durée {{duration}}"
+  },
+  "reasoning": {
+    "thinking": "Réflexion…",
+    "thought": "Réflexion faite",
+    "collapse": "Replier le raisonnement",
+    "expand": "Voir tout le raisonnement"
+  },
+  "stepSummary": {
+    "steps": "{{count}} étapes"
+  },
+  "thread": {
+    "exampleBadge": "Exemple · lecture seule",
+    "sampleNotice": "Il s'agit d'une session d'exemple. Démarrez une session d'agent en direct pour discuter réellement."
+  },
+  "workspaceChip": {
+    "fallbackName": "Espace de travail",
+    "titlePinned": "{{workspace}} — cliquez pour choisir un autre dossier",
+    "titleUnpinned": "Démarre dans un nouveau dossier daté ({{name}}) — cliquez pour choisir un dossier à la place",
+    "chooseAria": "Choisir le dossier de la session",
+    "switching": "Changement en cours…"
+  },
+  "agentMessage": {
+    "previewTitle": "Aperçu de {{path}}"
+  },
+  "goal": {
+    "label": "Objectif",
+    "running": "en cours",
+    "runningTurns": "tour auto {{count}}",
+    "paused": "en pause",
+    "done": "terminé",
+    "pauseAria": "Mettre l'objectif en pause (stoppe la continuation auto)",
+    "resumeAria": "Reprendre l'objectif",
+    "clearAria": "Retirer l'objectif",
+    "unmet": "bloqué",
+    "limited": "limite atteinte"
+  },
+  "message": {
+    "copy": "Copier",
+    "copied": "Copié",
+    "copyFailed": "Impossible de copier dans le presse-papiers.",
+    "edit": "Modifier",
+    "editing": {
+      "cancel": "Annuler",
+      "send": "Envoyer"
+    },
+    "revert": "Revenir",
+    "retry": "Réessayer",
+    "confirm": {
+      "title": "Tout supprimer après ceci ?",
+      "body": "Cela ramène la conversation à ce message et le supprime, ainsi que tous les messages suivants et les modifications de fichiers effectuées lors de ces tours. Action irréversible.",
+      "edit": "Modifier et renvoyer",
+      "revert": "Revenir ici"
+    },
+    "sentByAgentFull": "Envoyé par l’agent de « {{session}} » ({{id}}). Cliquez pour copier sa référence pour un agent.",
+    "sentByAccount": "Envoyé par le compte {{account}}",
+    "sentByAgentLabel": "Envoyé par l’agent de",
+    "sentByAccountLabel": "Envoyé par le compte",
+    "clickToCopyRef": "Cliquez pour copier sa référence pour un agent",
+    "from": "De"
+  },
+  "historyRepair": {
+    "reason": {
+      "text-missing": "Un message enregistré de cette conversation n'a pas de texte là où le format du modèle en exige un — le plus souvent une réponse interrompue dès son début.",
+      "tool-result-missing": "Il manque à une étape {{tool}} enregistrée le résultat qu'elle a rapporté.",
+      "tool-error-missing": "Une étape {{tool}} enregistrée a échoué sans consigner pourquoi.",
+      "tool-call-id-missing": "Une étape d'outil enregistrée a perdu l'identifiant qui l'associe à son résultat.",
+      "unknown": "Cette conversation ne peut plus être envoyée au modèle, et nous n'avons pas pu identifier quel message enregistré en est la cause."
+    },
+    "someTool": "outil",
+    "offer_one": "Revenir juste avant écarte {{count}} message et résout le problème.",
+    "offer_other": "Revenir juste avant écarte {{count}} messages et résout le problème.",
+    "noTarget": "Il n'existe aucun point antérieur où revenir : cette conversation ne peut pas être réparée, commencez-en une nouvelle. Rien n'est supprimé ; vous pouvez toujours la lire et l'exporter.",
+    "action": "Réparer la conversation",
+    "confirm": {
+      "title": "Revenir avant le message endommagé ?",
+      "body_one": "Cela écarte {{count}} message et annule les modifications de fichiers de ce tour. Votre saisie revient dans le champ de saisie. Cette action est irréversible.",
+      "body_other": "Cela écarte {{count}} messages et annule les modifications de fichiers de ces tours. Votre saisie revient dans le champ de saisie. Cette action est irréversible.",
+      "action": "Revenir"
+    }
+  },
+  "historyRetry": "Réessayer",
+  "compaction": {
+    "label": "Contexte compacté",
+    "autoBody": "L’exécution a résumé les tours précédents pour rester dans la fenêtre de contexte du modèle, et la conversation a continué ici.",
+    "manualBody": "Vous avez demandé de résumer les tours précédents ; la conversation a continué ici.",
+    "overflowBody": "Cela s’est produit parce que le contexte était déjà saturé.",
+    "at": "Quand : {{time}}",
+    "originalKept": "La conversation d’origine complète reste stockée en local."
+  },
+  "meta": {
+    "context": "{{used}} / {{limit}} ({{percent}} %)",
+    "contextUnknown": "{{used}} jetons",
+    "durationTitle": "Durée de cette réponse",
+    "costTitle": "Coût de ce tour",
+    "tooltip": {
+      "input": "Entrée : {{n}}",
+      "cacheRead": "Lecture du cache : {{n}}",
+      "cacheWrite": "Écriture du cache : {{n}}",
+      "output": "Sortie : {{n}}",
+      "reasoning": "Raisonnement : {{n}}",
+      "context": "Contexte utilisé : {{used}} sur {{limit}}",
+      "contextUnknown": "Contexte utilisé : {{used}} (fenêtre inconnue)"
+    }
+  },
+  "selection": {
+    "aria": "Actions sur le texte sélectionné",
+    "quote": "Citer",
+    "explain": "Expliquer",
+    "explainPrompt": "Explique ce passage plus en détail.",
+    "remember": "Enregistrer dans la mémoire",
+    "savedProject": "Enregistré dans la mémoire de {{name}}",
+    "savedGlobal": "Enregistré dans la mémoire globale"
+  },
+  "subagents": {
+    "title": "Sous-agents",
+    "toggleTitle": "Voir ce que font les sous-agents",
+    "closeAria": "Fermer le panneau des sous-agents",
+    "count_one": "{{count}} tâche",
+    "count_other": "{{count}} tâches",
+    "empty": "Aucun sous-agent dans cette conversation pour l’instant.",
+    "noDetail": "Aucune étape n'a été enregistrée pour ce sous-agent.",
+    "loadingDetail": "Chargement…",
+    "openRow": "Ouvrir ce sous-agent dans le panneau"
+  },
+  "splitDestination": {
+    "title": "La session du nouveau volet sera créée dans",
+    "continueIn": "Continuer dans {{name}}",
+    "newFolder": "Nouveau dossier",
+    "chooseOther": "Choisir un autre dossier…",
+    "terminal": "Terminal dans ce dossier"
+  },
+  "stall": {
+    "silentTitle": "Le tour est peut-être bloqué",
+    "silentLine": "Ce tour est silencieux depuis {{minutes}} min. Toujours en cours, ou bloqué ?",
+    "repeatTitle": "Le tour boucle peut-être",
+    "repeatLine": "Ce tour a exécuté le même appel {{count}} fois avec des résultats identiques. Toujours en cours, ou en boucle ?",
+    "keepWaiting": "Continuer d'attendre",
+    "stopTurn": "Arrêter le tour"
+  },
+  "terminal": {
+    "title": "Terminal",
+    "exited": "[processus terminé]",
+    "openFailed": "[terminal injoignable : {{message}}. Nouvel essai dans {{seconds}} s]",
+    "desktopOnly": "Le terminal nécessite l'app de bureau.",
+    "webOff": "Les terminaux sont désactivés pour l’accès web. Activez-les dans l’application de bureau : Réglages › Accès à distance.",
+    "new": "Terminal",
+    "menu": {
+      "label": "Menu du terminal",
+      "copy": "Copier",
+      "paste": "Coller",
+      "selectAll": "Tout sélectionner",
+      "clear": "Effacer l'écran",
+      "revealCwd": "Afficher le dossier de travail",
+      "resumeAgent": "Reprendre la dernière session {{agent}}"
+    },
+    "rename": "Renommer le terminal…",
+    "confirmClose": {
+      "title": "Fermer ce terminal ?",
+      "body": "Le shell et tout ce qui y tourne encore s'arrêteront. L'historique n'est pas conservé.",
+      "action": "Fermer le terminal"
+    },
+    "search": {
+      "placeholder": "Rechercher",
+      "matchCase": "Respecter la casse",
+      "regex": "Expression régulière",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "close": "Fermer la recherche",
+      "none": "aucun résultat",
+      "find": "Rechercher…"
+    },
+    "recentInput": "Saisies récentes venues de l’extérieur :",
+    "continueInApp": {
+      "label": "Ouvrir en conversation",
+      "confirmTitle": "Continuer en conversation ?",
+      "confirmBody": "Cette session {{agent}} se poursuit dans la vue conversation de l’app, et ce terminal se ferme. Vous pourrez la remettre dans un terminal à tout moment."
+    },
+    "continueInTerminal": {
+      "label": "Continuer dans le terminal",
+      "confirmTitle": "Continuer dans un terminal ?",
+      "confirmBody": "Cette conversation reprend dans un terminal là où elle en était, et ce volet devient ce terminal. Elle reste dans la barre latérale, vous pourrez y revenir.",
+      "confirmBodyRunning": "La réponse en cours s’arrête, puis cette conversation reprend dans un terminal là où elle en était. Elle reste dans la barre latérale, vous pourrez y revenir."
+    },
+    "control": {
+      "held": "L’{{by}} a la main",
+      "takeOver": "Reprendre celui-ci",
+      "takeOverAll": "Tout reprendre",
+      "by": {
+        "desktop": "application de bureau",
+        "web": "interface web",
+        "phone": "interface mobile"
+      }
+    }
+  },
+  "splitInto": {
+    "session": "Session"
+  },
+  "find": {
+    "placeholder": "Rechercher dans la conversation",
+    "matchCase": "Respecter la casse",
+    "regex": "Expression régulière",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "close": "Fermer la recherche",
+    "none": "aucun résultat",
+    "find": "Rechercher…"
+  },
+  "turnNav": {
+    "label": "Navigation par tour",
+    "jump": "Aller au tour {{turn}}",
+    "turn": "Tour {{turn}}"
+  },
+  "trajectory": {
+    "title": "Trajectoire",
+    "toggle": "Trajectoire — chaque étape de cette conversation",
+    "duration": "Durée",
+    "useActual": "Durée réelle",
+    "useEqual": "Largeur égale",
+    "turns": "Tours",
+    "expandTurns": "Déplier les tours",
+    "collapseTurns": "Replier les tours",
+    "calls": "Appels",
+    "expandCalls": "Déplier les appels",
+    "collapseCalls": "Replier les appels",
+    "search": "Rechercher",
+    "user": "UTILISATEUR",
+    "assistant": "ASSISTANT",
+    "tool": "OUTIL",
+    "message": "MESSAGE",
+    "system": "SYSTÈME",
+    "compacted": "COMPACTÉ",
+    "input": "Entrée",
+    "model": "Modèle",
+    "tools": "Outils",
+    "turn": "Tour {{n}}",
+    "noOutput": "aucune sortie",
+    "thinking": "Réflexion",
+    "result": "Résultat",
+    "empty": "Aucune étape pour l’instant.",
+    "noMatch": "Aucune étape correspondante.",
+    "steps_one": "{{count}} étape",
+    "steps_other": "{{count}} étapes",
+    "close": "Fermer la trajectoire"
+  },
+  "drag": {
+    "moveInto": "Déplacer vers « {{name}} »"
+  },
+  "home": {
+    "tab": "Accueil",
+    "openFolder": "Ouvrir le dossier",
+    "recent": "Sessions récentes",
+    "seeAll": "Les {{count}}",
+    "emptyProject": "Rien ici pour l’instant — commencez la première conversation de ce projet.",
+    "emptyDefault": "Pas encore de session libre — créez-en une ou ouvrez un projet à gauche.",
+    "greeting": {
+      "morning": "Bonjour",
+      "noon": "Bon midi",
+      "afternoon": "Bon après-midi",
+      "evening": "Bonsoir",
+      "night": "Encore debout"
+    },
+    "count_one": "{{count}} session",
+    "count_other": "{{count}} sessions"
+  },
+  "reference": {
+    "copy": "Copier une référence pour un agent",
+    "copied": "Référence copiée — collez-la à un agent"
+  }
+}

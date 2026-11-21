@@ -1,0 +1,229 @@
+{
+  "sidebar": {
+    "collapse": "サイドバーを折りたたむ",
+    "collapseTitle": "サイドバーを折りたたむ ({{shortcut}})",
+    "expand": "サイドバーを展開する",
+    "expandTitle": "サイドバーを展開する ({{shortcut}})",
+    "settings": "設定",
+    "searchAria": "セッションを検索",
+    "searchPlaceholder": "セッション名を検索",
+    "searchClear": "検索をクリア",
+    "searchResultsAria": "検索結果",
+    "searchNoMatches": "一致するセッションはありません"
+  },
+  "items": {
+    "new": "新規",
+    "notebooks": "ノートブック",
+    "files": "ファイル",
+    "runs": "実行",
+    "skills": "スキル",
+    "projects": "プロジェクト"
+  },
+  "projects": {
+    "heading": "プロジェクト",
+    "new": "新規プロジェクト",
+    "importedBadge": "取り込み",
+    "menuScratch": "ゼロから始める",
+    "menuExisting": "既存のフォルダを使う",
+    "importTitle": "既存のフォルダを取り込む",
+    "importSubtitle": "Open Science Desktop で「{{name}}」を使う方法を選択してください。",
+    "importCopy": "ワークスペースにコピー",
+    "importCopyHint": "管理されたコピーを作成して元のファイルは変更しませんが、追加のディスク容量を使います。",
+    "importInPlace": "そのまま使用",
+    "importInPlaceHint": "コピーを作らず元のファイルを直接操作します。macOS が選択したフォルダへのアクセス許可を求める場合があります。",
+    "nameTitle": "プロジェクト名",
+    "nameSubtitle": "短く分かりやすい名前に",
+    "namePlaceholder": "プロジェクト名",
+    "newSessionAria": "「{{name}}」で新しいセッション",
+    "noSessions": "セッションはまだありません。",
+    "renameHint": "ダブルクリックで名前を変更",
+    "pageSearch": "プロジェクトを検索",
+    "colName": "名前",
+    "colSources": "ソース",
+    "colUpdated": "更新",
+    "noResults": "一致するプロジェクトがありません。",
+    "pin": "ピン留め",
+    "unpin": "ピン留めを解除",
+    "rename": "名前を変更",
+    "remove": "削除",
+    "more": "その他",
+    "removeTitle": "{{name}} を削除しますか?",
+    "removeBody": "サイドバーからプロジェクトを削除します。ディスク上のファイルは削除されません。",
+    "removeCopyBody": "ワークスペース内の管理コピーを削除します。元のソースフォルダは保持されますが、既存のセッションからワークスペースファイルへアクセスできなくなります。",
+    "seeAll": "すべてのプロジェクト",
+    "openFolder": "{{path}} を開く",
+    "newSession": "新しいセッション",
+    "openFolderLabel": "フォルダを開く"
+  },
+  "history": {
+    "heading": "セッション",
+    "empty": "まだ会話がありません。",
+    "exampleTag": "例",
+    "deleteAria": "{{title}} を削除",
+    "running": "実行中",
+    "seeAll": "すべてのセッション",
+    "renameHint": "ダブルクリックで名前を変更",
+    "pageHeading": "すべてのセッション",
+    "pageSearch": "会話を検索",
+    "noResults": "一致する会話はありません。",
+    "rename": "名前を変更",
+    "moveTo": "プロジェクトに追加",
+    "moveToNone": "プロジェクトはまだありません",
+    "rowActions": "{{title}} の操作",
+    "groups": {
+      "today": "今日",
+      "yesterday": "昨日",
+      "week": "過去 7 日間",
+      "month": "過去 30 日間",
+      "older": "それ以前"
+    },
+    "showArchived": "アーカイブ済みを表示",
+    "archivedBadge": "アーカイブ済み",
+    "archive": "アーカイブ",
+    "archiveTitle": "このセッションをアーカイブしますか？",
+    "archiveBody": "「{{title}}」はサイドバーから外れます。削除はされません。「すべてのセッション」で「アーカイブ済みを表示」をオンにすると見つかり、「元に戻す」で戻せます。",
+    "restore": "元に戻す",
+    "loadMore": "さらに読み込む",
+    "loading": "読み込み中…",
+    "export": "エクスポート",
+    "exportProgress": "{{count}} 件をエクスポート中…",
+    "exportTitle": "会話をエクスポートしますか？",
+    "exportBody": "各会話を Markdown ファイルとして、選んだフォルダに新しい順で書き出し、目次も作成します。削除や変更は行いません。",
+    "exportBodyFiltered": "「{{query}}」に一致する会話を Markdown ファイルとして、選んだフォルダに目次付きで書き出します。削除や変更は行いません。",
+    "exportConfirm": "フォルダを選択",
+    "exportDone_other": "{{count}} 件の会話をエクスポートしました。",
+    "exportDonePartial_other": "{{count}} 件をエクスポートしました（{{failed}} 件は読み取れませんでした）。",
+    "draft": "新しいセッション",
+    "moved": "「{{project}}」に移動しました。",
+    "moveBusy": "移動する前にこのセッションを停止してください。実行中のターンは元のフォルダーに書き込み続けます。",
+    "moveFailed": "セッションを移動できませんでした：{{detail}}",
+    "movedLinked": "「{{project}}」に移動しました。フォルダーはプロジェクト内に「{{link}}」として表示されます。",
+    "moving": "移動中…"
+  },
+  "confirmDelete": {
+    "sessionTitle": "セッションを削除しますか？",
+    "sessionBody": "「{{title}}」とそのメッセージが削除されます。この操作は取り消せません。",
+    "exampleTitle": "サンプルを非表示にしますか？",
+    "exampleBody": "「{{title}}」がサイドバーから非表示になります。",
+    "deleteAction": "削除",
+    "hideAction": "非表示"
+  },
+  "status": {
+    "usage": {
+      "title": "使用量",
+      "refresh": "更新",
+      "tokens": "トークン",
+      "today": "本日",
+      "days7": "7日",
+      "resetsIn": "{{duration}} 後にリセット",
+      "asOf": "{{age}}前の値",
+      "otherAccount": "もうすぐ上限です。別のアカウントで新しい会話を始めると続けられます。",
+      "resetCredits": "無料リセット：{{count}} 回"
+    },
+    "awake": {
+      "title": "スリープ防止",
+      "active": "有効",
+      "inactive": "無効",
+      "mode": {
+        "on": "オン",
+        "auto": "自動",
+        "off": "オフ"
+      },
+      "hint": {
+        "on": "常にスリープさせない",
+        "auto": "エージェントの作業中はスリープさせない",
+        "off": "通常どおりスリープする"
+      }
+    },
+    "resources": {
+      "title": "リソース",
+      "memory": "メモリ",
+      "processes": "プロセス数",
+      "note": "このアプリと、その配下のプロセスのみ。",
+      "cpu": "CPU {{n}}%",
+      "terminal": "ターミナル",
+      "app": "ワークベンチ本体",
+      "kernel": "カーネル"
+    },
+    "ports": {
+      "title": "ポート",
+      "empty": "待ち受けているポートはありません。",
+      "public": "公開",
+      "openTitle": "{{url}} を開く"
+    },
+    "hosts": {
+      "title": "ホスト",
+      "empty": "~/.ssh/config にログインできるマシンがありません。",
+      "count": "{{count}} 台",
+      "count_other": "{{count}} 台",
+      "status": {
+        "connected": "接続済み",
+        "connecting": "接続中",
+        "prompt": "操作待ち",
+        "failed": "失敗",
+        "disconnected": "未接続"
+      },
+      "connect": "接続",
+      "hint": "クリックでシェルを開く",
+      "openShell": "{{host}} でシェルを開く",
+      "unreachable": "接続できません",
+      "cores": "{{n}} コア",
+      "disk": "ディスク {{free}} / {{total}}"
+    }
+  },
+  "commandPalette": {
+    "ariaLabel": "コマンドパレット",
+    "placeholder": "コマンドを入力…",
+    "noResults": "結果がありません。",
+    "actions": {
+      "newSession": "新規セッション",
+      "analyzeData": "データを分析する（新しいワークフロー）",
+      "auditReport": "レポートを検証する（トレーサビリティレビュー）",
+      "openNotebooks": "ノートブックを開く",
+      "manageSkills": "スキルを管理",
+      "openSettings": "設定を開く",
+      "toggleTheme": "テーマを切り替え（ライト / ウォーム / ダーク）"
+    }
+  },
+  "rowMenu": {
+    "sessionLabel": "セッションの操作",
+    "projectLabel": "プロジェクトの操作",
+    "exampleLabel": "サンプルの操作"
+  },
+  "jump": {
+    "ariaLabel": "ジャンプ",
+    "placeholder": "プロジェクト・画面・セッションを検索…",
+    "noResults": "一致するものがありません",
+    "sections": {
+      "actions": "操作",
+      "projects": "プロジェクト",
+      "screens": "スクリーン",
+      "panes": "開いているペイン",
+      "sessions": "セッション",
+      "recent": "最近",
+      "newIn": "新しいセッション"
+    },
+    "actions": {
+      "newSession": "「{{project}}」で新しいセッション",
+      "newTerminal": "「{{project}}」で新しいターミナル"
+    },
+    "projectDetail_other": "{{count}} 件 · {{ago}}",
+    "projectEmpty": "セッションなし",
+    "hints": {
+      "open": "開く",
+      "beside": "横に開く",
+      "close": "閉じる"
+    }
+  },
+  "newPicker": {
+    "title": "新しいセッション",
+    "search": "プロジェクトを検索…",
+    "current": "現在",
+    "newProject": "新しいプロジェクト…",
+    "hintCreate": "作成",
+    "hintQuick": "確認なしで現在のプロジェクトに作成"
+  },
+  "web": {
+    "manyTabs": "{{count}} 個のタブで開いています。ブラウザが同じアドレスに張れる接続は少ないため、タブが増えるほどすべて遅くなります。使っていないタブを閉じてください。"
+  }
+}

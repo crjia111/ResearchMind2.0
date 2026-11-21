@@ -1,0 +1,232 @@
+{
+  "sidebar": {
+    "collapse": "Seitenleiste einklappen",
+    "collapseTitle": "Seitenleiste einklappen ({{shortcut}})",
+    "expand": "Seitenleiste ausklappen",
+    "expandTitle": "Seitenleiste ausklappen ({{shortcut}})",
+    "settings": "Einstellungen",
+    "searchAria": "Sitzungen durchsuchen",
+    "searchPlaceholder": "Sitzungsnamen suchen",
+    "searchClear": "Suche löschen",
+    "searchResultsAria": "Suchergebnisse",
+    "searchNoMatches": "Keine passenden Sitzungen"
+  },
+  "items": {
+    "new": "Neu",
+    "notebooks": "Notebooks",
+    "files": "Dateien",
+    "runs": "Durchläufe",
+    "skills": "Skills",
+    "projects": "Projekte"
+  },
+  "projects": {
+    "heading": "Projekte",
+    "new": "Neues Projekt",
+    "importedBadge": "importiert",
+    "menuScratch": "Bei null anfangen",
+    "menuExisting": "Vorhandenen Ordner verwenden",
+    "importTitle": "Vorhandenen Ordner importieren",
+    "importSubtitle": "Wählen Sie, wie Open Science Desktop „{{name}}“ verwenden soll.",
+    "importCopy": "In den Arbeitsbereich kopieren",
+    "importCopyHint": "Erstellt eine verwaltete Kopie und lässt das Original unverändert, benötigt aber zusätzlichen Speicherplatz.",
+    "importInPlace": "Direkt verwenden",
+    "importInPlaceHint": "Arbeitet ohne Kopie direkt an den Originaldateien. macOS kann um Zugriff auf den ausgewählten Ordner bitten.",
+    "nameTitle": "Projekt benennen",
+    "nameSubtitle": "Kurz und einprägsam halten",
+    "namePlaceholder": "Projektname",
+    "newSessionAria": "Neue Sitzung in „{{name}}“",
+    "noSessions": "Noch keine Sitzungen.",
+    "renameHint": "Zum Umbenennen doppelklicken",
+    "pageSearch": "Projekte suchen",
+    "colName": "Name",
+    "colSources": "Quellen",
+    "colUpdated": "Aktualisiert",
+    "noResults": "Keine passenden Projekte.",
+    "pin": "Anheften",
+    "unpin": "Lösen",
+    "rename": "Umbenennen",
+    "remove": "Entfernen",
+    "more": "Mehr",
+    "removeTitle": "{{name}} entfernen?",
+    "removeBody": "Entfernt das Projekt aus der Seitenleiste. Dateien auf der Festplatte werden nicht gelöscht.",
+    "removeCopyBody": "Löscht die verwaltete Kopie aus dem Arbeitsbereich. Der ursprüngliche Quellordner bleibt erhalten, vorhandene Sitzungen haben jedoch keinen Zugriff mehr auf ihre Arbeitsbereichsdateien.",
+    "seeAll": "Alle Projekte",
+    "openFolder": "{{path}} öffnen",
+    "newSession": "Neue Sitzung",
+    "openFolderLabel": "Ordner öffnen"
+  },
+  "history": {
+    "heading": "Sitzungen",
+    "empty": "Noch keine Unterhaltungen.",
+    "exampleTag": "Beispiel",
+    "deleteAria": "{{title}} löschen",
+    "running": "Arbeitet",
+    "seeAll": "Alle Sitzungen",
+    "renameHint": "Zum Umbenennen doppelklicken",
+    "pageHeading": "Alle Sitzungen",
+    "pageSearch": "Unterhaltungen durchsuchen",
+    "noResults": "Keine passenden Unterhaltungen.",
+    "rename": "Umbenennen",
+    "moveTo": "Zu Projekt hinzufügen",
+    "moveToNone": "Noch keine Projekte",
+    "rowActions": "Aktionen für {{title}}",
+    "groups": {
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "week": "Letzte 7 Tage",
+      "month": "Letzte 30 Tage",
+      "older": "Älter"
+    },
+    "showArchived": "Archivierte anzeigen",
+    "archivedBadge": "archiviert",
+    "archive": "Archivieren",
+    "archiveTitle": "Diese Sitzung archivieren?",
+    "archiveBody": "„{{title}}“ verschwindet aus der Seitenleiste. Nichts wird gelöscht – unter Alle Sitzungen → Archivierte anzeigen findest du sie, und Wiederherstellen holt sie zurück.",
+    "restore": "Wiederherstellen",
+    "loadMore": "Mehr laden",
+    "loading": "Wird geladen…",
+    "export": "Exportieren",
+    "exportProgress": "{{count}} exportiert…",
+    "exportTitle": "Unterhaltungen exportieren?",
+    "exportBody": "Jede Unterhaltung wird als Markdown-Datei in einen von Ihnen gewählten Ordner geschrieben, neueste zuerst, mit einem Index. Es wird nichts gelöscht oder verändert.",
+    "exportBodyFiltered": "Unterhaltungen, die zu „{{query}}“ passen, werden als Markdown-Dateien in einen von Ihnen gewählten Ordner geschrieben, mit einem Index. Es wird nichts gelöscht oder verändert.",
+    "exportConfirm": "Ordner wählen",
+    "exportDone_one": "{{count}} Unterhaltung exportiert.",
+    "exportDone_other": "{{count}} Unterhaltungen exportiert.",
+    "exportDonePartial_one": "{{count}} Unterhaltung exportiert; {{failed}} konnte nicht gelesen werden.",
+    "exportDonePartial_other": "{{count}} Unterhaltungen exportiert; {{failed}} konnten nicht gelesen werden.",
+    "draft": "Neue Sitzung",
+    "moved": "Nach „{{project}}“ verschoben.",
+    "moveBusy": "Halte die Sitzung an, bevor du sie verschiebst – ein laufender Schritt schreibt weiter in den bisherigen Ordner.",
+    "moveFailed": "Sitzung konnte nicht verschoben werden: {{detail}}",
+    "movedLinked": "Nach „{{project}}“ verschoben. Sein Ordner liegt im Projekt als „{{link}}“.",
+    "moving": "Wird verschoben…"
+  },
+  "confirmDelete": {
+    "sessionTitle": "Sitzung löschen?",
+    "sessionBody": "„{{title}}“ und die zugehörigen Nachrichten werden gelöscht. Dies kann nicht widerrufen werden.",
+    "exampleTitle": "Beispiel ausblenden?",
+    "exampleBody": "„{{title}}“ wird in der Seitenleiste ausgeblendet.",
+    "deleteAction": "Löschen",
+    "hideAction": "Ausblenden"
+  },
+  "status": {
+    "usage": {
+      "title": "Verbrauch",
+      "refresh": "Aktualisieren",
+      "tokens": "Tokens",
+      "today": "heute",
+      "days7": "7 T",
+      "resetsIn": "Zurücksetzung in {{duration}}",
+      "asOf": "Stand: vor {{age}}",
+      "otherAccount": "Fast aufgebraucht. Ein neues Gespräch mit einem anderen Konto setzt die Arbeit fort.",
+      "resetCredits": "Kostenlose Resets: {{count}}"
+    },
+    "awake": {
+      "title": "Wachhalten",
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "mode": {
+        "on": "An",
+        "auto": "Auto",
+        "off": "Aus"
+      },
+      "hint": {
+        "on": "Diesen Computer dauerhaft wachhalten",
+        "auto": "Wachbleiben, solange ein Agent arbeitet",
+        "off": "Normalen Ruhezustand zulassen"
+      }
+    },
+    "resources": {
+      "title": "Ressourcen",
+      "memory": "Arbeitsspeicher",
+      "processes": "Prozesse",
+      "note": "Diese App und alles, was sie gestartet hat.",
+      "cpu": "{{n}} % CPU",
+      "terminal": "Terminal",
+      "app": "Workbench selbst",
+      "kernel": "Kernel"
+    },
+    "ports": {
+      "title": "Ports",
+      "empty": "Nichts aus dieser App lauscht auf einem Port.",
+      "public": "öffentlich",
+      "openTitle": "{{url}} öffnen"
+    },
+    "hosts": {
+      "title": "Hosts",
+      "empty": "Keine Maschinen in ~/.ssh/config.",
+      "count": "{{count}} Host",
+      "count_other": "{{count}} Hosts",
+      "status": {
+        "connected": "verbunden",
+        "connecting": "verbindet",
+        "prompt": "wartet auf dich",
+        "failed": "fehlgeschlagen",
+        "disconnected": "nicht verbunden"
+      },
+      "connect": "Verbinden",
+      "hint": "klicken für eine Shell",
+      "openShell": "Shell auf {{host}} öffnen",
+      "unreachable": "nicht erreichbar",
+      "cores": "{{n}} Kerne",
+      "disk": "{{free}} frei von {{total}}"
+    }
+  },
+  "commandPalette": {
+    "ariaLabel": "Befehlspalette",
+    "placeholder": "Befehl eingeben…",
+    "noResults": "Keine Ergebnisse.",
+    "actions": {
+      "newSession": "Neue Sitzung",
+      "analyzeData": "Meine Daten analysieren (neuer Workflow)",
+      "auditReport": "Bericht prüfen (Nachvollziehbarkeitsprüfung)",
+      "openNotebooks": "Notebooks öffnen",
+      "manageSkills": "Skills verwalten",
+      "openSettings": "Einstellungen öffnen",
+      "toggleTheme": "Design wechseln (Hell / Warm / Dunkel)"
+    }
+  },
+  "rowMenu": {
+    "sessionLabel": "Sitzungsaktionen",
+    "projectLabel": "Projektaktionen",
+    "exampleLabel": "Beispielaktionen"
+  },
+  "jump": {
+    "ariaLabel": "Springen zu",
+    "placeholder": "Projekte, Bildschirme, Sitzungen suchen…",
+    "noResults": "Keine Treffer",
+    "sections": {
+      "actions": "Aktionen",
+      "projects": "Projekte",
+      "screens": "Screens",
+      "panes": "Offene Bereiche",
+      "sessions": "Sitzungen",
+      "recent": "Zuletzt",
+      "newIn": "Neue Sitzung in…"
+    },
+    "actions": {
+      "newSession": "Neue Sitzung in {{project}}",
+      "newTerminal": "Neues Terminal in {{project}}"
+    },
+    "projectDetail_one": "{{count}} Sitzung · {{ago}}",
+    "projectDetail_other": "{{count}} Sitzungen · {{ago}}",
+    "projectEmpty": "Noch keine Sitzungen",
+    "hints": {
+      "open": "öffnen",
+      "beside": "daneben öffnen",
+      "close": "schließen"
+    }
+  },
+  "newPicker": {
+    "title": "Neue Sitzung",
+    "search": "Projekte suchen…",
+    "current": "Aktuell",
+    "newProject": "Neues Projekt…",
+    "hintCreate": "erstellen",
+    "hintQuick": "direkt hier, ohne Nachfrage"
+  },
+  "web": {
+    "manyTabs": "In {{count}} Tabs geöffnet. Ein Browser erlaubt nur wenige Verbindungen zu einer Adresse, jeder weitere Tab bremst alle – schließen Sie die, die Sie nicht brauchen."
+  }
+}

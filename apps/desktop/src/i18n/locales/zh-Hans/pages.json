@@ -1,0 +1,206 @@
+{
+  "notebooks": {
+    "title": "笔记本",
+    "openJupyterLab": "打开 JupyterLab",
+    "openJupyterLabTitle": "在浏览器中打开完整的 JupyterLab（相同环境和文件）",
+    "newNotebook": "新建笔记本",
+    "pythonNotebook": "Python 笔记本",
+    "rNotebook": "R 笔记本",
+    "description": "您所有会话文件夹中的 Jupyter 笔记本，按最新排序。单元格在笔记本自身文件夹中的本地 Python 或 R 内核上运行；代理处理的是同一批文件。",
+    "createsIn": "新笔记本创建于",
+    "empty": {
+      "tauri": "尚无笔记本。创建一个，或让代理生成一个。",
+      "web": "笔记本功能在桌面应用中可用。"
+    },
+    "toast": {
+      "openingJupyterLab": "正在浏览器中打开 JupyterLab…",
+      "setUpJupyterFirst": "请先设置 Jupyter — 设置 → MCP 服务器 → Jupyter。",
+      "couldNotOpenJupyterLab": "无法打开 JupyterLab",
+      "couldNotCreateNotebook": "无法创建笔记本"
+    },
+    "editor": {
+      "backAria": "返回笔记本列表",
+      "languageR": "R",
+      "languagePython": "Python",
+      "saved": "已保存",
+      "unsaved": "未保存",
+      "openJupyterLabAria": "在 JupyterLab 中打开",
+      "historyAria": "历史记录",
+      "historyTitle": "历史记录 — 每个已记录版本及其代码和对话",
+      "reloadAria": "从磁盘重新加载",
+      "reloadTitle": "重新加载（获取代理的更改）",
+      "closeAria": "关闭检查器",
+      "stopCellTitle": "停止 — 重启此笔记本的内核（变量将被重置）",
+      "stopLabel": "停止",
+      "runLabel": "运行",
+      "addCellLabel": "添加单元格",
+      "askAgent": "就这个 cell 问 Agent",
+      "askAgentAria": "就第 {{n}} 个 cell 问 Agent",
+      "askAgentIntro": "关于 `{{file}}` 的第 [{{n}}] 个 cell：",
+      "askAgentOutput": "它的输出是：",
+      "askAgentSent": "已放入输入框",
+      "countTitle": "执行序号 —— 运行中为 [*]，运行过为 [n]",
+      "interrupted": "已中断 —— 内核已重启，变量已清空。",
+      "desktopOnlyKernel": "本地内核只能在桌面应用中使用。"
+    }
+  },
+  "files": {
+    "loading": "正在加载…",
+    "folderEmpty": "此文件夹为空。",
+    "explorerUnavailableWeb": "文件浏览器在桌面应用中可用。",
+    "selectFilePrompt": "选择一个文件以在此处预览。",
+    "pane": {
+      "subtitle": "此会话的文件夹",
+      "closeAria": "关闭文件"
+    },
+    "contextMenu": {
+      "copyPath": "复制路径",
+      "copyRelativePath": "复制相对路径",
+      "relativePathLabel": "相对路径",
+      "openInDefaultApp": "用默认应用打开"
+    },
+    "linked": {
+      "tag": "关联",
+      "unlink": "解除关联",
+      "unlinkTitle": "解除这个文件夹的关联？",
+      "unlinkBody": "项目里的这个链接会被移除。它指向的文件夹和里面的文件都原样不动；之后 AI 要用到它们时会重新征求你的同意。",
+      "outsideBase": "这个文件夹已不在工作区文件夹里：{{path}}"
+    }
+  },
+  "skills": {
+    "title": "技能与代理",
+    "subtitle": "代理可以调用的全部能力，从 OpenCode 实时加载。",
+    "install": {
+      "sectionTitle": "安装技能",
+      "placeholder": "粘贴 SKILL.md，或粘贴一个 URL / 描述，交给代理生成",
+      "starting": "正在启动…",
+      "cta": "安装技能",
+      "hintConnected": "粘贴 SKILL.md 会直接安装；其他内容会打开代理会话。安装后的技能在所有工作区都可用。",
+      "hintDisconnected": "请先连接运行时。",
+      "installed": "已安装“{{name}}”——在所有工作区均可用。",
+      "agentPrompt": "用户在技能安装框中输入了以下内容：\n\n---\n{{input}}\n---\n\n请耐心协助用户完成安装：先确认用户指的是哪个技能（可以抓取该 URL、搜索，或在含义不明时直接询问用户），然后把它保存为技能文件 .opencode/skills/<name>/SKILL.md，必须写在当前工作区内、不要写到工作区之外（之后由应用负责让它在所有工作区可用）。技能文件的格式见 customize-opencode 技能。最后回复已安装技能的名称。",
+      "echo": "请协助我安装这个技能：\n\n{{input}}",
+      "adoptFailed": "技能已写入，但未能移动到你的配置目录；当这个会话文件夹被替换时它会消失：{{detail}}"
+    },
+    "environment": {
+      "sectionTitle": "科学计算环境",
+      "detectionUnavailable": "环境检测功能在桌面应用中运行。",
+      "found": "已找到",
+      "notFound": "未找到",
+      "appManaged": "应用内置",
+      "note": "OpenCode 使用此处已安装的组件运行代码（例如通过其 shell 工具调用 Python）。uv 随应用内置，Jupyter 可在「设置 → 连接器」中由应用托管。Python 和 R 并未内置——请自行安装它们或安装 Science Pack 以启用分析功能。"
+    },
+    "agentsSection": {
+      "heading": "代理",
+      "empty": "未报告任何代理。",
+      "agentMode": {
+        "primary": "主要",
+        "subagent": "子代理",
+        "all": "全部"
+      }
+    },
+    "skillsListSection": {
+      "heading": "技能",
+      "empty": "尚未加载任何技能。",
+      "source": {
+        "builtin": "内置",
+        "project": "项目",
+        "user": "用户"
+      }
+    },
+    "disconnected": "连接运行时以列出其已加载的技能和代理。",
+    "search": "搜索技能和代理",
+    "noMatch": "没有匹配“{{query}}”的结果。",
+    "specialists": {
+      "heading": "专家",
+      "hint": "你自己定义的子代理。主代理遇到符合描述的任务，会交给它们处理。",
+      "new": "新建专家",
+      "emptyTitle": "还没有专家",
+      "emptyBody": "专家是专做一类事的助手，有自己的指令，只能用你选定的技能和连接器。比如一个只用 R 技能的统计审稿人。",
+      "newTitle": "新建专家",
+      "editTitle": "编辑 {{id}}",
+      "close": "关闭",
+      "untitled": "未命名专家",
+      "kind": "专家",
+      "name": "名称",
+      "namePlaceholder": "例如 统计审稿",
+      "idHint": "会根据名称保存为一个简短的 ID。",
+      "idPreview": "保存为 {{id}}",
+      "idTaken": "已经有一个叫 {{id}} 的代理。",
+      "color": "颜色",
+      "colors": {
+        "ink": "墨色",
+        "gray": "灰",
+        "red": "红",
+        "orange": "橙",
+        "yellow": "黄",
+        "green": "绿",
+        "aqua": "青",
+        "blue": "蓝",
+        "violet": "紫",
+        "magenta": "品红"
+      },
+      "whenToUse": "何时使用",
+      "whenToUseHint": "主代理靠这段话判断什么时候把任务交给它。写清楚是什么任务、在什么情况下。",
+      "whenToUsePlaceholder": "例如：审查 R 或 Python 里的统计分析，包括检验方法选择、前提假设、多重比较。",
+      "whenToUseRequired": "请写明何时使用它。",
+      "instructions": "指令",
+      "instructionsHint": "替换这个专家的默认系统提示词。项目记忆和技能列表仍会附上。留空则沿用默认提示词。",
+      "instructionsPlaceholder": "它该怎么做、要检查什么、怎么汇报结果。",
+      "capabilities": "能力",
+      "capabilitiesHint": "它可以用什么。它执行的所有操作仍受审批规则约束。",
+      "skills": "技能",
+      "skillsAll": "全部技能",
+      "skillsSome": "仅选中的",
+      "skillsFilter": "筛选技能",
+      "skillsSelected": "已选 {{count}} 个",
+      "skillsNoMatch": "没有匹配的技能。",
+      "skillsNone": "未选择任何技能：这个专家不使用技能。",
+      "skillMissing": "已不再安装",
+      "connectors": "连接器",
+      "connectorsHint": "之后新增的连接器默认开启，可以在这里关闭。",
+      "connectorsLoading": "正在读取连接器…",
+      "noConnectors": "还没有配置连接器，可在 设置 › 连接器 中添加。",
+      "connectorCollision": "关闭 {{blocked}} 会连带关闭 {{other}}。请把两个都关掉，或保留 {{blocked}}。",
+      "modelDefault": "默认模型",
+      "create": "创建专家",
+      "save": "保存",
+      "saving": "正在保存并重启运行时…",
+      "delete": "删除",
+      "deleting": "正在删除…",
+      "deleteTitle": "删除 {{id}}？",
+      "deleteBody": "主代理将不能再把任务交给它。历史会话里它做过的内容会保留。",
+      "discardTitle": "放弃修改？",
+      "discardBody": "你对这个专家做的修改会丢失。",
+      "discard": "放弃",
+      "created": "已创建 {{id}}，主代理现在可以把任务交给它。",
+      "saved": "已保存 {{id}}。",
+      "deleted": "已删除 {{id}}。",
+      "idEmpty": "名称里至少要有一个文字或数字，它会成为 ID。",
+      "model": "模型",
+      "modelDefaultNamed": "默认模型（{{model}}）",
+      "modelUnlisted": "{{model}}（不在模型目录中）",
+      "icon": "图标",
+      "iconLetter": "首字"
+    },
+    "showAll": "显示全部 {{count}} 个",
+    "showFewer": "收起",
+    "detail": {
+      "close": "关闭",
+      "loading": "正在读取 SKILL.md…",
+      "unreadable": "无法读取这个技能的文件。",
+      "empty": "这个 SKILL.md 除了描述之外没有其他内容。",
+      "reveal": "在文件夹中显示"
+    }
+  },
+  "notFound": {
+    "title": "404 — 未找到",
+    "hint": "此页面不存在。",
+    "backLink": "返回工作区"
+  },
+  "notify": {
+    "completeTitle": "回合已完成",
+    "failedTitle": "回合失败",
+    "interruptedTitle": "回合已中断"
+  }
+}

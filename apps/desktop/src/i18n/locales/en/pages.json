@@ -1,0 +1,206 @@
+{
+  "notebooks": {
+    "title": "Notebooks",
+    "openJupyterLab": "Open JupyterLab",
+    "openJupyterLabTitle": "Open the full JupyterLab (same env and files) in your browser",
+    "newNotebook": "New notebook",
+    "pythonNotebook": "Python notebook",
+    "rNotebook": "R notebook",
+    "description": "All Jupyter notebooks across your session folders, newest first. Cells run on the local Python or R kernel in the notebook's own folder; the agent works on the same files.",
+    "createsIn": "New notebooks are created in",
+    "empty": {
+      "tauri": "No notebooks yet. Create one, or ask the agent to produce one.",
+      "web": "Notebooks are available in the desktop app."
+    },
+    "toast": {
+      "openingJupyterLab": "Opening JupyterLab in your browser…",
+      "setUpJupyterFirst": "Set up Jupyter first — Settings → MCP servers → Jupyter.",
+      "couldNotOpenJupyterLab": "Could not open JupyterLab",
+      "couldNotCreateNotebook": "Could not create notebook"
+    },
+    "editor": {
+      "backAria": "Back to notebooks",
+      "languageR": "R",
+      "languagePython": "Python",
+      "saved": "Saved",
+      "unsaved": "Unsaved",
+      "openJupyterLabAria": "Open in JupyterLab",
+      "historyAria": "History",
+      "historyTitle": "History — every recorded version with its code and conversation",
+      "reloadAria": "Reload from disk",
+      "reloadTitle": "Reload (pick up the agent's changes)",
+      "closeAria": "Close inspector",
+      "stopCellTitle": "Stop — restarts this notebook's kernel (variables reset)",
+      "stopLabel": "Stop",
+      "runLabel": "Run",
+      "addCellLabel": "Add cell",
+      "askAgent": "Ask the agent about this cell",
+      "askAgentAria": "Ask the agent about cell {{n}}",
+      "askAgentIntro": "About cell [{{n}}] of `{{file}}`:",
+      "askAgentOutput": "It printed:",
+      "askAgentSent": "Cell added to the composer",
+      "countTitle": "Execution count — [*] while running, [n] once it has run",
+      "interrupted": "Interrupted — the kernel was restarted; variables were reset.",
+      "desktopOnlyKernel": "The local kernel needs the desktop app."
+    }
+  },
+  "files": {
+    "loading": "Loading…",
+    "folderEmpty": "This folder is empty.",
+    "explorerUnavailableWeb": "The file explorer is available in the desktop app.",
+    "selectFilePrompt": "Select a file to preview it here.",
+    "pane": {
+      "subtitle": "this session's folder",
+      "closeAria": "Close files"
+    },
+    "contextMenu": {
+      "copyPath": "Copy path",
+      "copyRelativePath": "Copy relative path",
+      "relativePathLabel": "Relative path",
+      "openInDefaultApp": "Open in default app"
+    },
+    "linked": {
+      "tag": "Linked",
+      "unlink": "Unlink",
+      "unlinkTitle": "Unlink this folder?",
+      "unlinkBody": "The link leaves the project. The folder it points to and all its files stay exactly where they are; the agent will ask again before using them.",
+      "outsideBase": "That folder is outside the workspace folder now: {{path}}"
+    }
+  },
+  "skills": {
+    "title": "Skills & Agents",
+    "subtitle": "Everything the agent can use, loaded live from OpenCode.",
+    "install": {
+      "sectionTitle": "Install a skill",
+      "placeholder": "Paste a SKILL.md, or a URL / description for the agent to turn into one",
+      "starting": "Starting…",
+      "cta": "Install skill",
+      "hintConnected": "A pasted SKILL.md installs straight away; anything else opens an agent session. Installed skills are available in every workspace.",
+      "hintDisconnected": "Connect the runtime first.",
+      "installed": "Installed “{{name}}” — available in every workspace.",
+      "agentPrompt": "The user typed this into the Skills install box:\n\n---\n{{input}}\n---\n\nPlease help them install it patiently: work out which skill they mean (fetch the URL, search for it, or ask them if it is ambiguous), then save it as a skill file at .opencode/skills/<name>/SKILL.md inside this workspace — never outside it; the app then makes it available in every workspace. The customize-opencode skill documents the format. Finally reply with the installed skill's name.",
+      "echo": "Please help me install this skill:\n\n{{input}}",
+      "adoptFailed": "The skill was written but could not be moved into your profile, so it will disappear when this session's folder is replaced: {{detail}}"
+    },
+    "environment": {
+      "sectionTitle": "Scientific environment",
+      "detectionUnavailable": "Environment detection runs in the desktop app.",
+      "found": "found",
+      "notFound": "not found",
+      "appManaged": "app-managed",
+      "note": "OpenCode runs code with whatever is installed here (e.g. Python via its shell tool). uv ships with the app, and Jupyter can be app-managed in Settings → Connectors. Python and R are not bundled — install them or a Science Pack to enable analysis."
+    },
+    "agentsSection": {
+      "heading": "Agents",
+      "empty": "No agents reported.",
+      "agentMode": {
+        "primary": "primary",
+        "subagent": "subagent",
+        "all": "all"
+      }
+    },
+    "skillsListSection": {
+      "heading": "Skills",
+      "empty": "No skills loaded yet.",
+      "source": {
+        "builtin": "built-in",
+        "project": "project",
+        "user": "user"
+      }
+    },
+    "disconnected": "Connect the runtime to list the skills and agents it has loaded.",
+    "search": "Search skills and agents",
+    "noMatch": "Nothing matches “{{query}}”.",
+    "specialists": {
+      "heading": "Specialists",
+      "hint": "Your own subagents. The main agent hands them work that matches their description.",
+      "new": "New specialist",
+      "emptyTitle": "No specialists yet",
+      "emptyBody": "A specialist is a focused helper with its own instructions, limited to the skills and connectors you choose — for example a statistics reviewer that only uses your R skills.",
+      "newTitle": "New specialist",
+      "editTitle": "Edit {{id}}",
+      "close": "Close",
+      "untitled": "Untitled specialist",
+      "kind": "Specialist",
+      "name": "Name",
+      "namePlaceholder": "e.g. Stats reviewer",
+      "idHint": "Saved as a short ID made from the name.",
+      "idPreview": "Saved as {{id}}",
+      "idTaken": "An agent called {{id}} already exists.",
+      "color": "Color",
+      "colors": {
+        "ink": "Ink",
+        "gray": "Gray",
+        "red": "Red",
+        "orange": "Orange",
+        "yellow": "Yellow",
+        "green": "Green",
+        "aqua": "Aqua",
+        "blue": "Blue",
+        "violet": "Violet",
+        "magenta": "Magenta"
+      },
+      "whenToUse": "When to use",
+      "whenToUseHint": "The main agent reads this to decide when to hand work over. Name the task and the situation.",
+      "whenToUsePlaceholder": "e.g. Reviews statistical analyses in R or Python: test choice, assumptions, multiple comparisons.",
+      "whenToUseRequired": "Describe when it should be used.",
+      "instructions": "Instructions",
+      "instructionsHint": "Replaces the default system prompt for this specialist. Project memory and the skill list are still included. Leave empty to keep the default.",
+      "instructionsPlaceholder": "How it should work, what to check, how to report back.",
+      "capabilities": "Capabilities",
+      "capabilitiesHint": "What it may use. Approval rules still apply to everything it runs.",
+      "skills": "Skills",
+      "skillsAll": "All skills",
+      "skillsSome": "Only selected",
+      "skillsFilter": "Filter skills",
+      "skillsSelected": "{{count}} selected",
+      "skillsNoMatch": "No skills match.",
+      "skillsNone": "None selected: this specialist uses no skills.",
+      "skillMissing": "Not installed any more",
+      "connectors": "Connectors",
+      "connectorsHint": "Connectors added later are on until you turn them off here.",
+      "connectorsLoading": "Reading connectors…",
+      "noConnectors": "No connectors configured. Add them in Settings › Connectors.",
+      "connectorCollision": "Turning off {{blocked}} would also turn off {{other}}. Turn both off, or keep {{blocked}} on.",
+      "modelDefault": "Default model",
+      "create": "Create specialist",
+      "save": "Save",
+      "saving": "Saving and restarting the runtime…",
+      "delete": "Delete",
+      "deleting": "Deleting…",
+      "deleteTitle": "Delete {{id}}?",
+      "deleteBody": "The main agent will no longer be able to hand work to it. Past sessions keep what it did.",
+      "discardTitle": "Discard changes?",
+      "discardBody": "What you changed in this specialist will be lost.",
+      "discard": "Discard",
+      "created": "Created {{id}}. The main agent can hand work to it now.",
+      "saved": "Saved {{id}}.",
+      "deleted": "Deleted {{id}}.",
+      "idEmpty": "The name needs at least one letter or digit — it becomes the ID.",
+      "model": "Model",
+      "modelDefaultNamed": "Default model ({{model}})",
+      "modelUnlisted": "{{model}} (not in the catalog)",
+      "icon": "Icon",
+      "iconLetter": "First letter"
+    },
+    "showAll": "Show all {{count}}",
+    "showFewer": "Show fewer",
+    "detail": {
+      "close": "Close",
+      "loading": "Reading SKILL.md…",
+      "unreadable": "Couldn't read this skill's file.",
+      "empty": "This SKILL.md has no instructions beyond its description.",
+      "reveal": "Show in folder"
+    }
+  },
+  "notFound": {
+    "title": "404 — Not found",
+    "hint": "This page does not exist.",
+    "backLink": "Back to workspace"
+  },
+  "notify": {
+    "completeTitle": "Turn complete",
+    "failedTitle": "Turn failed",
+    "interruptedTitle": "Turn interrupted"
+  }
+}

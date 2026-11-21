@@ -1,0 +1,705 @@
+{
+  "notFound": {
+    "title": "Session not found",
+    "hint": "Pick a session from the sidebar."
+  },
+  "group": {
+    "defaultName": "Screen {{n}}",
+    "newTab": "New screen",
+    "close": "Close screen",
+    "renameHint": "Double-click to rename",
+    "splitRight": "Split right — open a new session beside this one",
+    "splitDown": "Split down — open a new session below this one",
+    "closePane": "Close this pane",
+    "confirmClose": {
+      "title": "Close this panel?",
+      "body": "This only removes the panel from this Screen. The session, conversation history, and workspace files are kept.",
+      "action": "Close panel"
+    },
+    "confirmCloseScreen": {
+      "title": "Close this Screen?",
+      "body": "This removes the Screen and every panel in it. Sessions, conversation history, and workspace files are kept.",
+      "action": "Close Screen"
+    },
+    "zoom": "Zoom this pane",
+    "rename": "Rename screen",
+    "tabMenu": "Screen actions",
+    "runAgent": "Run an agent",
+    "newNotebook": "New Notebook",
+    "newMarkdown": "New Markdown",
+    "sourceMenu": "Which Screens to show",
+    "sourceDesktop": "Desktop's Screens",
+    "sourceDesktopHint": "The desktop window's own, live: changes here show there and back.",
+    "sourceOwn": "My own Screens",
+    "sourceOwnHint": "Kept in this browser. The desktop window is not affected.",
+    "splitRightShort": "Split right",
+    "splitDownShort": "Split down",
+    "defaultProject": "Default",
+    "projectMenu": "Switch project",
+    "panes": "Panes in this Screen"
+  },
+  "composer": {
+    "placeholder": {
+      "default": "Ask anything",
+      "arguments": "Arguments (optional) — Enter to run",
+      "shell": "Run a shell command in the workspace folder",
+      "plan": "Describe what to plan — no files will be changed"
+    },
+    "commandsAria": "Commands",
+    "source": {
+      "skill": "skill",
+      "mcp": "mcp"
+    },
+    "file": {
+      "removeAria": "Remove {{name}}",
+      "previewAria": "Preview {{name}}",
+      "preview": {
+        "empty": "Empty file",
+        "none": "No inline preview",
+        "unreadable": "Can't read this file from the workspace",
+        "lines_other": "{{count}} lines"
+      }
+    },
+    "attach": {
+      "addAria": "Add files",
+      "title": "Add local files to the workspace"
+    },
+    "command": {
+      "chipTitle": "Runs this command — type arguments, or press Backspace to edit the name",
+      "removeAria": "Remove command"
+    },
+    "shellMode": {
+      "badge": "shell",
+      "title": "Runs directly in the session's workspace folder"
+    },
+    "stop": {
+      "aria": "Stop",
+      "title": "Interrupt this turn (Esc)"
+    },
+    "send": {
+      "aria": "Send"
+    },
+    "approval": {
+      "aria": "Approval mode",
+      "title": "How agent actions get approved",
+      "menuAria": "Approval modes",
+      "menuTitle": "How should agent actions be approved?",
+      "approve": {
+        "label": "Approve for me",
+        "description": "Asks before deleting, installing, or going remote"
+      },
+      "full": {
+        "label": "Full access",
+        "description": "Runs every command without asking"
+      }
+    },
+    "error": {
+      "paste": "Could not save paste: {{message}}",
+      "addFiles": "Could not add files: {{message}}",
+      "imageNotSent": "Couldn't read {{names}} — the message was sent without the image."
+    },
+    "model": {
+      "aria": "Switch model",
+      "title": "Model & reasoning effort",
+      "search": "Search models…",
+      "none": "Select model",
+      "empty": "No models yet. Connect a provider.",
+      "noResults": "No matching models",
+      "favorite": "Favorite",
+      "manage": "Manage providers…",
+      "close": "Close",
+      "filter": {
+        "all": "All",
+        "favorites": "Favorites",
+        "recent": "Recent",
+        "new": "New"
+      },
+      "reasoning": "Reasoning effort",
+      "reasoningDefault": "Model default",
+      "faster": "Faster",
+      "smarter": "Smarter",
+      "followingAgent": "Following the {{agent}} agent",
+      "followAgent": "Follow the {{agent}} agent",
+      "useDefault": "Use the global default",
+      "unknownContextTitle": "Context window unknown",
+      "unknownContextBody": "Auto-compaction stays off for this model, so the conversation grows without limit and long turns eventually stall. Set the window in Settings → Agents.",
+      "retiredTitle": "Model retired by its provider",
+      "retiredBody": "{{model}} is still configured, but the provider no longer serves it, so every turn fails. Pick another model above.",
+      "newBadge": "New",
+      "catalog": {
+        "updated": "Updated {{ago}} ago",
+        "updatedNow": "Updated just now",
+        "checking": "Checking for new models",
+        "loading": "Loading new models",
+        "upToDate": "Up to date",
+        "added_one": "{{count}} new model",
+        "added_other": "{{count}} new models",
+        "waiting_one": "{{count}} new model after this reply",
+        "waiting_other": "{{count}} new models after this reply",
+        "failed": {
+          "timeout": "Update timed out",
+          "proxy": "Proxy refused the update",
+          "offline": "Update could not connect",
+          "server": "Update server error",
+          "invalid": "Update was incomplete"
+        },
+        "retry": "Retry",
+        "staleTitle_one": "Model list is {{count}} day old",
+        "staleTitle_other": "Model list is {{count}} days old",
+        "staleBody": "Recent updates have failed. Newer models appear once an update gets through.",
+        "proxySettings": "Proxy settings",
+        "noMatch": "0 results for {{query}}",
+        "listAge": "Model list updated {{ago}} ago",
+        "checkNow": "Check for new models"
+      }
+    },
+    "reference": {
+      "filesAria": "Workspace files",
+      "sessionsAria": "Past conversations",
+      "scanning": "Reading the workspace…",
+      "chipTitle": "This conversation will be quoted for the agent",
+      "removeAria": "Remove the reference to {{title}}"
+    },
+    "compact": {
+      "confirmTitle": "Compact the context?",
+      "confirmBody": "The earlier turns are replaced with a summary so the next reply runs on a bounded context. The full original conversation is still stored locally.",
+      "confirmAction": "Compact",
+      "empty": "No conversation to compact yet",
+      "justCompacted": "Just compacted — nothing new to compact since",
+      "small": "Only {{used}} of context in use; compacting starts at {{threshold}}"
+    },
+    "builtin": {
+      "plan": "Plan mode: research and write a plan before changing files. /plan off leaves",
+      "compact": "Compress context: summarize the earlier conversation"
+    },
+    "planMode": {
+      "label": "Plan mode",
+      "title": "The agent researches and writes a plan; it does not edit files. Shift+Tab or /plan off leaves",
+      "exitAria": "Leave plan mode"
+    },
+    "todos": {
+      "title": "Tasks",
+      "done": "{{count}} done",
+      "active": "{{count}} in progress",
+      "pending": "{{count}} to do",
+      "status": {
+        "completed": "Done",
+        "in_progress": "In progress",
+        "pending": "To do",
+        "cancelled": "Cancelled"
+      }
+    },
+    "queue": {
+      "aria": "Queued messages",
+      "edit": "Edit queued message",
+      "save": "Save",
+      "cancelEdit": "Cancel editing",
+      "remove": "Remove queued message",
+      "steer": "Steer in now",
+      "sendNow": "Send now",
+      "add": "Queue message",
+      "addTitle": "Queue for after this turn (Enter) · Cmd/Ctrl+Enter steers it in now"
+    },
+    "busyCommand": "Wait for this turn to finish before running a command.",
+    "agent": {
+      "aria": "Agent",
+      "title": "Agent and model",
+      "locked": "New conversation to use another agent",
+      "manage": "Manage agents",
+      "optionsLoading": "Reading {{agent}}'s models…",
+      "optionsNone": "{{agent}} offers no models to choose from.",
+      "optionsFailed": "{{agent}} did not start: {{error}}",
+      "more": "More agents…",
+      "accountAria": "Account",
+      "defaultAccount": "Default account"
+    }
+  },
+  "localCommand": {
+    "newDescription": "New conversation in this folder",
+    "clearDescription": "Clear the context; earlier messages stay visible above",
+    "clearedLabel": "Context cleared",
+    "clearedHint": "The model no longer sees the messages above",
+    "openEarlier": "Open that session",
+    "olderCleared_one": "{{count}} earlier cleared conversation",
+    "olderCleared_other": "{{count}} earlier cleared conversations",
+    "showOlder": "Show"
+  },
+  "starters": {
+    "newSession": "New session",
+    "heading": "What should we look into?",
+    "subheading": "Describe your analysis below — or start from one of these.",
+    "subheadingNoCards": "Describe your analysis below.",
+    "demo": {
+      "title": "Run a demo analysis, end to end",
+      "description": "Simulate a dataset, fit a model, and produce a figure and a traceable report."
+    },
+    "analyze": {
+      "title": "Analyze my data",
+      "description": "Point the agent at a file you added; get figures and a report back."
+    },
+    "audit": {
+      "title": "Audit a report for traceability",
+      "description": "Check citations, unsourced numbers, and figure-versus-code consistency."
+    },
+    "example-climate": {
+      "title": "Explore an example: climate trends",
+      "description": "Real NASA GISTEMP data — trend, decadal comparison, figure, and report."
+    },
+    "error": {
+      "setup": "Could not set up the example: {{message}}"
+    }
+  },
+  "live": {
+    "starting": {
+      "bodyWeb": "Waiting for the host app to answer. Keep this page open — it connects on its own as soon as the host is reachable.",
+      "title": "Starting the local runtime…",
+      "body": "The bundled agent runtime is coming up. On a first launch macOS may ask for permission to access your folders — allow it and this finishes on its own.",
+      "upgrading": "Open Science is upgrading your conversation history for the new runtime ({{done}} of {{total}} conversations). This happens once."
+    },
+    "runtime": {
+      "title": "OpenCode runtime",
+      "bodyPrefix": "The desktop app runs a bundled OpenCode automatically. In the browser, start one with",
+      "bodySuffix": " and connect."
+    },
+    "connect": "Connect",
+    "latest": "Latest",
+    "subagentFallback": "a subagent",
+    "header": {
+      "expandSidebarAria": "Expand sidebar",
+      "expandSidebarTitle": "Expand sidebar ({{shortcut}})",
+      "rename": "Rename session…",
+      "untitled": "Untitled session",
+      "paneMenu": "Session actions"
+    },
+    "filesToggle": {
+      "default": "Files",
+      "title": "Browse this session's folder beside the chat"
+    },
+    "runsToggle": {
+      "label": "Runs",
+      "title": "This session's experiment runs — beside the chat"
+    },
+    "notebook": {
+      "chooseTitle": "Choose a notebook",
+      "openTitle": "Open {{path}} — the agent works on this notebook in this session"
+    },
+    "connBadge": {
+      "title": "OpenCode · {{status}}",
+      "status": {
+        "ready": "ready",
+        "connecting": "connecting",
+        "error": "error",
+        "offline": "offline"
+      }
+    },
+    "status": {
+      "paused": "Paused — the agent needs your answer below",
+      "startingSession": "Starting the session in its folder…",
+      "retrying": "Provider error — retrying (attempt {{attempt}})",
+      "limitReached": "Provider limit reached — waiting will not help",
+      "working": "Working…",
+      "step": "step {{count}}"
+    },
+    "review": {
+      "queued": "Background review queued…",
+      "running": "Reviewing this checkpoint in the background…",
+      "cancelAria": "Stop background review",
+      "cancelTitle": "Stop this review"
+    },
+    "placeholder": {
+      "starting": "Starting the runtime…",
+      "disconnected": "Connect to chat",
+      "waiting": "Waiting for the reply…",
+      "readOnly": "Read-only access — viewing only",
+      "queue": "Enter queues for after this turn, Cmd/Ctrl+Enter steers in now",
+      "steerQueue": "Cmd/Ctrl+Enter steers all queued messages in now",
+      "compacting": "Compressing context…"
+    }
+  },
+  "tool": {
+    "status": {
+      "pending": "Pending",
+      "running": "Running",
+      "waiting-approval": "Waiting",
+      "success": "Success",
+      "warning": "Warning",
+      "failed": "Failed"
+    },
+    "verb": {
+      "Ran": "Ran",
+      "Created": "Created",
+      "Edited": "Edited",
+      "Read": "Read",
+      "Searched": "Searched",
+      "Listed": "Listed",
+      "Fetched": "Fetched"
+    },
+    "group": {
+      "phrase": {
+        "ran_one": "ran a command",
+        "ran_other": "ran {{count}} commands",
+        "created_one": "created a file",
+        "created_other": "created {{count}} files",
+        "edited_one": "edited a file",
+        "edited_other": "edited {{count}} files",
+        "read_one": "read a file",
+        "read_other": "read {{count}} files",
+        "searched_one": "ran a search",
+        "searched_other": "ran {{count}} searches",
+        "listed": "listed files",
+        "fetched_one": "fetched a page",
+        "fetched_other": "fetched {{count}} pages",
+        "default_one": "ran a step",
+        "default_other": "ran {{count}} steps"
+      },
+      "callCount_one": "{{count}} tool call",
+      "callCount_other": "{{count}} tool calls"
+    },
+    "process": {
+      "thinking": "Analysis completed",
+      "read": "Read files",
+      "write": "Wrote files",
+      "search": "Searched code",
+      "edit": "Edited files",
+      "commands": "Ran commands",
+      "webFetch": "Visited web pages",
+      "tools": "Called tools",
+      "joinTwo": "{{first}} and {{second}}",
+      "comma": ", ",
+      "sharedPrefix": "",
+      "more": "{{title}}, etc."
+    }
+  },
+  "artifact": {
+    "kind": {
+      "figure": "figure",
+      "script": "script",
+      "report": "report",
+      "table": "table",
+      "notebook": "notebook",
+      "model": "model",
+      "data": "data"
+    },
+    "via": "· via {{tool}}",
+    "open": "Open",
+    "maximize": "Maximize",
+    "collapse": "Collapse",
+    "expand": "Expand"
+  },
+  "figure": {
+    "downloadAria": "Download figure",
+    "addAnnotationAria": "Add annotation",
+    "annotationAria": "Annotation {{index}}: {{note}}",
+    "notePlaceholder": "Add a note…",
+    "noteAria": "Annotation note",
+    "send": "Send"
+  },
+  "reviewer": {
+    "heading": "Reviewer",
+    "badge": {
+      "warn": "Warn",
+      "ok": "OK",
+      "error": "Error"
+    },
+    "checkTag": {
+      "citation": "citation",
+      "number": "number",
+      "figure": "figure ↔ code",
+      "domain": "domain",
+      "integrity": "integrity"
+    },
+    "findingCount_one": "· {{count}} finding",
+    "findingCount_other": "· {{count}} findings",
+    "dismissedCount": "· {{count}} dismissed",
+    "dismissAria": "Dismiss finding: {{title}}",
+    "dismissTitle": "Dismiss this finding",
+    "allDismissed": "All findings dismissed."
+  },
+  "interaction": {
+    "question": {
+      "heading": "The agent needs your input",
+      "customPlaceholder": "Or type your own answer…",
+      "other": "Something else…"
+    },
+    "permission": {
+      "heading": "The agent asks permission:"
+    },
+    "askedBy": "Asked by {{origin}}",
+    "skip": "Skip",
+    "submit": "Submit",
+    "reject": "Reject",
+    "alwaysAllow": "Always allow",
+    "allowOnce": "Allow once"
+  },
+  "turn": {
+    "worked": "Worked",
+    "workedFor": "Took {{duration}}"
+  },
+  "reasoning": {
+    "thinking": "Thinking…",
+    "thought": "Thought",
+    "collapse": "Collapse the thought",
+    "expand": "Show the whole thought"
+  },
+  "stepSummary": {
+    "steps": "{{count}} steps"
+  },
+  "thread": {
+    "exampleBadge": "Example · read-only",
+    "sampleNotice": "This is a sample session. Start a live agent session to chat for real."
+  },
+  "workspaceChip": {
+    "fallbackName": "Workspace",
+    "titlePinned": "{{workspace}} — click to choose a different folder",
+    "titleUnpinned": "Starts in a new dated folder ({{name}}) — click to choose a folder instead",
+    "chooseAria": "Choose session folder",
+    "switching": "Switching…"
+  },
+  "agentMessage": {
+    "previewTitle": "Preview {{path}}"
+  },
+  "goal": {
+    "label": "Goal",
+    "running": "running",
+    "runningTurns": "auto-turn {{count}}",
+    "paused": "paused",
+    "done": "done",
+    "pauseAria": "Pause the goal (stops auto-continuation)",
+    "resumeAria": "Resume the goal",
+    "clearAria": "Clear the goal",
+    "unmet": "blocked",
+    "limited": "limit reached"
+  },
+  "message": {
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyFailed": "Could not copy to the clipboard.",
+    "edit": "Edit",
+    "editing": {
+      "cancel": "Cancel",
+      "send": "Send"
+    },
+    "revert": "Revert",
+    "retry": "Retry",
+    "confirm": {
+      "title": "Discard everything after this?",
+      "body": "This rolls the conversation back to this message and discards it and every message after it, along with the file changes those turns made. This can't be undone.",
+      "edit": "Edit & resend",
+      "revert": "Revert here"
+    },
+    "sentByAgentFull": "Sent by the agent in “{{session}}” ({{id}}). Click to copy its reference for an agent.",
+    "sentByAccount": "Sent by the account {{account}}",
+    "sentByAgentLabel": "Sent by the agent in",
+    "sentByAccountLabel": "Sent by the account",
+    "clickToCopyRef": "Click to copy its reference for an agent",
+    "from": "From"
+  },
+  "historyRepair": {
+    "reason": {
+      "text-missing": "One saved message in this conversation has no text where the model's format requires it — usually a reply cut short the instant it began.",
+      "tool-result-missing": "A saved {{tool}} step is missing the result it reported.",
+      "tool-error-missing": "A saved {{tool}} step failed without recording why.",
+      "tool-call-id-missing": "A saved tool step lost the id that pairs it with its result.",
+      "unknown": "This conversation can no longer be sent to the model, and we could not identify which saved message is responsible."
+    },
+    "someTool": "tool",
+    "offer_one": "Rolling back to just before it discards {{count}} message and clears the problem.",
+    "offer_other": "Rolling back to just before it discards {{count}} messages and clears the problem.",
+    "noTarget": "There is no earlier point to roll back to, so this conversation cannot be repaired — start a new one. Nothing is deleted; you can still read and export this one.",
+    "action": "Repair conversation",
+    "confirm": {
+      "title": "Roll back to before the damaged message?",
+      "body_one": "This discards {{count}} message and rolls back the file changes that turn made. Your prompt returns to the composer. This can't be undone.",
+      "body_other": "This discards {{count}} messages and rolls back the file changes those turns made. Your prompt returns to the composer. This can't be undone.",
+      "action": "Roll back"
+    }
+  },
+  "historyRetry": "Retry",
+  "compaction": {
+    "label": "Context compacted",
+    "autoBody": "The runtime summarized the earlier turns to stay inside this model's context window, and the conversation continued here.",
+    "manualBody": "You asked the runtime to summarize the earlier turns; the conversation continued here.",
+    "overflowBody": "It happened because the context had already filled up.",
+    "at": "When: {{time}}",
+    "originalKept": "The full original conversation is still stored locally."
+  },
+  "meta": {
+    "context": "{{used}} / {{limit}} ({{percent}}%)",
+    "contextUnknown": "{{used}} tokens",
+    "durationTitle": "How long this reply took",
+    "costTitle": "What this turn cost",
+    "tooltip": {
+      "input": "Input: {{n}}",
+      "cacheRead": "Cache read: {{n}}",
+      "cacheWrite": "Cache write: {{n}}",
+      "output": "Output: {{n}}",
+      "reasoning": "Reasoning: {{n}}",
+      "context": "Context in use: {{used}} of {{limit}}",
+      "contextUnknown": "Context in use: {{used}} (window unknown)"
+    }
+  },
+  "selection": {
+    "aria": "Actions for the selected text",
+    "quote": "Quote",
+    "explain": "Explain",
+    "explainPrompt": "Explain this part in more detail.",
+    "remember": "Save to memory",
+    "savedProject": "Saved to {{name}}'s memory",
+    "savedGlobal": "Saved to global memory"
+  },
+  "subagents": {
+    "title": "Subagents",
+    "toggleTitle": "Show what the subagents are doing",
+    "closeAria": "Close the subagent panel",
+    "count_one": "{{count}} task",
+    "count_other": "{{count}} tasks",
+    "empty": "No subagents in this conversation yet.",
+    "noDetail": "No steps were recorded for this subagent.",
+    "loadingDetail": "Loading…",
+    "openRow": "Open this subagent in the panel"
+  },
+  "splitDestination": {
+    "title": "The new pane's session will be created in",
+    "continueIn": "Continue in {{name}}",
+    "newFolder": "New folder",
+    "chooseOther": "Choose another folder…",
+    "terminal": "Terminal in this folder"
+  },
+  "stall": {
+    "silentTitle": "Turn may be stuck",
+    "silentLine": "This turn has been silent for {{minutes}} min. Still running, or stuck?",
+    "repeatTitle": "Turn may be looping",
+    "repeatLine": "This turn has run the same call {{count}} times with identical results. Still working, or looping?",
+    "keepWaiting": "Keep waiting",
+    "stopTurn": "Stop turn"
+  },
+  "terminal": {
+    "title": "Terminal",
+    "exited": "[process exited]",
+    "openFailed": "[could not reach the terminal: {{message}}. Trying again in {{seconds}} s]",
+    "desktopOnly": "A terminal needs the desktop app.",
+    "webOff": "Terminals are off for web access. Turn them on in the desktop app: Settings › Remote access.",
+    "new": "Terminal",
+    "menu": {
+      "label": "Terminal menu",
+      "copy": "Copy",
+      "paste": "Paste",
+      "selectAll": "Select All",
+      "clear": "Clear",
+      "revealCwd": "Reveal working folder",
+      "resumeAgent": "Resume last {{agent}} session"
+    },
+    "rename": "Rename terminal…",
+    "confirmClose": {
+      "title": "Close this terminal?",
+      "body": "The shell and anything still running in it will stop. Scrollback is not kept.",
+      "action": "Close terminal"
+    },
+    "search": {
+      "placeholder": "Find",
+      "matchCase": "Match case",
+      "regex": "Regular expression",
+      "previous": "Previous match",
+      "next": "Next match",
+      "close": "Close find",
+      "none": "no results",
+      "find": "Find…"
+    },
+    "recentInput": "Recent input from outside:",
+    "continueInApp": {
+      "label": "Open as conversation",
+      "confirmTitle": "Continue in a conversation?",
+      "confirmBody": "This {{agent}} session continues in the app's conversation view, and this terminal closes. You can move it back to a terminal at any time."
+    },
+    "continueInTerminal": {
+      "label": "Continue in terminal",
+      "confirmTitle": "Continue in a terminal?",
+      "confirmBody": "This conversation reopens in a terminal where it is, and this pane becomes that terminal. It stays in the sidebar, so you can come back to it here.",
+      "confirmBodyRunning": "The reply in progress stops, then this conversation reopens in a terminal where it is. It stays in the sidebar, so you can come back to it here."
+    },
+    "control": {
+      "held": "The {{by}} is in control",
+      "takeOver": "Take over this one",
+      "takeOverAll": "Take over all",
+      "by": {
+        "desktop": "desktop app",
+        "web": "browser",
+        "phone": "phone"
+      }
+    }
+  },
+  "splitInto": {
+    "session": "Session"
+  },
+  "find": {
+    "placeholder": "Find in conversation",
+    "matchCase": "Match case",
+    "regex": "Regular expression",
+    "previous": "Previous match",
+    "next": "Next match",
+    "close": "Close find",
+    "none": "no results",
+    "find": "Find…"
+  },
+  "turnNav": {
+    "label": "Turn navigation",
+    "jump": "Jump to turn {{turn}}",
+    "turn": "Turn {{turn}}"
+  },
+  "trajectory": {
+    "title": "Trajectory",
+    "toggle": "Trajectory — every step of this conversation",
+    "duration": "Duration",
+    "useActual": "Use actual duration",
+    "useEqual": "Use equal-width operations",
+    "turns": "Turns",
+    "expandTurns": "Expand turns",
+    "collapseTurns": "Collapse turns",
+    "calls": "Calls",
+    "expandCalls": "Expand calls",
+    "collapseCalls": "Collapse calls",
+    "search": "Search",
+    "user": "USER",
+    "assistant": "ASSISTANT",
+    "tool": "TOOL",
+    "message": "MESSAGE",
+    "system": "SYSTEM",
+    "compacted": "COMPACTED",
+    "input": "Input",
+    "model": "Model",
+    "tools": "Tools",
+    "turn": "Turn {{n}}",
+    "noOutput": "no output",
+    "thinking": "Thinking",
+    "result": "Result",
+    "empty": "No steps yet.",
+    "noMatch": "No steps match.",
+    "steps_one": "{{count}} step",
+    "steps_other": "{{count}} steps",
+    "close": "Close trajectory"
+  },
+  "drag": {
+    "moveInto": "Move to “{{name}}”"
+  },
+  "home": {
+    "tab": "Home",
+    "openFolder": "Open the folder",
+    "recent": "Recent sessions",
+    "seeAll": "All {{count}}",
+    "emptyProject": "Nothing here yet — start the first conversation of this project.",
+    "emptyDefault": "No loose sessions yet — start one, or open a project in the sidebar.",
+    "greeting": {
+      "morning": "Good morning",
+      "noon": "Good afternoon",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening",
+      "night": "Working late"
+    },
+    "count_one": "{{count}} session",
+    "count_other": "{{count}} sessions"
+  },
+  "reference": {
+    "copy": "Copy reference for an agent",
+    "copied": "Reference copied — paste it to an agent"
+  }
+}

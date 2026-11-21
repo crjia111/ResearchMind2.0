@@ -1,0 +1,789 @@
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/source-serif-4/400.css";
+@import "@fontsource/source-serif-4/600.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Webview page-zoom factor (Cmd/Ctrl +/-), owned by ZoomProvider. The macOS
+   traffic lights are native chrome and never zoom, so titlebar strips counter-
+   scale their height and traffic-light inset by 1/--zoom (see overlayTitlebarStyle)
+   to stay pinned to the lights at every zoom level. */
+:root {
+  --zoom: 1;
+}
+
+/* Warm — the original paper palette, and the default theme. Its default
+   variant, "soft": the session and terminal sit on a barely warm white rather
+   than pure white, so the window reads as one sheet. Other variants below. */
+:root,
+[data-theme="warm"] {
+  --bg: #f7f5ef;
+  --surface: #fdfcf9;
+  --surface-2: #f2efe7;
+  --border: #e7e3da;
+  --border-faint: #efece5;
+  --text: #2a2723;
+  --muted: #8c877d;
+  --accent: #c15f3c;
+  --accent-fg: #ffffff;
+  --link: #2a6fdb;
+  --warn: #c98a2b;
+  --ok: #4b8b5b;
+  --error: #c0564b;
+  /* Chart design system (P1-5) — validated categorical hues + chart chrome,
+     the single source of truth shared with @ai4s/shared and the matplotlib
+     style. Light surface = --surface (#ffffff). */
+  --series-1: #2a78d6;
+  --series-2: #1baf7a;
+  --series-3: #eda100;
+  --series-4: #008300;
+  --series-5: #4a3aa7;
+  --series-6: #e34948;
+  --series-7: #e87ba4;
+  --series-8: #eb6834;
+  --chart-grid: #e7e3da;
+  --chart-axis: #cbc6bb;
+  /* Code highlighting (GitHub-light hues; see .hljs-* rules below). */
+  --hl-keyword: #cf222e;
+  --hl-entity: #8250df;
+  --hl-constant: #0550ae;
+  --hl-string: #0a3069;
+  --hl-builtin: #953800;
+  --hl-comment: #6e7781;
+  --hl-tag: #116329;
+  --hl-addition: #116329;
+  --hl-addition-bg: #dafbe1;
+  --hl-deletion: #82071e;
+  --hl-deletion-bg: #ffebe9;
+
+  /* Terminal colours, tuned for this light ground (xterm's own are for black). */
+  --term-ansi-0: #3a332b;
+  --term-ansi-1: #b8442f;
+  --term-ansi-2: #56782a;
+  --term-ansi-3: #9a6a00;
+  --term-ansi-4: #2f62a8;
+  --term-ansi-5: #8a4b8f;
+  --term-ansi-6: #1f7470;
+  --term-ansi-7: #c9c2b4;
+  --term-ansi-8: #8a8174;
+  --term-ansi-9: #c9533c;
+  --term-ansi-10: #668c33;
+  --term-ansi-11: #ad7a00;
+  --term-ansi-12: #3f74bd;
+  --term-ansi-13: #9d5aa2;
+  --term-ansi-14: #28857f;
+  --term-ansi-15: #e9e4da;
+}
+
+/* Light — clean white with neutral (cool) grays and a blue accent (the warm
+   terracotta belongs to the warm theme); same chart hues as warm since both
+   sit on a white chart surface. */
+[data-theme="light"] {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f4f4f6;
+  --border: #e6e6ea;
+  --border-faint: #f0f0f3;
+  --text: #1f1f24;
+  --muted: #8a8a93;
+  --accent: #2563eb;
+  --accent-fg: #ffffff;
+  --link: #2a6fdb;
+  --warn: #c98a2b;
+  --ok: #4b8b5b;
+  --error: #c0564b;
+  --series-1: #2a78d6;
+  --series-2: #1baf7a;
+  --series-3: #eda100;
+  --series-4: #008300;
+  --series-5: #4a3aa7;
+  --series-6: #e34948;
+  --series-7: #e87ba4;
+  --series-8: #eb6834;
+  --chart-grid: #e6e6ea;
+  --chart-axis: #c9c9cf;
+  /* Code highlighting (GitHub-light hues; see .hljs-* rules below). */
+  --hl-keyword: #cf222e;
+  --hl-entity: #8250df;
+  --hl-constant: #0550ae;
+  --hl-string: #0a3069;
+  --hl-builtin: #953800;
+  --hl-comment: #6e7781;
+  --hl-tag: #116329;
+  --hl-addition: #116329;
+  --hl-addition-bg: #dafbe1;
+  --hl-deletion: #82071e;
+  --hl-deletion-bg: #ffebe9;
+
+  /* Terminal colours, tuned for a white ground. */
+  --term-ansi-0: #24292f;
+  --term-ansi-1: #c4302b;
+  --term-ansi-2: #2f7d32;
+  --term-ansi-3: #8a6400;
+  --term-ansi-4: #1f5fc4;
+  --term-ansi-5: #8a3fa6;
+  --term-ansi-6: #0f7480;
+  --term-ansi-7: #c8ccd2;
+  --term-ansi-8: #6e7781;
+  --term-ansi-9: #d6453f;
+  --term-ansi-10: #3b8f3e;
+  --term-ansi-11: #9c7300;
+  --term-ansi-12: #2f6fd6;
+  --term-ansi-13: #9b51b8;
+  --term-ansi-14: #16808c;
+  --term-ansi-15: #eef0f3;
+}
+
+/* Dark — neutral-cool like light, so it shares light's blue accent (stepped
+   up for the dark surface; dark text on the filled accent keeps contrast). */
+[data-theme="dark"] {
+  /* Default variant, "dimmed": a cool slate a step above black, with text
+     softened from near-white, so long sessions do not glare. */
+  --bg: #1c2128;
+  --surface: #22272e;
+  --surface-2: #2d333b;
+  --border: #3a414a;
+  --border-faint: #2a3038;
+  --text: #d1d7e0;
+  --muted: #8b949e;
+  --accent: #539bf5;
+  --accent-fg: #1c2128;
+  --link: #6cb6ff;
+  --warn: #d7a24a;
+  --ok: #8ddb8c;
+  --error: #d47a70;
+  /* Same hues stepped for the dark chart surface (--surface #22272e). */
+  --series-1: #3987e5;
+  --series-2: #199e70;
+  --series-3: #c98500;
+  --series-4: #008300;
+  --series-5: #9085e9;
+  --series-6: #e66767;
+  --series-7: #d55181;
+  --series-8: #d95926;
+  --chart-grid: #3a414a;
+  --chart-axis: #545d68;
+  /* Code highlighting (GitHub-dark hues; see .hljs-* rules below). */
+  --hl-keyword: #ff7b72;
+  --hl-entity: #d2a8ff;
+  --hl-constant: #79c0ff;
+  --hl-string: #a5d6ff;
+  --hl-builtin: #ffa657;
+  --hl-comment: #9198a1;
+  --hl-tag: #7ee787;
+  --hl-addition: #aff5b4;
+  --hl-addition-bg: rgba(46, 160, 67, 0.18);
+  --hl-deletion: #ffdcd7;
+  --hl-deletion-bg: rgba(248, 81, 73, 0.18);
+  --term-fg: #c5cdd8;
+  --term-ansi-0: #3b424b;
+  --term-ansi-1: #f47067;
+  --term-ansi-2: #8ddb8c;
+  --term-ansi-3: #daaa3f;
+  --term-ansi-4: #6cb6ff;
+  --term-ansi-5: #dcbdfb;
+  --term-ansi-6: #76e3ea;
+  --term-ansi-7: #c5cdd8;
+  --term-ansi-8: #768390;
+  --term-ansi-9: #ff938a;
+  --term-ansi-10: #a5e3a4;
+  --term-ansi-11: #eac55f;
+  --term-ansi-12: #96d0ff;
+  --term-ansi-13: #e6ccff;
+  --term-ansi-14: #96ebf0;
+  --term-ansi-15: #e6edf3;
+}
+
+/* Variants: other looks for the warm and dark themes, chosen in Settings
+   (ThemeProvider sets data-variant on the root). Each overrides only the
+   ground, text and accent tokens, and the terminal's colours; charts and
+   code keep the theme's own. Attribute-only selectors, so the Settings swatches can paint
+   themselves by carrying the same two attributes. */
+[data-theme="warm"][data-variant="paper"] {
+  --bg: #f4f1ea;
+  --surface: #fbf9f4;
+  --surface-2: #efebe2;
+  --border: #e3ded3;
+  --border-faint: #ece8df;
+  --text: #2b2621;
+  --muted: #857e72;
+  --link: #2f62a8;
+  --ok: #56782a;
+  --chart-grid: #e3ded3;
+}
+[data-theme="warm"][data-variant="sepia"] {
+  --bg: #ede7da;
+  --surface: #f6f1e6;
+  --surface-2: #e9e2d2;
+  --border: #dbd2bf;
+  --border-faint: #e6dfcf;
+  --text: #33302a;
+  --muted: #837b6b;
+  --accent: #b9573a;
+  --link: #2f62a8;
+  --ok: #56782a;
+  --chart-grid: #dbd2bf;
+}
+[data-theme="dark"][data-variant="graphite"] {
+  --bg: #1d1c1a;
+  --surface: #262522;
+  --surface-2: #302e2a;
+  --border: #3d3a35;
+  --border-faint: #2c2a27;
+  --text: #e4dfd5;
+  --muted: #9e988c;
+  --accent: #d9825f;
+  --accent-fg: #1d1c1a;
+  --link: #8fb3e8;
+  --ok: #9cc17a;
+  --chart-grid: #3d3a35;
+  --chart-axis: #57534c;
+  --term-fg: #dcd6cb;
+  --term-ansi-0: #3a3834;
+  --term-ansi-1: #e0796b;
+  --term-ansi-2: #9cc17a;
+  --term-ansi-3: #e2b65c;
+  --term-ansi-4: #82a9e0;
+  --term-ansi-5: #c792c4;
+  --term-ansi-6: #6fbfb8;
+  --term-ansi-7: #d6d0c4;
+  --term-ansi-8: #77716a;
+  --term-ansi-9: #ee8f80;
+  --term-ansi-10: #b0d28f;
+  --term-ansi-11: #efc877;
+  --term-ansi-12: #9bbcee;
+  --term-ansi-13: #d6a8d4;
+  --term-ansi-14: #88d1ca;
+  --term-ansi-15: #f2eee6;
+}
+[data-theme="dark"][data-variant="slate"] {
+  --bg: #202024;
+  --surface: #28282d;
+  --surface-2: #323238;
+  --border: #404047;
+  --border-faint: #2f2f35;
+  --text: #e2e1de;
+  --muted: #9d9a94;
+  --accent: #5aa5f6;
+  --accent-fg: #202024;
+  --link: #86aef0;
+  --ok: #7cbf8c;
+  --chart-grid: #404047;
+  --chart-axis: #55555d;
+  --term-fg: #dcdad6;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* This is app chrome, not a document: the window itself must never scroll or
+   rubber-band. Without this, dragging anywhere — including the sidebar, the
+   Screen tabs and a pane header, none of which scroll — bounced the whole
+   window a few points and sprang back, so fixed furniture did not feel fixed. */
+html,
+body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* Web client: the shell covers exactly the visible part of the page, keyboard
+   excluded (see lib/visibleViewport). */
+.app-viewport {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--vv-top, 0px);
+  height: var(--vv-height, 100%);
+}
+
+/* A real scroller reaching its end must not hand the leftover gesture to its
+   ancestors (which is what made the window bounce from inside a list). Keyed to
+   the utility classes the app actually scrolls with. */
+.overflow-y-auto,
+.overflow-auto,
+.overflow-x-auto {
+  overscroll-behavior: contain;
+}
+
+/* …except across the axis a box does not scroll. A wide table, a code block or
+   a tab strip scrolls sideways only, and `contain` on its vertical axis stopped every
+   vertical swipe that started on it from reaching the conversation: on a phone
+   the thread could not be scrolled past a table. (The trackpad has the same
+   trap for another reason — see lib/wheelChain.) */
+.overflow-x-auto:not(.overflow-y-auto):not(.overflow-auto) {
+  overscroll-behavior-y: auto;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* A subagent's transcript is a NESTED, secondary read inside a narrow panel.
+   The thread's own type scale (15px body) is sized for the main conversation
+   and overwhelms it there. The block components set their sizes explicitly, so
+   the step down is applied once here rather than threaded as a prop through
+   every one of them. */
+.nested-transcript,
+.nested-transcript p,
+.nested-transcript li {
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+/* Sidebar icon weight. lucide ships stroke-width 2, which next to the 1.5 of the
+   collapse button read thick and slightly fuzzy at these sizes. One rule instead
+   of a prop on every call site, so an icon added later matches by default.
+   (A CSS stroke-width beats the presentation attribute lucide sets inline.) */
+
+/* DeepSeek Harness token layer. Components ported from DSH (MIT) keep their
+   CSS verbatim and read these names; each resolves to this app's own theme, so
+   warm / light / dark all carry through. DSH's translucent inks (hover fill,
+   border steps) keep their alpha and mix it from the theme's text colour. */
+:root {
+  --ds-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-font-family-code: "JetBrains Mono", ui-monospace, monospace;
+  --dsw-radius-xs: 4px;
+  --dsw-radius-sm: 8px;
+  --dsw-radius-md: 12px;
+  --dsw-radius-lg: 16px;
+  --dsw-radius-xl: 20px;
+  --dsw-focus-ring-width: 2px;
+  --dsw-focus-ring-color: var(--accent);
+  --dsw-alias-label-primary: var(--text);
+  --dsw-alias-label-secondary: color-mix(in srgb, var(--text) 62%, var(--muted));
+  --dsw-alias-label-tertiary: var(--muted);
+  --dsw-alias-label-caption: color-mix(in srgb, var(--muted) 60%, var(--surface));
+  --dsw-alias-label-primary-inverted: var(--surface);
+  --dsw-alias-interactive-bg-hover: color-mix(in srgb, var(--text) 6%, transparent);
+  --dsw-alias-border-l1: color-mix(in srgb, var(--text) 4%, transparent);
+  --dsw-alias-border-l2: color-mix(in srgb, var(--text) 10%, transparent);
+  --dsw-alias-border-l3: color-mix(in srgb, var(--text) 12%, transparent);
+  --dsw-alias-border-l4: color-mix(in srgb, var(--text) 16%, transparent);
+  --dsw-alias-state-business-primary: var(--accent);
+  --dsw-alias-state-error-primary: var(--error);
+  --dsw-alias-state-success-primary: var(--ok);
+  --dsw-alias-state-warn-primary: var(--warn);
+  --dsw-alias-state-idle-primary: var(--muted);
+  --dsw-alias-bg-base: var(--bg);
+  --dsw-alias-bg-layer-1: var(--surface);
+  --dsw-alias-bg-layer-2: var(--surface);
+  --dsw-alias-button-elevated-fill: var(--surface);
+  --dsw-alias-button-floating-hover: color-mix(in srgb, var(--text) 4%, var(--surface));
+  --dsw-specific-sidebar-fill: var(--surface);
+  --dsw-alias-bg-module-platform: var(--surface-2);
+  --dsw-alias-label-dimmed: color-mix(in srgb, var(--muted) 45%, var(--surface));
+  --dsw-alias-state-business-tertiary: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  --dsw-alias-state-success-tertiary: color-mix(in srgb, var(--ok) 14%, var(--surface));
+  --dsw-alias-state-warn-label: color-mix(in srgb, var(--warn) 80%, var(--text));
+  --dsw-alias-state-warn-tertiary: color-mix(in srgb, var(--warn) 16%, var(--surface));
+  --dsw-alias-state-error-secondary: color-mix(in srgb, var(--error) 70%, var(--surface));
+  /* DSH's violet brand step, used for the assistant tag and model lane. */
+  --dsw-alias-brand-primary-new-colorprimary-new-color: #7c5cff;
+  --dsw-static-blue-500: #3b82f6;
+}
+
+/* Sidebar background. With window vibrancy (macOS desktop app, data-vibrancy
+   set by ThemeProvider) the page under the sidebar goes transparent and the
+   sidebar turns slightly translucent, letting the blurred desktop tint
+   through; everywhere else it stays an opaque surface. */
+.sidebar-surface {
+  background: var(--surface);
+}
+[data-vibrancy] body {
+  background: transparent;
+}
+/* The translucent tint uses the theme's own --bg (not the white surface) so
+   the sidebar stays warm in warm and dark in dark. The vibrancy material
+   itself follows the in-app theme via setWindowTheme (needs the
+   core:window:allow-set-theme capability). */
+[data-vibrancy] .sidebar-surface {
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+}
+[data-vibrancy][data-theme="dark"] .sidebar-surface {
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+}
+
+/* Native <select> chrome (metallic bezel + arrow) clashes with the flat
+   inputs; draw our own chevron instead. Pair with inputCls via selectCls. */
+.select-chrome {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23898989' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  background-size: 14px;
+  padding-right: 30px;
+  cursor: pointer;
+}
+
+/* Thin, calm scrollbars to match the paper aesthetic. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+/* Horizontal scroll rows (e.g. the model picker's filter chips) where a visible
+   scrollbar would eat row height and clip the content. Still scrolls by drag/wheel. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* A strip that scrolls sideways (the Screen bar, the phone's pane row): no
+   scrollbar at rest — on a phone it ate a strip of an already short bar and
+   read as a second border — and a thin one while a finger or wheel is moving
+   it (`data-scrolling`, set by `useTransientScrollbar`). */
+.scrollbar-transient:not([data-scrolling]) {
+  scrollbar-width: none;
+}
+.scrollbar-transient:not([data-scrolling])::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-transient[data-scrolling] {
+  scrollbar-width: thin;
+}
+
+/* One-shot attention pulse for the reasoning-effort slider when a model that
+   supports it is picked — so it's clear where the effort control is. */
+@keyframes effort-flash {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(76, 157, 255, 0);
+  }
+  35%,
+  65% {
+    box-shadow: 0 0 0 3px rgba(76, 157, 255, 0.7);
+  }
+}
+.animate-effort-flash {
+  animation: effort-flash 0.6s ease-in-out 2;
+}
+
+/* "Still emitting" sweep for a row whose text is streaming in (the reasoning
+   row). A faint band of light travels across the row — motion that reads as
+   progress without adding a second spinner to a turn that already has one (see
+   RunningDot). Animating a transform keeps it off the layout path. */
+.live-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.live-sweep::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 40%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--text) 7%, transparent),
+    transparent
+  );
+  animation: live-sweep 2.4s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes live-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  90%,
+  100% {
+    transform: translateX(250%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-sweep::after {
+    display: none;
+  }
+}
+
+/* The turn's "still producing" mark: a light travels left-to-right THROUGH the
+   letters of the status label, so the row needs no spinner beside it. The
+   gradient is three times the label's width and clipped to the glyphs; sliding
+   its position is what moves the light.
+
+   The label is painted a plain colour FIRST, and only goes transparent inside
+   @supports. Making the glyphs transparent and letting a decorative gradient
+   supply the colour means that if the gradient does not paint — an engine
+   without color-mix() drops the whole declaration as invalid, and the ones
+   without background-clip:text never fill the glyphs — the text is still
+   there, still selectable, and completely invisible. That is #122: "正在处理"
+   could be highlighted with the mouse but not seen. Legibility must not depend
+   on an ornament. */
+.shimmer-text {
+  color: var(--link);
+  -webkit-text-fill-color: var(--link);
+}
+@supports ((background-clip: text) or (-webkit-background-clip: text)) and
+  (color: color-mix(in srgb, red 50%, white)) {
+  .shimmer-text {
+    background-image: linear-gradient(
+      90deg,
+      var(--link) 0%,
+      var(--link) 40%,
+      color-mix(in srgb, var(--link) 35%, #ffffff) 50%,
+      var(--link) 60%,
+      var(--link) 100%
+    );
+    background-size: 250% 100%;
+    background-position: 100% 0;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer-text 1.8s linear infinite;
+  }
+}
+@keyframes shimmer-text {
+  to {
+    background-position: 0 0;
+  }
+}
+/* After the @supports block, so it wins on equal specificity. */
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-text {
+    background-image: none;
+    animation: none;
+    color: var(--link);
+    -webkit-text-fill-color: var(--link);
+  }
+}
+
+/* highlight.js token colors on the per-theme --hl-* variables (CodeViewer).
+   Grouping mirrors highlight.js's github/github-dark themes so every language
+   grammar maps the same way; a bundled stylesheet would hardcode one theme. */
+.hljs {
+  color: var(--text);
+  background: transparent;
+}
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  color: var(--hl-keyword);
+}
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  color: var(--hl-entity);
+}
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id,
+.hljs-variable {
+  color: var(--hl-constant);
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-meta .hljs-string {
+  color: var(--hl-string);
+}
+.hljs-built_in,
+.hljs-symbol,
+.hljs-bullet {
+  color: var(--hl-builtin);
+}
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+  color: var(--hl-comment);
+}
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+  color: var(--hl-tag);
+}
+.hljs-subst {
+  color: var(--text);
+}
+.hljs-section {
+  color: var(--hl-constant);
+  font-weight: 600;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: 600;
+}
+.hljs-addition {
+  color: var(--hl-addition);
+  background-color: var(--hl-addition-bg);
+}
+.hljs-deletion {
+  color: var(--hl-deletion);
+  background-color: var(--hl-deletion-bg);
+}
+
+/* Sidebar expand button appears after the collapse animation settles. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.fade-in {
+  animation: fade-in 150ms ease-out 150ms backwards;
+}
+
+/* A project's home settles in: a short rise and fade, so arriving there reads
+   as a place, not a blank that popped up. */
+@keyframes home-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.project-home {
+  animation: home-rise 360ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-home {
+    animation: none;
+  }
+}
+
+/* Text selection is opt-in. The app is chrome around documents: right-clicking
+   a row or a tab must not select its label (WebKit selects the word under the
+   cursor before opening its menu), and a drag out of an answer must not sweep
+   up the meta row, the composer and its buttons. So nothing is selectable by
+   default; content opts back in — elements that are always content here, and
+   anything else (an answer, a message, a document preview) with `select-text`
+   on its container. */
+body {
+  user-select: none;
+  -webkit-user-select: none;
+}
+input,
+textarea,
+[contenteditable]:not([contenteditable="false"]),
+.cm-editor,
+pre,
+code,
+table {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* While a pane is being dragged (see lib/dragPane), forcefully suppress text
+   selection everywhere — the conversation's message text sets its own
+   `user-select`, which a body-level `user-select:none` can't override. */
+.pane-dragging,
+.pane-dragging * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  cursor: grabbing !important;
+}
+
+/* Hover-revealed rows under a message: Copy, and the turn's timing/context
+   readout. Shown by the message the pointer is actually over (lib/hoverTracking
+   sets `data-hovered`), NOT by `:hover` — WebKit leaves that flag on whatever
+   the cursor last touched, so rows stayed lit after the pointer had gone.
+   Keyboard focus reveals them too; a click does not, or the row would stay lit
+   for as long as the button kept focus. Pointer-less devices (touch) get them
+   unconditionally: there is no hover to reveal anything with. */
+@media (hover: hover) {
+  /* `visibility`, not opacity alone: opacity is a compositor property, and on a
+     long conversation (hundreds of rows in one scroller) WebKit left the old
+     tiles on screen — the computed style said hidden while the pixels stayed.
+     A dump taken in that state proved it: 351 rows, exactly one of them
+     visible by computed style, several still drawn. Visibility invalidates
+     differently and cannot be animated on the compositor, so the row goes when
+     it is told to. No transition, for the same reason. */
+  /* Out of the flow, not merely invisible. A hidden row still reserves its
+     height, and with one under every message that dead strip — plus the gap the
+     block list already puts between blocks — was most of the whitespace between
+     a paragraph and the activity line under it. Floated into that gap it costs
+     nothing when hidden and overlaps nothing when shown (the row is ~18px, the
+     gap 16px). Touch devices keep it in the flow: with no hover to reveal it,
+     the row is permanent and must not sit on top of the next block. */
+  [data-hover-row] {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    visibility: hidden;
+  }
+  [data-hovered] [data-hover-row] {
+    opacity: 1;
+    visibility: visible;
+  }
+  /* Deliberately its own rule, not a second selector on the one above. A
+     selector list is dropped ENTIRELY when any part of it fails to parse, so an
+     engine without :has() would lose the hover reveal too — and the row's
+     controls (Copy, Edit, Revert) would then be unreachable by any means, not
+     merely un-focusable. Keeping it separate costs a rule and cannot take the
+     hover path down with it (#122). */
+  [data-hover-row]:has(:focus-visible) {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Find-in-page highlights (lib/findInPage).
+   One overlay, appended to the searched element and holding a rectangle per
+   match — the way an editor draws its own decorations. The conversation's DOM
+   belongs to React and is never touched. Every match is tinted with the
+   accent, the current one more strongly and outlined, so a search reads the
+   same wherever it is used. */
+[data-osd-find-overlay] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* No size of its own: it must not add a pixel of scrollable area. */
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.osd-find-hit {
+  position: absolute;
+  border-radius: 2px;
+  /* Drawn over the words, translucent, the way a marker pen reads: the text
+     underneath has to stay readable at every theme. */
+  background-color: color-mix(in srgb, var(--accent) 28%, transparent);
+}
+.osd-find-hit-current {
+  background-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  outline: 1px solid var(--accent);
+}

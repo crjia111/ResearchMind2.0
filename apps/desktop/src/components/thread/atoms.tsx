@@ -1,0 +1,602 @@
+import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { Check, Copy, Loader2, Paperclip, Pencil, RefreshCw, RotateCcw, Wrench } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { copyText } from "@/lib/clipboard";
+import { toast } from "@/lib/toast";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import type {
+  ArtifactBlock,
+  ContextUsage,
+  DataTableBlock,
+  HistoryRepairBlock,
+  MessageUsage,
+  RunningJobsBlock,
+  StatusLineBlock,
+  UserMessageBlock,
+} from "@ai4s/shared";
+import { MessageMeta } from "./MessageMeta";
+import { cn } from "@/lib/cn";
+import { pressOnPadding } from "@/lib/padPress";
+import { LinkFolder, MarkdownViewer } from "@/components/markdown-viewer/MarkdownViewer";
+import { extractArtifactRefs, refToArtifactBlock } from "@/lib/artifacts";
+import { resolveArtifactPath } from "@/lib/artifactFile";
+import { useThrottledValue } from "@/lib/useThrottledValue";
+import { splitStreamingMarkdown } from "@/lib/markdownSegments";
+import { HSCROLL_ATTR } from "@/lib/wheelChain";
+import { HOVER_HOST } from "@/lib/hoverTracking";
+import { RunningDot } from "./RunningDot";
+import type { MessageSender } from "@/lib/messageSenders";
+import { SenderBadge } from "./SenderBadge";
+import { useRuntimeStore } from "@/lib/runtime";
+
+/** Streaming markdown throttle interval, ms (#157). The re-parse cost is
+ *  linear in the message length, so the window scales with it: 90ms for short
+ *  answers, reaching the 1200ms cap around 72k chars — long enough that the
+ *  per-render work stays cheaper than the interval on a slow CPU, short
+ *  enough that the text still visibly types out. */
+export function streamThrottleMs(length: number): number {
+  return Math.min(1200, Math.max(90, Math.floor(length / 60)));
+}
+
+/** One sealed markdown segment of a streaming answer (#157). Its text is
+ *  prefix-stable (splitStreamingMarkdown never revises a sealed segment), so
+ *  this memo means the already-finished paragraphs/code blocks of a streaming
+ *  message are parsed and highlighted exactly once — only the live tail below
+ *  re-renders on each throttle tick. The wrapper's bottom margin stands in
+ *  for the blank line that ended the segment (the finished message renders
+ *  as a single MarkdownViewer, so final spacing is unchanged). */
+const SealedSegment = memo(function SealedSegment({ text }: { text: string }) {
+  return (
+    <div className="mb-3.5" data-sealed-segment>
+      <MarkdownViewer links>{text}</MarkdownViewer>
+    </div>
+  );
+});
+
+// All block atoms are memoized on their props: a fold rebuilds only the one
+// block object it changed (the blocks-array copy preserves the rest by
+// reference), so an SSE event re-renders just the affected row — the rest of a
+// long conversation is skipped, keeping render cost flat as history grows (#34).
+// A user turn: a right-aligned bubble that hugs its content (short prompts stay
+// small; long ones wrap at 85% of the column). Hovering reveals Copy and — when
+// the message carries a server id and the thread supplies the handlers — Edit
+// (open inline, correct, resend) and Revert (roll back to here, prefill the
+// composer). Edit and Revert both discard this message and everything after it
+// and roll back the files those turns changed, so each confirms first.
+// A message whose send failed never reached the server: it offers Retry and
+// Edit instead, with no confirmation, since there is nothing to roll back.
+export const UserMessage = memo(function UserMessage({
+  block,
+  onEdit,
+  onRevert,
+  onResend,
+  sender,
+}: {
+  block: UserMessageBlock;
+  /** Who sent it, when it was not the owner (see lib/messageSenders). */
+  sender?: MessageSender;
+  onEdit?: (messageID: string, newText: string) => void | Promise<void>;
+  onRevert?: (messageID: string, text: string) => void | Promise<void>;
+  onResend?: (block: UserMessageBlock, text: string) => void | Promise<void>;
+}) {
+  const { t } = useTranslation(["session", "common"]);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(block.text);
+  const [copied, setCopied] = useState(false);
+  // Which destructive action is awaiting confirmation, if any.
+  const [confirm, setConfirm] = useState<null | "edit" | "revert">(null);
+  const areaRef = useRef<HTMLTextAreaElement>(null);
+  const canResend = !!onResend && !!block.failed;
+  const canEdit = (!!onEdit && !!block.messageID) || canResend;
+  const canRevert = !!onRevert && !!block.messageID;
+  /** Send the edited text: a failed message goes straight out again, a sent
+   *  one rolls the conversation back first and so asks to confirm. */
+  const submitEdit = () => {
+    const text = draft.trim();
+    if (!text) return;
+    if (!canResend) return setConfirm("edit");
+    setEditing(false);
+    void onResend?.(block, text);
+  };
+
+  const copy = async () => {
+    try {
+      await copyText(block.text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      toast.error(t("message.copyFailed"));
+    }
+  };
+
+  const openEditor = () => {
+    setDraft(block.text);
+    setEditing(true);
+  };
+  const runConfirmed = () => {
+    const action = confirm;
+    setConfirm(null);
+    if (!block.messageID) return;
+    if (action === "edit") {
+      const text = draft.trim();
+      if (!text) return;
+      setEditing(false);
+      void onEdit?.(block.messageID, text);
+    } else if (action === "revert") {
+      void onRevert?.(block.messageID, block.text);
+    }
+  };
+
+  // Focus at the end when the editor opens.
+  useEffect(() => {
+    if (!editing) return;
+    const el = areaRef.current;
+    if (!el) return;
+    el.focus();
+    el.setSelectionRange(el.value.length, el.value.length);
+  }, [editing]);
+
+  const confirmDialog = confirm && (
+    <ConfirmDialog
+      title={t("message.confirm.title")}
+      body={t("message.confirm.body")}
+      confirmLabel={confirm === "edit" ? t("message.confirm.edit") : t("message.confirm.revert")}
+      onConfirm={runConfirmed}
+      onCancel={() => setConfirm(null)}
+    />
+  );
+
+  if (editing) {
+    return (
+      <div className="flex flex-col items-end">
+        <div
+          className="w-full rounded-card border border-border bg-surface-2 p-2"
+          onMouseDown={(e) => pressOnPadding(e, areaRef.current)}
+        >
+          <textarea
+            ref={areaRef}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                setEditing(false);
+              } else if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                e.preventDefault();
+                submitEdit();
+              }
+            }}
+            rows={Math.min(12, Math.max(2, draft.split("\n").length))}
+            className="w-full resize-none bg-transparent px-2 py-1.5 text-[15px] leading-relaxed text-text outline-none"
+          />
+          <div className="flex justify-end gap-2 px-1 pt-1">
+            <button
+              onClick={() => setEditing(false)}
+              className="rounded-input px-3 py-1.5 text-xs font-medium text-muted hover:bg-surface hover:text-text"
+            >
+              {t("message.editing.cancel")}
+            </button>
+            <button
+              onClick={submitEdit}
+              disabled={!draft.trim()}
+              className="rounded-input bg-accent px-3 py-1.5 text-xs font-medium text-accent-fg hover:opacity-90 disabled:opacity-40"
+            >
+              {t("message.editing.send")}
+            </button>
+          </div>
+        </div>
+        {confirmDialog}
+      </div>
+    );
+  }
+
+  return (
+    <div {...{ [HOVER_HOST]: "" }} className="relative flex flex-col items-end">
+      {sender && <SenderBadge sender={sender} className="mb-1" />}
+      <div className="w-fit max-w-[85%] select-text whitespace-pre-wrap break-words rounded-card bg-surface-2 px-4 py-2.5 text-[15px] leading-relaxed text-text">
+        {block.text}
+      </div>
+      <div
+        data-hover-row
+        className="flex items-center justify-end gap-0.5 pr-0.5 pt-0.5"
+      >
+        <button
+          onClick={copy}
+          title={copied ? t("message.copied") : t("message.copy")}
+          aria-label={t("message.copy")}
+          className="rounded p-0.5 text-muted hover:bg-surface-2 hover:text-text"
+        >
+          {copied ? <Check size={14} /> : <Copy size={14} />}
+        </button>
+        {canEdit && (
+          <button
+            onClick={openEditor}
+            title={t("message.edit")}
+            aria-label={t("message.edit")}
+            className="rounded p-0.5 text-muted hover:bg-surface-2 hover:text-text"
+          >
+            <Pencil size={14} />
+          </button>
+        )}
+        {canResend && (
+          <button
+            onClick={() => void onResend?.(block, block.text)}
+            title={t("message.retry")}
+            aria-label={t("message.retry")}
+            className="rounded p-0.5 text-muted hover:bg-surface-2 hover:text-text"
+          >
+            <RefreshCw size={14} />
+          </button>
+        )}
+        {canRevert && (
+          <button
+            onClick={() => setConfirm("revert")}
+            title={t("message.revert")}
+            aria-label={t("message.revert")}
+            className="rounded p-0.5 text-muted hover:bg-surface-2 hover:text-text"
+          >
+            <RotateCcw size={14} />
+          </button>
+        )}
+      </div>
+      {confirmDialog}
+    </div>
+  );
+});
+
+/** Streaming body as one memoized unit (#157): `markdown` changes on every
+ *  coalesced flush (~8/s), but `segments` only changes on a throttle tick —
+ *  keying the memo on the segments OBJECT keeps the sealed-list reconcile
+ *  (dozens of elements late in a long answer) off the per-flush path. */
+const StreamingMarkdown = memo(function StreamingMarkdown({
+  segments,
+}: {
+  segments: { sealed: string[]; tail: string };
+}) {
+  return (
+    <>
+      {segments.sealed.map((text, i) => (
+        <SealedSegment key={i} text={text} />
+      ))}
+      <MarkdownViewer links>{segments.tail}</MarkdownViewer>
+    </>
+  );
+});
+
+export const AgentMessage = memo(function AgentMessage({
+  markdown,
+  created,
+  completed,
+  usage,
+  contextUsage,
+  contextLimit,
+  onOpenArtifact,
+  directory,
+}: {
+  markdown: string;
+  /** Turn timings and token accounting, when the runtime reported them —
+   *  rendered beside Copy in the hover row (see MessageMeta). */
+  created?: number;
+  completed?: number;
+  usage?: MessageUsage;
+  /** How full the agent says the conversation is (ACP `usage_update`) — the
+   *  alternative to `usage`, not an addition: an ACP agent reports one number
+   *  for the whole context instead of a per-message breakdown. */
+  contextUsage?: ContextUsage;
+  contextLimit?: number;
+  onOpenArtifact?: (a: ArtifactBlock) => void;
+  /** The session's folder, where the files it mentions are looked up. */
+  directory?: string;
+}) {
+  const { t } = useTranslation(["session", "common"]);
+  const [copied, setCopied] = useState(false);
+  // While the agent streams, `markdown` grows on every token and re-parsing the
+  // whole message (react-markdown + KaTeX) each time is the main live CPU cost
+  // (#50). Throttle to the trailing value so the parse runs a bounded number of
+  // times per second; a finished message settles immediately and stays put.
+  // The interval scales with message length (#157): re-parsing is linear in
+  // markdown length, so a long streaming answer needs a longer window for the
+  // per-render cost to stay below the frame budget on slow machines.
+  const shown = useThrottledValue(markdown, streamThrottleMs(markdown.length));
+  // A streaming message (no `completed` yet) renders as sealed segments + a
+  // live tail (#157): without this the whole document — every finished code
+  // block re-highlighted, every table re-parsed — churns on each throttle
+  // tick, and that O(message) work per update is what saturated the main
+  // thread on long answers. Sealed segments are memoized and never render
+  // twice; only the tail re-parses. A finished message keeps the single
+  // MarkdownViewer, so the final layout is byte-identical to before.
+  const streaming = completed === undefined;
+  const segments = useMemo(() => (streaming ? splitStreamingMarkdown(shown) : null), [streaming, shown]);
+  // Files the agent mentions (e.g. a PDF produced by running code) become clickable.
+  // Each mention is resolved to a real workspace path first — prose often names a
+  // bare filename ("index.html") whose file lives in a subdirectory; mentions of
+  // files that don't exist get no chip.
+  // Memoized on `shown` (#157): the regex sweeps the whole message, so running
+  // it per coalesced flush (rather than per throttle tick) is a linear cost
+  // that grows exactly as the answer does.
+  const mentioned = useMemo(() => (onOpenArtifact ? extractArtifactRefs(shown) : []), [shown, onOpenArtifact]);
+  const [refs, setRefs] = useState<string[]>([]);
+  const mentionedKey = mentioned.join("\n");
+  useEffect(() => {
+    let cancelled = false;
+    if (!mentionedKey) {
+      setRefs([]);
+      return;
+    }
+    void Promise.all(mentionedKey.split("\n").map((p) => resolveArtifactPath(p, directory).catch(() => null))).then(
+      (resolved) => {
+        if (cancelled) return;
+        setRefs([...new Set(resolved.filter((p): p is string => p !== null))]);
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [mentionedKey, directory]);
+
+  // An answer about another conversation names it (`ses_…`) and writes paths
+  // inside ITS folder. Keyed by the folders, so streaming text does not hand
+  // every link a new list to look up again.
+  const linkFoldersKey = useMemo(() => {
+    const { sessions } = useRuntimeStore.getState();
+    const named = [...new Set(shown.match(/\bses_[A-Za-z0-9]{8,}/g) ?? [])]
+      .map((id) => sessions.find((x) => x.id === id)?.directory)
+      .filter((d): d is string => !!d);
+    return [...new Set([directory, ...named].filter((d): d is string => !!d))].join("\n");
+  }, [directory, shown]);
+  const linkFolders = useMemo(() => (linkFoldersKey ? linkFoldersKey.split("\n") : undefined), [linkFoldersKey]);
+
+  const copy = async () => {
+    try {
+      await copyText(markdown);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      toast.error(t("message.copyFailed"));
+    }
+  };
+
+  return (
+    // Marked so a text selection inside an ANSWER (never a tool log or the
+    // user's own message) can offer follow-up actions — see SelectionActions.
+    <div {...{ [HOVER_HOST]: "" }} data-agent-message className="relative">
+      {/* Paths in the answer are this conversation's files — or those of the
+          conversations it names (see LinkFolder). */}
+      <LinkFolder.Provider value={linkFolders}>
+        {segments ? (
+          <StreamingMarkdown segments={segments} />
+        ) : (
+          <MarkdownViewer links>{shown}</MarkdownViewer>
+        )}
+      </LinkFolder.Provider>
+      {refs.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          {refs.map((path) => (
+            <button
+              key={path}
+              onClick={() => onOpenArtifact?.(refToArtifactBlock(path))}
+              className="flex items-center gap-1.5 rounded-input border border-border bg-surface px-2 py-1 text-xs text-text hover:bg-surface-2"
+              title={t("agentMessage.previewTitle", { path })}
+            >
+              <Paperclip size={12} className="text-accent" />
+              <span className="font-mono">{path.split(/[\\/]/).pop()}</span>
+            </button>
+          ))}
+        </div>
+      )}
+      <div
+        data-hover-row
+        className="flex min-w-0 items-center gap-1.5 pt-0.5"
+      >
+        <button
+          onClick={copy}
+          title={copied ? t("message.copied") : t("message.copy")}
+          aria-label={t("message.copy")}
+          className="shrink-0 rounded p-0.5 text-muted hover:bg-surface-2 hover:text-text"
+        >
+          {copied ? <Check size={14} /> : <Copy size={14} />}
+        </button>
+        <MessageMeta
+          created={created}
+          completed={completed}
+          usage={usage}
+          contextUsage={contextUsage}
+          contextLimit={contextLimit}
+        />
+      </div>
+    </div>
+  );
+});
+
+export const DataTable = memo(function DataTable({ block }: { block: DataTableBlock }) {
+  return (
+    // `overflow-y-hidden`: a lone `overflow-x` makes the other axis `auto` too,
+    // and the scrollbar's own height then made this card eat vertical wheel
+    // events that belonged to the conversation. The marker hands WebKit's
+    // latched trackpad gestures back as well (lib/wheelChain).
+    <div
+      {...{ [HSCROLL_ATTR]: "" }}
+      className="overflow-x-auto overflow-y-hidden"
+    >
+      {block.caption && (
+        <div className="pb-2 text-xs text-muted">{block.caption}</div>
+      )}
+      <table className="w-full border-collapse text-sm">
+        <thead>
+          <tr className="border-b border-border text-left text-muted">
+            {block.columns.map((c) => (
+              <th key={c} className="py-2 pr-4 font-medium">
+                {c}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {block.rows.map((row, i) => (
+            <tr key={i} className="border-b border-border/60 last:border-0">
+              {row.map((cell, j) => (
+                <td
+                  key={j}
+                  className={cn(
+                    "py-2 pr-4 text-text",
+                    j === row.length - 1 && "font-mono text-[13px] text-link",
+                  )}
+                >
+                  {cell}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+});
+
+export const RunningJobsOverlay = memo(function RunningJobsOverlay({
+  block,
+}: {
+  block: RunningJobsBlock;
+}) {
+  return (
+    <div>
+      <div className="border-b border-border pb-2 text-xs font-medium uppercase tracking-wider text-muted">
+        {block.title}
+      </div>
+      <ul className="divide-y divide-border/60">
+        {block.jobs.map((j, i) => (
+          <li key={i} className="flex items-center gap-2 px-4 py-2 text-sm">
+            <RunningDot className="text-accent" />
+            <span className="flex-1 truncate text-text">{j.label}</span>
+            <span className="text-xs text-muted">{j.elapsed}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+});
+
+const TONE: Record<NonNullable<StatusLineBlock["tone"]>, string> = {
+  running: "text-accent",
+  done: "text-ok",
+  review: "text-muted",
+  error: "text-error",
+};
+
+export const StatusLine = memo(function StatusLine({
+  block,
+  onStallAction,
+  onRetry,
+}: {
+  block: StatusLineBlock;
+  /** Present only in the live session; powers the stall warning's two actions. */
+  onStallAction?: (stallKey: string, action: "keep-waiting" | "stop") => void;
+  /** Present only in the live session; powers the failed history-load error
+   *  line's Retry action (#139). */
+  onRetry?: () => void;
+}) {
+  const { t } = useTranslation(["session", "common"]);
+  return (
+    <div className={cn(block.divider && "border-t border-border pt-4")}>
+      <div className={cn("flex items-center gap-2 text-sm", TONE[block.tone ?? "review"])}>
+        <Loader2
+          size={14}
+          className={cn(block.tone === "running" && "animate-spin", block.tone !== "running" && "hidden")}
+        />
+        <span className="min-w-0 flex-1">{block.text}</span>
+        {block.stall && onStallAction && (
+          <span className="flex shrink-0 items-center gap-1.5">
+            <button
+              type="button"
+              className="rounded-input border border-border px-2.5 py-1 text-xs font-medium text-text hover:bg-surface-2"
+              onClick={() => onStallAction(block.stall!.key, "keep-waiting")}
+            >
+              {t("stall.keepWaiting")}
+            </button>
+            <button
+              type="button"
+              className="rounded-input bg-error px-2.5 py-1 text-xs font-medium text-white hover:opacity-90"
+              onClick={() => onStallAction(block.stall!.key, "stop")}
+            >
+              {t("stall.stopTurn")}
+            </button>
+          </span>
+        )}
+        {block.retry && onRetry && (
+          <span className="flex shrink-0 items-center gap-1.5">
+            <button
+              type="button"
+              className="rounded-input border border-border px-2.5 py-1 text-xs font-medium text-text hover:bg-surface-2"
+              onClick={onRetry}
+            >
+              {t("historyRetry")}
+            </button>
+          </span>
+        )}
+      </div>
+    </div>
+  );
+});
+
+// A session whose stored history the model can no longer be sent (#114). The
+// error line above already said retrying cannot work; this says what is broken
+// and offers the only thing that clears it. It sits under the error rather than
+// replacing it, because the two answer different questions ("why did this fail"
+// / "what do I do now"), and it is a quiet bordered card, not another red line —
+// the failure has been reported once already, and a second alarm reads as two
+// problems. The rollback discards messages and rolls back files, so it confirms
+// through the same dialog as Revert, naming the count first.
+export const HistoryRepair = memo(function HistoryRepair({
+  block,
+  onRevert,
+}: {
+  block: HistoryRepairBlock;
+  onRevert?: (messageID: string, text: string) => void | Promise<void>;
+}) {
+  const { t } = useTranslation(["session", "common"]);
+  const [confirming, setConfirming] = useState(false);
+  const target = block.target;
+  const canRepair = !!onRevert && !!target;
+
+  return (
+    <div className="rounded-card bg-surface-2 p-3 text-sm">
+      <div className="flex items-start gap-2">
+        <Wrench size={14} className="mt-0.5 shrink-0 text-muted" aria-hidden />
+        <div className="min-w-0 flex-1">
+          <p className="text-text">
+            {block.reason
+              ? t(`historyRepair.reason.${block.reason}`, {
+                  tool: block.tool || t("historyRepair.someTool"),
+                })
+              : t("historyRepair.reason.unknown")}
+          </p>
+          <p className="mt-1 text-muted">
+            {canRepair
+              ? t("historyRepair.offer", { count: block.drops ?? 0 })
+              : t("historyRepair.noTarget")}
+          </p>
+          {canRepair && (
+            <button
+              className="mt-2.5 rounded-input border border-border px-3 py-1.5 text-sm font-medium text-text hover:bg-surface-2"
+              onClick={() => setConfirming(true)}
+            >
+              {t("historyRepair.action")}
+            </button>
+          )}
+        </div>
+      </div>
+      {confirming && target && (
+        <ConfirmDialog
+          title={t("historyRepair.confirm.title")}
+          body={t("historyRepair.confirm.body", { count: block.drops ?? 0 })}
+          confirmLabel={t("historyRepair.confirm.action")}
+          onConfirm={() => {
+            setConfirming(false);
+            void onRevert?.(target.messageID, target.text);
+          }}
+          onCancel={() => setConfirming(false)}
+        />
+      )}
+    </div>
+  );
+});
