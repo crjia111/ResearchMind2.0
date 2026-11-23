@@ -614,7 +614,7 @@ final class Provider {
             // should open macOS privacy prompts/settings; runtime calls stay quiet.
             throw ProviderError.coded(
                 "permission_denied",
-                "Accessibility permission is required for Open Science Computer Use. Open Settings > Computer Use in Open Science Desktop, grant Accessibility to Open Science Computer Use, then retry."
+                "Accessibility permission is required for ResearchMind Computer Use. Open Settings > Computer Use in ResearchMind, grant Accessibility to ResearchMind Computer Use, then retry."
             )
         }
         let appElement = AXUIElementCreateApplication(app.pid)
@@ -651,7 +651,7 @@ final class Provider {
         let screenshotStatus: ScreenshotStatus = if screenshot != nil {
             .captured
         } else if includeScreenshot && !canCaptureScreenshot {
-            .failed("Screen Recording permission is required, and macOS grants it to Open Science itself rather than to this helper. Enable Open Science under Screen Recording in System Settings, or ask for no screenshot to inspect accessibility state only.")
+            .failed("Screen Recording permission is required, and macOS grants it to ResearchMind itself rather than to this helper. Enable ResearchMind under Screen Recording in System Settings, or ask for no screenshot to inspect accessibility state only.")
         } else if includeScreenshot {
             .failed("window screenshot capture returned no image; retry with --no-screenshot if accessibility state is sufficient.")
         } else {
@@ -1139,7 +1139,7 @@ private func focusedWindow(appElement: AXUIElement, app: AppDescriptor, visibleW
         if let window = settledWindow, outcome.settled {
             return window
         }
-        throw ProviderError.coded("permission_denied", "app '\(app.name)' has visible windows but no accessibility window (AX reads stayed blocked for \(outcome.waitedMs)ms after retries). macOS Accessibility may need Open Science Computer Use toggled off and on again in System Settings.")
+        throw ProviderError.coded("permission_denied", "app '\(app.name)' has visible windows but no accessibility window (AX reads stayed blocked for \(outcome.waitedMs)ms after retries). macOS Accessibility may need ResearchMind Computer Use toggled off and on again in System Settings.")
     }
     throw ProviderError.coded("window_not_found", "app '\(app.name)' has no accessibility window; make sure the app has a visible window, then retry with --restore-window.")
 }
@@ -3074,7 +3074,7 @@ private final class PermissionWindowController: NSWindowController {
             backing: .buffered,
             defer: false
         )
-        window.title = "Enable Open Science Computer Use"
+        window.title = "Enable ResearchMind Computer Use"
         window.titleVisibility = .hidden
         window.titlebarAppearsTransparent = true
         window.backgroundColor = PermissionPalette.background
@@ -3200,9 +3200,9 @@ private enum PermissionKind: CaseIterable {
     var dragInstruction: String {
         switch self {
         case .accessibility:
-            "Drag Open Science Computer Use into the list above to allow Accessibility."
+            "Drag ResearchMind Computer Use into the list above to allow Accessibility."
         case .screenshots:
-            "Drag Open Science Computer Use into the list above to allow Screenshots."
+            "Drag ResearchMind Computer Use into the list above to allow Screenshots."
         }
     }
 
@@ -3304,14 +3304,14 @@ private final class PermissionView: NSView {
 
         let titleText = checking
             ? "Checking Computer Use"
-            : (ready ? "Computer Use is Ready" : "Enable Open Science Computer Use")
+            : (ready ? "Computer Use is Ready" : "Enable ResearchMind Computer Use")
         let title = label(titleText, size: 22, weight: .bold)
         let subtitle = label(
             checking
                 ? "Checking Accessibility and Screenshots."
                 : (ready
-                    ? "Open Science Desktop can use local apps when you ask."
-                    : "Grant permissions so Open Science Desktop can use apps when you ask."),
+                    ? "ResearchMind can use local apps when you ask."
+                    : "Grant permissions so ResearchMind can use apps when you ask."),
             size: 12,
             weight: .regular
         )
@@ -3483,7 +3483,7 @@ private final class PermissionDragAssistantController: NSWindowController {
             backing: .buffered,
             defer: false
         )
-        window.title = "Drag Open Science Computer Use"
+        window.title = "Drag ResearchMind Computer Use"
         window.backgroundColor = .clear
         window.isOpaque = false
         window.isReleasedWhenClosed = false
@@ -3895,7 +3895,7 @@ private final class DraggableAppTile: NSView, NSDraggingSource {
         icon.imageScaling = .scaleProportionallyUpOrDown
         icon.translatesAutoresizingMaskIntoConstraints = false
 
-        let title = NSTextField(labelWithString: "Open Science Computer Use")
+    let title = NSTextField(labelWithString: "ResearchMind Computer Use")
         title.font = NSFont.systemFont(ofSize: 15, weight: .semibold)
         title.textColor = PermissionPalette.primaryText
         title.translatesAutoresizingMaskIntoConstraints = false
@@ -4257,7 +4257,7 @@ private func writePermissionStatus(to path: String) {
 }
 
 private func runStdio() {
-    fputs("Open Science Computer Use provider must be launched by Open Science Desktop in app-agent mode.\n", stderr)
+    fputs("ResearchMind Computer Use provider must be launched by ResearchMind in app-agent mode.\n", stderr)
     exit(13)
 }
 

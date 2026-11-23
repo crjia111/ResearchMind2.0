@@ -484,7 +484,7 @@ export interface ProvenanceEnv {
   python?: string;
   /** OS and architecture, e.g. "macos-aarch64". */
   platform: string;
-  /** Open Science app version that recorded it. */
+  /** ResearchMind app version that recorded it. */
   app: string;
   /** Installed Python packages (pip freeze), content-addressed to a lockfile. */
   packages?: PackageSnapshot;
@@ -577,7 +577,7 @@ export interface Citation {
 // ---- Chart design system (P1-5) ----
 // One validated palette, the single source of truth for BOTH native app charts
 // (SVG stat tiles, mini-bars) and agent-generated figures (matplotlib, via the
-// bundled `openscience.mplstyle` which carries the same hexes). Validated with
+// bundled `researchmind.mplstyle` which carries the same hexes). Validated with
 // the dataviz skill against the app's real surfaces — light #ffffff, dark
 // #1e1d24 — for the lightness band, chroma floor, CVD separation, and contrast.
 // Categorical hues are assigned in this fixed order, never cycled.

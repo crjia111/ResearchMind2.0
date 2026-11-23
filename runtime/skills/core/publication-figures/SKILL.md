@@ -1,12 +1,12 @@
 ---
 name: publication-figures
-description: Use whenever you generate or review a chart, plot, table, or paper figure in this workspace, including work delegated by paper-writing, literature-survey, and experiment skills. Applies the Open Science publication style, enforces readable final-size layout for figures and tables, and rejects generic diagram-tool output as a publication figure. Interactive Plotly/HTML may be used for exploration, but paper delivery requires a static publication-ready export.
+description: Use whenever you generate or review a chart, plot, table, or paper figure in this workspace, including work delegated by paper-writing, literature-survey, and experiment skills. Applies the ResearchMind publication style, enforces readable final-size layout for figures and tables, and rejects generic diagram-tool output as a publication figure. Interactive Plotly/HTML may be used for exploration, but paper delivery requires a static publication-ready export.
 ---
 
 # Publication Figures and Tables
 
 Make generated figures **publication-grade and on-system by default**. Every
-figure you produce with matplotlib must use the bundled Open Science style, so a
+figure you produce with matplotlib must use the bundled ResearchMind style, so a
 figure in a report and a stat tile in the app read as one design system.
 When a paper/survey skill or target venue specifies its own publication palette
 and physical type scale, that more specific standard overrides this palette;
@@ -14,7 +14,7 @@ the final-size, collision, and figure-form rules below still apply.
 
 ## Apply the style (always, before plotting)
 
-The style file `openscience.mplstyle` sits next to this SKILL.md. Load it by
+The style file `researchmind.mplstyle` sits next to this SKILL.md. Load it by
 absolute path at the top of any figure script:
 
 ```python
@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # This skill's directory — the style ships beside SKILL.md.
-STYLE = Path(__file__).resolve().parent / "openscience.mplstyle" if "__file__" in dir() else None
+STYLE = Path(__file__).resolve().parent / "researchmind.mplstyle" if "__file__" in dir() else None
 # In a notebook/agent cell, use the skill's deployed path directly:
 plt.style.use(str(STYLE)) if STYLE and STYLE.exists() else plt.style.use("default")
 ```
@@ -112,7 +112,7 @@ that the rendered result is readable.
 
 ## Checklist before returning a figure or table
 
-1. Style applied (palette + chrome from `openscience.mplstyle`).
+1. Style applied (palette + chrome from `researchmind.mplstyle`).
 2. Series colors assigned in slot order; ≤8 series (else group into "Other").
 3. Single y-axis; legend iff ≥2 series; axis labels + units present.
 4. Figure form is appropriate for a paper; no Mermaid/PlantUML/generic diagram.

@@ -1,7 +1,7 @@
 // Bundle the ACP agent server into one file the app can ship (#14).
 //
 // An external editor integrates with an ACP agent by SPAWNING it (stdio is the
-// only transport v1 stabilizes), so "Open Science as an ACP agent" has to be a
+// only transport v1 stabilizes), so "ResearchMind as an ACP agent" has to be a
 // command on disk. This produces that command: a single ESM file with the SDK
 // inlined, written into `runtime/acp-server/` where Tauri picks it up as a
 // bundled resource — no npm install for the user, nothing to publish.

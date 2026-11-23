@@ -1,12 +1,12 @@
 <div align="center">
 
-[![Open Science Desktop — Local-first AI research workbench](./docs/assets/banner.webp)](https://github.com/ai4s-research/open-science)
+[![ResearchMind — Local-first AI research workbench](./docs/assets/banner.webp)](https://github.com/crjia111/ResearchMind2.0)
 
-# Open Science Desktop
+# ResearchMind
 
 **Local-first, modellunabhängige KI-Forschungs-Workbench für macOS, Windows & Linux.**
 
-Formerly Open Science. Eine quelloffene Desktop-Alternative zu Claude Science und ähnlichen AI-for-science-Workbenches, gebaut mit Tauri, MCP, agent skills und reproduzierbaren Artefakten. Agenten, Notebooks, Dateien, Abbildungen, Berichte, Läufe und Reviews werden zu einem auditierbaren Desktop-Workflow verbunden.
+ResearchMind ist eine quelloffene Desktop-Umgebung für KI-gestützte Forschung, gebaut mit Tauri, MCP, agent skills und reproduzierbaren Artefakten. Agenten, Notebooks, Dateien, Abbildungen, Berichte, Läufe und Reviews werden zu einem auditierbaren Desktop-Workflow verbunden.
 
 <p>
   <a href="./README.md">English</a> ·
@@ -41,12 +41,12 @@ Formerly Open Science. Eine quelloffene Desktop-Alternative zu Claude Science un
 - **2026-10-26** — 🌐 **Die ganze Werkbank in jedem Browser, und Agenten, die miteinander sprechen.** Splits, Screens und Terminals funktionieren jetzt über den Fernzugriff, auch auf dem Smartphone, mit Konten aus Name und Passwort; eigene Spezialisten mit eigenen Anweisungen, Skills, Konnektoren und Modell; und Agenten lesen über `osd` die Unterhaltungen und Terminals anderer und schreiben ihnen. Dazu Nachrichten in der Warteschlange, während der Agent arbeitet, und eine Linux-Installation ohne Root. *(v0.7.0)*
 - **2026-10-04** — 🖱️ **Computer Use, Terminals und Editoren.** Der Agent bedient jetzt Desktop-Apps wie ImageJ, Origin oder Gerätesoftware; Panes enthalten Terminals, Dateien und einen Code-Editor, in denen Claude Code / Codex nach einem Neustart weiterlaufen; dazu Suche (⌘F), Sprung zu jeder Sitzung oder jedem Projekt (⌘J) und Linux ARM64 für DGX Spark. *(v0.6.0)*
 - **2026-08-18** — 🖥️ **Läuft ohne Bildschirm.** `osd server` startet die komplette Workbench — Workspace, Agent-Runtime und *dieselbe* Web-UI — auf einer Maschine ohne Display, und `osd session send … --wait` steuert sie aus einem Skript oder von einem anderen Agenten aus. Ein Archiv, kein Installer. `osd` steckt im Desktop-Installer und legt sich beim ersten Start auf den PATH; auf einem Server genügt das Archiv. Modelle, Schlüssel und Genehmigungen sind alle vom Terminal aus einstellbar (`osd model`, `osd auth`, `osd approval`).
-- **2026-08-13** — 🔌 **Spricht das Agent Client Protocol, in beide Richtungen.** Steuere Codex, Gemini CLI, Claude Code oder jeden anderen ACP-Agenten aus dieser App heraus — mit dessen eigenen Modellen, dessen Verlauf und deinen MCP-Konnektoren — oder steuere Open Science selbst aus Zed, JetBrains oder Neovim. *(v0.4.0)*
+- **2026-08-13** — 🔌 **Spricht das Agent Client Protocol, in beide Richtungen.** Steuere Codex, Gemini CLI, Claude Code oder jeden anderen ACP-Agenten aus dieser App heraus — mit dessen eigenen Modellen, dessen Verlauf und deinen MCP-Konnektoren — oder steuere ResearchMind selbst aus Zed, JetBrains oder Neovim. *(v0.4.0)*
 - **2026-08-01** — 🗂️ **Projekte, Memory und vollständiger Verlauf.** Sitzungen in benannten Projekten gruppieren (ein bestehendes Repository wird *an seinem Ort* importiert, nicht kopiert), dem Agenten globales und projektbezogenes Memory geben und jede frühere Unterhaltung über einen durchsuchbaren Verlauf mit Archivieren, Wiederherstellen und Export erreichen. *(v0.3.1)*
 - **2026-07-24** — 🪟 **Geteilte Panes.** Sitzungen nebeneinander anordnen, Panes per Drag neu andocken, mehrere unabhängige Screens behalten und in jedem Pane ein anderes Modell fahren. *(v0.3.0)*
 - **2026-07-21** — 🌐 **Von überall zugreifen — sogar vom Handy.** Ein token-authentifiziertes Gateway liefert die *echte* Desktop-UI an eine CLI, einen Browser in deinem LAN oder dein Handy (standardmäßig nur Loopback; LAN ist optional aktivierbar). Starte einen Lauf am Schreibtisch und lies die fertige Abbildung und den Bericht auf deinem Handy. *(v0.2.3)*
 - **2026-07-21** — 🧭 **Browser-Steuerung.** Der Agent kann deinen eigenen Chrome steuern — mit Profil und Logins intakt —, um das aktuelle Web so zu lesen wie du, oder bei Bedarf einen isolierten privaten Browser. *(v0.2.3)*
-- **2026-07-09** — 🎉 **Platz 1 auf ResearchClawBench.** Open Science Desktop belegt nach Durchschnitt der bewerteten Aufgaben Platz 1 auf [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/), einem End-to-End-Benchmark für autonome wissenschaftliche Forschungsagenten (Pass@1-Leaderboard).
+- **2026-07-09** — 🎉 **Platz 1 auf ResearchClawBench.** ResearchMind belegt nach Durchschnitt der bewerteten Aufgaben Platz 1 auf [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/), einem End-to-End-Benchmark für autonome wissenschaftliche Forschungsagenten (Pass@1-Leaderboard).
 
 ---
 
@@ -143,7 +143,7 @@ Diese sind im `ai4s-skills`-Pack enthalten, neben den First-Party-Review-Skills 
 | Dateien | Globale und sitzungsbezogene Dateiansicht, Kontextmenü, extern öffnen/anzeigen, Pfad kopieren, lokaler Preview-Server. |
 | Headless & CLI | `osd server` betreibt die Workbench ohne Fenster — derselbe Workspace, dieselbe Runtime, dieselbe Web-UI, ausgeliefert aus einem einzigen eigenständigen Verzeichnis. `osd` steuert sie (oder eine laufende Desktop-App) vom Terminal aus: Sessions, Projekte, Runs, Dateien, Freigaben, `--wait`, `--json`. |
 | Fernzugriff | Token-authentifiziertes Gateway, das die echte UI an eine CLI, einen Web-Browser im LAN oder dein Handy liefert (standardmäßig nur Loopback, LAN optional aktivierbar); Modi für Nur-Lesen bzw. Vollzugriff; kopiere einen Link mit eingebettetem Token, um dich mit einem Tipp zu verbinden. API-Keys gehen niemals über die Leitung. |
-| Editor-Interop (ACP) | Spricht das Agent Client Protocol in beide Richtungen: Jeder ACP-Agent (Codex, Gemini CLI, Claude Code, …) läuft als Runtime hinter der gewohnten UI — mit seinen eigenen Modell- und Reasoning-Auswahlen, Verlaufswiedergabe und den MCP-Konnektoren dieser App; oder ein externer Editor (Zed, JetBrains, Neovim, …) steuert Open Science und nutzt dabei das Gateway-Token weiter. |
+| Editor-Interop (ACP) | Spricht das Agent Client Protocol in beide Richtungen: Jeder ACP-Agent (Codex, Gemini CLI, Claude Code, …) läuft als Runtime hinter der gewohnten UI — mit seinen eigenen Modell- und Reasoning-Auswahlen, Verlaufswiedergabe und den MCP-Konnektoren dieser App; oder ein externer Editor (Zed, JetBrains, Neovim, …) steuert ResearchMind und nutzt dabei das Gateway-Token weiter. |
 | Browser-Steuerung | Der Agent steuert deinen eigenen Chrome — mit erhaltenem Profil und Login-Zustand —, liest Seiten über den Accessibility-Baum, oder bei Bedarf einen isolierten/privaten Browser. |
 | Notebooks | Echte `.ipynb`-Dateien, Python/R-Notebook-Erstellung, lokaler Kernel, Jupyter-Umgebung über gebündeltes `uv`, JupyterLab öffnen. |
 | Läufe | Append-only Run Logs, globaler SQLite-Index, Suche/Facetten/Paginierung, lokale und entfernte Oberflächen, Output-Links, Logs und Reproduce-Prompts. |
@@ -159,7 +159,7 @@ Ein-Klick-MCP-Konnektoren: Literatursuche, biomedizinische Datenbanken, Material
 
 ## Installation
 
-Lade den neuesten Installer von [Releases](https://github.com/ai4s-research/open-science/releases/latest).
+Lade den neuesten Installer von [Releases](https://github.com/crjia111/ResearchMind2.0/releases/latest).
 
 - **macOS**: `.dmg` / `.app`, Apple Silicon und Intel, macOS 13 Ventura oder neuer.
 - **Windows**: NSIS `.exe`, Windows 10/11 x64 — Installation pro Benutzer, ohne Administratorrechte. Zusätzlich erscheint eine `.msi` für IT-verwaltete Verteilung; bleiben Sie bei einem Format.
@@ -306,7 +306,7 @@ starten, abstürzen, stoppen:
 ```ini
 # /etc/systemd/system/osd.service
 [Unit]
-Description=Open Science Desktop (headless)
+Description=ResearchMind (headless)
 After=network-online.target
 
 [Service]
@@ -334,8 +334,8 @@ Was ohne Desktop *fehlt*: lokale Jupyter-Kernel, native Dateidialoge und der Dat
 ## Aus dem Quellcode bauen
 
 ```bash
-git clone https://github.com/ai4s-research/open-science
-cd open-science
+git clone https://github.com/crjia111/ResearchMind2.0
+cd ResearchMind2.0
 pnpm install
 bash scripts/dev/fetch-opencode.sh
 bash scripts/dev/fetch-uv.sh
@@ -376,22 +376,22 @@ Workspace-Dateien, Rohdaten, Sitzungsverlauf, Provenance, Notebooks und Run Reco
 
 ## Status
 
-Das verlässlichste Implementierungslog ist [`PROGRESS.md`](./PROGRESS.md). Nahe Arbeiten: Windows-Code-Signierung, Auto-Update, breitere Windows/Linux-Verifikation, robustere Konnektoren und weitere Reproduzierbarkeits-Reviews. macOS-Releases sind bereits signiert und notarisiert. Für Diskussionen gibt es den [Open Science Discord](https://discord.gg/fWNMDKcd5P).
+Das verlässlichste Implementierungslog ist [`PROGRESS.md`](./PROGRESS.md). Nahe Arbeiten: Windows-Code-Signierung, Auto-Update, breitere Windows/Linux-Verifikation, robustere Konnektoren und weitere Reproduzierbarkeits-Reviews. macOS-Releases sind bereits signiert und notarisiert. Für Diskussionen gibt es den [ResearchMind Discord](https://discord.gg/fWNMDKcd5P).
 
-[MIT](./LICENSE). Open Science Desktop ist Beta-Forschungstooling. Ausgaben sind Entwürfe: Zahlen, Zitate, Code und Schlussfolgerungen vor Veröffentlichung oder Entscheidung prüfen.
+[MIT](./LICENSE). ResearchMind ist Beta-Forschungstooling. Ausgaben sind Entwürfe: Zahlen, Zitate, Code und Schlussfolgerungen vor Veröffentlichung oder Entscheidung prüfen.
 
 ## Zitation
 
-Wenn Sie Open Science Desktop in Ihrer Forschung verwenden, zitieren Sie es bitte wie folgt:
+Wenn Sie ResearchMind in Ihrer Forschung verwenden, zitieren Sie es bitte wie folgt:
 
 ```bibtex
 @software{open_science_desktop,
-  author  = {{The Open Science Desktop Contributors}},
-  title   = {Open Science Desktop: a local-first, model-agnostic AI research workbench},
+  author  = {{The ResearchMind Contributors}},
+  title   = {ResearchMind: a local-first, model-agnostic AI research workbench},
   year    = {2026},
   version = {0.7.3},
   doi     = {10.5281/zenodo.24286110},
-  url     = {https://github.com/ai4s-research/open-science},
+  url     = {https://github.com/crjia111/ResearchMind2.0},
   license = {MIT}
 }
 ```

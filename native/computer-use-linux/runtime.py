@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Open Science Desktop Linux computer-use bridge.
+"""ResearchMind Linux computer-use bridge.
 
 The host owns the public API. This process is intentionally a small
 AT-SPI adapter: read one JSON operation file, execute it in the user's desktop

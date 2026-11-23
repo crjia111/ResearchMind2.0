@@ -1,4 +1,4 @@
-// Open Science Desktop's OpenCode plugin: what the app adds to every session.
+// ResearchMind's OpenCode plugin: what the app adds to every session.
 //
 // - The host tools: present_artifact, ssh_connect, computer.
 // - The host UI contract (how to display an artifact) on every model request.

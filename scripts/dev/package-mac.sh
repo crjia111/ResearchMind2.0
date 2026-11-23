@@ -82,7 +82,7 @@ dmg="$(ls -t "$root/target/$target/release/bundle/dmg/"*.dmg | head -1)"
 mnt="$(mktemp -d)"
 hdiutil attach -nobrowse -readonly -mountpoint "$mnt" "$dmg" >/dev/null
 trap 'hdiutil detach "$mnt" -force >/dev/null 2>&1 || true' EXIT
-macos="$mnt/Open Science.app/Contents/MacOS"
+macos="$mnt/ResearchMind.app/Contents/MacOS"
 for pair in "opencode $opencode_pin" "uv $uv_pin" "agent-browser $browser_pin"; do
   set -- $pair
   inside="$(version_of "$macos/$1")"

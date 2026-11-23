@@ -350,12 +350,12 @@ mod tests {
 
     #[test]
     fn reads_the_process_table_including_commands_with_spaces() {
-        let rows = parse_ps(" 501   1  4096  12.5 /Applications/Open Science.app/Contents/MacOS/x\n 502 501  2048 0.0 zsh\n");
+        let rows = parse_ps(" 501   1  4096  12.5 /Applications/ResearchMind.app/Contents/MacOS/x\n 502 501  2048 0.0 zsh\n");
         assert_eq!(rows.len(), 2);
         assert_eq!(rows[0].pid, 501);
         assert_eq!(rows[0].rss_kb, 4096);
         assert_eq!(rows[0].cpu, 12.5);
-        assert_eq!(rows[0].command, "/Applications/Open Science.app/Contents/MacOS/x");
+        assert_eq!(rows[0].command, "/Applications/ResearchMind.app/Contents/MacOS/x");
         assert_eq!(rows[1].command, "zsh");
     }
 

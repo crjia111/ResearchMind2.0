@@ -1,8 +1,8 @@
 #!/bin/sh
-# Install Open Science Desktop on Linux for the current user — no root, no
+# Install ResearchMind on Linux for the current user — no root, no
 # package manager, nothing outside $HOME.
 #
-#   curl -fsSL https://raw.githubusercontent.com/ai4s-research/open-science/master/scripts/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/crjia111/ResearchMind2.0/main/scripts/install.sh | sh
 #   curl -fsSL …/install.sh | sh -s -- --desktop     the desktop app as well
 #   curl -fsSL …/install.sh | sh -s -- --uninstall
 #
@@ -12,26 +12,26 @@
 # cannot install without root, so it checks for it first.
 #
 # Layout:
-#   ~/.local/share/open-science/osd/        the osd archive, unpacked
-#   ~/.local/share/open-science/desktop/    the desktop app (usr/bin, usr/lib)
+#   ~/.local/share/researchmind/osd/        the osd archive, unpacked
+#   ~/.local/share/researchmind/desktop/    the desktop app (usr/bin, usr/lib)
 #   ~/.local/bin/osd                        a wrapper (not a symlink: osd finds
 #                                           its sidecars next to its real path)
-#   ~/.local/bin/open-science               the desktop app's launcher
-#   ~/.local/share/applications/open-science.desktop
+#   ~/.local/bin/researchmind               the desktop app's launcher
+#   ~/.local/share/applications/researchmind.desktop
 #
 # Environment: OSD_VERSION=0.6.1 pins a release (default: latest).
 #              OSD_DOWNLOAD_BASE overrides the release download URL (a mirror).
 set -eu
 
-REPO="ai4s-research/open-science"
+REPO="crjia111/ResearchMind2.0"
 # Shared with the desktop app's own wrapper (cli_shim.rs), so whichever wrote
 # `osd` last, the other recognizes it as ours and may replace it.
-SIGNATURE="Open Science Desktop CLI wrapper"
+SIGNATURE="ResearchMind CLI wrapper"
 
 DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
-PREFIX="$DATA/open-science"
+PREFIX="$DATA/researchmind"
 BIN="$HOME/.local/bin"
-DESKTOP_ENTRY="$DATA/applications/open-science.desktop"
+DESKTOP_ENTRY="$DATA/applications/researchmind.desktop"
 
 say() { printf '%s\n' "$*"; }
 die() { printf 'error: %s\n' "$*" >&2; exit 1; }
@@ -55,10 +55,10 @@ remove_ours() {
 if [ "$mode" = uninstall ]; then
   rm -rf "$PREFIX"
   remove_ours "$BIN/osd"
-  remove_ours "$BIN/open-science"
+  remove_ours "$BIN/researchmind"
   remove_ours "$DESKTOP_ENTRY"
-  say "Removed Open Science Desktop from $PREFIX."
-  say "Your workspace (~/Documents/OpenScience) and settings were left in place."
+  say "Removed ResearchMind from $PREFIX."
+  say "Your workspace (~/Documents/ResearchMind) and settings were left in place."
   exit 0
 fi
 
@@ -84,7 +84,7 @@ version="${version#v}"
 base="${OSD_DOWNLOAD_BASE:-https://github.com/$REPO/releases/download/v$version}"
 
 if [ "$mode" = desktop ]; then
-  archive="open-science-desktop-$version-$target.tar.gz"
+  archive="researchmind-desktop-$version-$target.tar.gz"
 else
   archive="osd-$version-$target.tar.gz"
 fi
@@ -137,7 +137,7 @@ write_wrapper() {
 # $SIGNATURE. A wrapper, not a symlink: osd finds its sidecars and
 # bundled resources next to the real executable.
 if [ ! -x "$binary" ]; then
-	echo "Open Science Desktop is no longer installed; removing this leftover command." >&2
+	echo "ResearchMind is no longer installed; removing this leftover command." >&2
 	rm -f -- "\$0"
 	exit 127
 fi
@@ -152,14 +152,14 @@ write_wrapper "$BIN/osd" "$osd_bin"
 if [ "$mode" = desktop ]; then
   app_bin="$dest/usr/bin/ai4s-workbench"
   [ -x "$app_bin" ] || die "the archive did not contain $app_bin"
-  write_wrapper "$BIN/open-science" "$app_bin"
+  write_wrapper "$BIN/researchmind" "$app_bin"
   mkdir -p "$(dirname "$DESKTOP_ENTRY")"
   cat > "$DESKTOP_ENTRY" <<EOF
 [Desktop Entry]
 # $SIGNATURE
 Type=Application
-Name=Open Science
-Comment=Open Science Desktop
+Name=ResearchMind
+Comment=Local AI research workbench
 Exec="$app_bin"
 Icon=$dest/usr/share/icons/hicolor/128x128/apps/ai4s-workbench.png
 StartupWMClass=ai4s-workbench
@@ -169,13 +169,13 @@ EOF
 fi
 
 say ""
-say "Installed Open Science Desktop $version ($mode) in $dest"
+say "Installed ResearchMind $version ($mode) in $dest"
 case ":$PATH:" in
   *":$BIN:"*) ;;
   *) say "Add $BIN to your PATH:  export PATH=\"$BIN:\$PATH\"" ;;
 esac
 if [ "$mode" = desktop ]; then
-  say "Start it from your applications menu, or run:  open-science"
+  say "Start it from your applications menu, or run:  researchmind"
 else
   say "Start it with:  osd server        (osd --help for everything else)"
 fi

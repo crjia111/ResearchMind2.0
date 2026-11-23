@@ -1,12 +1,12 @@
 <div align="center">
 
-[![Open Science Desktop — Local-first AI research workbench](./docs/assets/banner.webp)](https://github.com/ai4s-research/open-science)
+[![ResearchMind — Local-first AI research workbench](./docs/assets/banner.webp)](https://github.com/crjia111/ResearchMind2.0)
 
-# Open Science Desktop
+# ResearchMind
 
 **macOS、Windows & Linux 向けのローカルファースト、モデル非依存 AI 研究ワークベンチ。**
 
-Formerly Open Science. Claude Science などの AI-for-science ワークベンチに対するオープンソースのデスクトップ代替です。Tauri、MCP、agent skills、再現可能な成果物を基盤に、エージェント、ノートブック、ファイル、図、レポート、実行記録、レビューを 1 つの監査可能なデスクトップワークフローにまとめます。
+ResearchMind は AI 科学研究のためのオープンソース・デスクトップ環境です。Tauri、MCP、agent skills、再現可能な成果物を基盤に、エージェント、ノートブック、ファイル、図、レポート、実行記録、レビューを 1 つの監査可能なワークフローにまとめます。
 
 <p>
   <a href="./README.md">English</a> ·
@@ -41,12 +41,12 @@ Formerly Open Science. Claude Science などの AI-for-science ワークベン�
 - **2026-10-26** — 🌐 **どのブラウザからでもワークベンチ全体を、そしてエージェント同士の対話。** リモートアクセスで分割表示・Screen・ターミナルが使え、スマホにも対応、名前とパスワードのアカウントでサインイン。指示・スキル・コネクタ・モデルを持つ独自のスペシャリストを定義でき、エージェントは `osd` で他の会話やターミナルを読み、メッセージを送れます。作業中のメッセージ予約、root 不要の Linux インストールも。*(v0.7.0)*
 - **2026-10-04** — 🖱️ **Computer Use、ターミナル、エディタ。** エージェントが ImageJ、Origin、装置制御ソフトなどのデスクトップアプリを操作できるように。ペインにターミナル・ファイル・コードエディタを置け、Claude Code / Codex は再起動後もそのまま再開。検索（⌘F）、任意のセッションやプロジェクトへのジャンプ（⌘J）、DGX Spark 向け Linux ARM64 も。*(v0.6.0)*
 - **2026-08-18** — 🖥️ **画面がなくても動き、ターミナルのコマンドも同梱。** `osd server` はディスプレイのないマシンでワークベンチ一式（ワークスペース、エージェントランタイム、そして*同じ* Web UI）を起動し、`osd session send … --wait` でスクリプトや別のエージェントから動かせます。`osd` はデスクトップのインストーラーに入り、初回起動で PATH に載ります。サーバーではアーカイブだけで、追加インストールは不要です。モデル・鍵・承認はすべてターミナルから設定できます（`osd model`、`osd auth`、`osd approval`）。
-- **2026-08-13** — 🔌 **Agent Client Protocol に双方向で対応。** Codex、Gemini CLI、Claude Code などの ACP エージェントを、そのエージェント自身のモデル・履歴と本アプリの MCP コネクタごと、このアプリの中から動かせます。逆に Zed、JetBrains、Neovim から Open Science を動かすこともできます。 *(v0.4.0)*
+- **2026-08-13** — 🔌 **Agent Client Protocol に双方向で対応。** Codex、Gemini CLI、Claude Code などの ACP エージェントを、そのエージェント自身のモデル・履歴と本アプリの MCP コネクタごと、このアプリの中から動かせます。逆に Zed、JetBrains、Neovim から ResearchMind を動かすこともできます。 *(v0.4.0)*
 - **2026-08-01** — 🗂️ **プロジェクト・メモリ・全履歴。** セッションを名前付きプロジェクトにまとめ（既存リポジトリはコピーせず**その場で**インポート）、グローバルとプロジェクトの永続メモリを持たせ、過去のすべての会話を検索可能な履歴（アーカイブ／復元／エクスポート付き）から辿れます。 *(v0.3.1)*
 - **2026-07-24** — 🪟 **分割ペインのタイリング。** セッションを並べて表示し、ペインをドラッグして再配置し、独立した「スクリーン」を複数保持でき、ペインごとに別のモデルを使えます。 *(v0.3.0)*
 - **2026-07-21** — 🌐 **どこからでもアクセス——スマホからでも。** トークン認証ゲートウェイが*本物の*デスクトップ UI を CLI、LAN 上のブラウザ、あるいはスマホへ配信します（既定はループバック、LAN はオプトイン）。デスクで実行を開始し、完成した図とレポートをスマホで読めます。 *(v0.2.3)*
 - **2026-07-21** — 🧭 **ブラウザ制御。** エージェントがあなた自身の Chrome を——プロファイルとログインを保ったまま——操作し、あなたと同じようにライブな Web を読み取ります。必要に応じて分離されたプライベートブラウザも使えます。 *(v0.2.3)*
-- **2026-07-09** — 🎉 **ResearchClawBench 第 1 位。** Open Science Desktop は、自律型科学研究エージェント向けのエンドツーエンドベンチマーク [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/) で、採点済みタスク平均スコア第 1 位です（Pass@1 リーダーボード）。
+- **2026-07-09** — 🎉 **ResearchClawBench 第 1 位。** ResearchMind は、自律型科学研究エージェント向けのエンドツーエンドベンチマーク [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/) で、採点済みタスク平均スコア第 1 位です（Pass@1 リーダーボード）。
 
 ---
 
@@ -88,7 +88,7 @@ Formerly Open Science. Claude Science などの AI-for-science ワークベン�
 
 **あなた自身の Chrome を操作。** エージェントはあなた自身のブラウザプロファイル——ログインも含めて——を通じてライブな Web を読み取り、見つけた内容を図とソート可能な CSV に変換します。
 
-![open-science-browser でユーザー自身の Chrome を操作し、bioRxiv のプレプリントを収集してチャートと CSV にするエージェント](./docs/assets/showcase-browser.webp)
+![ユーザー自身の Chrome を操作し、bioRxiv のプレプリントを収集してチャートと CSV にするエージェント](./docs/assets/showcase-browser.webp)
 
 **どこからでも研究——スマホからでも。** 組み込みの認証ゲートウェイが*本物の*デスクトップ UI を LAN 上のブラウザ（またはトンネル）へ配信するので、デスクで実行を開始し、完成した図とレポートをスマホで読めます。
 
@@ -143,7 +143,7 @@ Formerly Open Science. Claude Science などの AI-for-science ワークベン�
 | ファイル | グローバル/セッション内のファイルブラウズ、右クリック操作、外部アプリで開く、パスコピー、ローカルプレビューサーバー。 |
 | ヘッドレスと CLI | `osd server` はウィンドウなしでワークベンチを動かします（同じワークスペース、同じランタイム、同じ Web UI を、自己完結したディレクトリひとつから配信）。`osd` はそれを（あるいは動作中のデスクトップアプリを）ターミナルから操作します: セッション、プロジェクト、実行履歴、ファイル、承認、`--wait`、`--json`。 |
 | リモートアクセス | 本物の UI を CLI、LAN 上の Web ブラウザ、またはスマホへ配信するトークン認証ゲートウェイ（既定はループバック、LAN はオプトイン）。読み取り専用/フルアクセスの各モード。トークンを埋め込んだリンクをコピーし、ワンタップで接続。API キーが通信路を渡ることはありません。 |
-| エディタ連携（ACP） | Agent Client Protocol に双方向で対応：任意の ACP エージェント（Codex、Gemini CLI、Claude Code など）を通常の UI の背後のランタイムとして動かし、そのエージェント自身のモデル／推論レベルの選択、履歴の再生、本アプリの MCP コネクタをそのまま使えます。逆に外部エディタ（Zed、JetBrains、Neovim など）がゲートウェイのトークンを再利用して Open Science を駆動することもできます。 |
+| エディタ連携（ACP） | Agent Client Protocol に双方向で対応：任意の ACP エージェント（Codex、Gemini CLI、Claude Code など）を通常の UI の背後のランタイムとして動かし、そのエージェント自身のモデル／推論レベルの選択、履歴の再生、本アプリの MCP コネクタをそのまま使えます。逆に外部エディタ（Zed、JetBrains、Neovim など）がゲートウェイのトークンを再利用して ResearchMind を駆動することもできます。 |
 | ブラウザ制御 | エージェントがあなた自身の Chrome を——プロファイルとログイン状態を保ったまま——操作し、アクセシビリティツリーを通じてページを読み取ります。必要に応じて分離された/プライベートなブラウザも使えます。 |
 | ノートブック | 実際の `.ipynb`、Python/R ノートブック作成、ローカルカーネル実行、バンドル `uv` による Jupyter 環境、JupyterLab 起動。 |
 | 実行記録 | 追記型 run log、グローバル SQLite インデックス、検索/ファセット/ページング、出力リンク、ログ、再現プロンプト。 |
@@ -159,7 +159,7 @@ Formerly Open Science. Claude Science などの AI-for-science ワークベン�
 
 ## インストール
 
-[Releases](https://github.com/ai4s-research/open-science/releases/latest) から最新版をダウンロードしてください。
+[Releases](https://github.com/crjia111/ResearchMind2.0/releases/latest) から最新版をダウンロードしてください。
 
 - **macOS**: `.dmg` / `.app`、Apple Silicon と Intel、macOS 13 Ventura 以降。
 - **Windows**: NSIS `.exe`、Windows 10/11 x64 — ユーザーごとにインストールされ、管理者権限は不要です。IT 部門による一括配布向けに `.msi` も配布しています。どちらか一方に統一してください。
@@ -273,7 +273,7 @@ osd approval set full   # 一切尋ねない: コマンド・削除・インス�
 ```ini
 # /etc/systemd/system/osd.service
 [Unit]
-Description=Open Science Desktop (headless)
+Description=ResearchMind (headless)
 After=network-online.target
 
 [Service]
@@ -298,8 +298,8 @@ WantedBy=multi-user.target
 ## ソースからビルド
 
 ```bash
-git clone https://github.com/ai4s-research/open-science
-cd open-science
+git clone https://github.com/crjia111/ResearchMind2.0
+cd ResearchMind2.0
 pnpm install
 bash scripts/dev/fetch-opencode.sh
 bash scripts/dev/fetch-uv.sh
@@ -340,22 +340,22 @@ pnpm lint
 
 ## 状態
 
-現在の実装ログは [`PROGRESS.md`](./PROGRESS.md) を参照してください。近い作業は Windows のコード署名、自動更新、Windows/Linux 検証の拡大、コネクタの堅牢化、再現性レビューの継続です。macOS リリースは署名・Notarization 済みです。議論には [Open Science Discord](https://discord.gg/fWNMDKcd5P) も使えます。
+現在の実装ログは [`PROGRESS.md`](./PROGRESS.md) を参照してください。近い作業は Windows のコード署名、自動更新、Windows/Linux 検証の拡大、コネクタの堅牢化、再現性レビューの継続です。macOS リリースは署名・Notarization 済みです。議論には [ResearchMind Discord](https://discord.gg/fWNMDKcd5P) も使えます。
 
-[MIT](./LICENSE). Open Science Desktop は beta の研究ツールです。出力は草稿として扱い、公開や意思決定の前に数字、引用、コード、結論を検証してください。
+[MIT](./LICENSE). ResearchMind は beta の研究ツールです。出力は草稿として扱い、公開や意思決定の前に数字、引用、コード、結論を検証してください。
 
 ## 引用
 
-研究で Open Science Desktop を使用した場合は、以下のように引用してください:
+研究で ResearchMind を使用した場合は、以下のように引用してください:
 
 ```bibtex
 @software{open_science_desktop,
-  author  = {{The Open Science Desktop Contributors}},
-  title   = {Open Science Desktop: a local-first, model-agnostic AI research workbench},
+  author  = {{The ResearchMind Contributors}},
+  title   = {ResearchMind: a local-first, model-agnostic AI research workbench},
   year    = {2026},
   version = {0.7.3},
   doi     = {10.5281/zenodo.24286110},
-  url     = {https://github.com/ai4s-research/open-science},
+  url     = {https://github.com/crjia111/ResearchMind2.0},
   license = {MIT}
 }
 ```

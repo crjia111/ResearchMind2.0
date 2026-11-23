@@ -167,10 +167,10 @@ Each is a named recovery, not a retry.
 - `action_timeout` — read the state before retrying, then use a simpler action.
 - `screenshot_failed` — the tree may still be enough. If the message names Screen
   Recording, the user grants it in Settings → Computer Use. Note it is granted to
-  **Open Science** itself, not to the helper that Accessibility is granted to —
+  **ResearchMind** itself, not to the helper that Accessibility is granted to —
   macOS attributes screen capture to the app that started the request.
 - `permission_denied` / `accessibility_error` — on macOS, Accessibility has not
-  been granted to **Open Science Computer Use**. Tell the user to open
+  been granted to **ResearchMind Computer Use**. Tell the user to open
   Settings → Computer Use and grant it; you cannot grant it for them.
 
 An empty tree with no screenshot usually means the app has no visible window, is

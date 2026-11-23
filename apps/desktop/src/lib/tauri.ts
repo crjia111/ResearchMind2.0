@@ -693,7 +693,7 @@ export async function agentBrowserProfiles(): Promise<BrowserProfile[]> {
   }
 }
 
-/** Close every browser session in Open Science Desktop's private namespace. */
+/** Close every browser session in ResearchMind's private namespace. */
 export async function closeAgentBrowser(): Promise<void> {
   if (!isTauri) return;
   const { invoke } = await import("@tauri-apps/api/core");

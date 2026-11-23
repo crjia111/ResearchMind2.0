@@ -1,4 +1,4 @@
-// `present_artifact`: ask the Open Science Desktop UI to display a workspace
+// `present_artifact`: ask the ResearchMind UI to display a workspace
 // file. The call itself is the signal the UI acts on; the tool only checks the
 // file is real and inside the workspace.
 import { stat } from "node:fs/promises";
@@ -19,7 +19,7 @@ export interface PresentInput {
 /** The host UI contract, attached to every model request: models sometimes
  *  mistake reading a file or linking its path for displaying it, and the tool
  *  description alone does not stop that. */
-export const ARTIFACT_PRESENTATION_SYSTEM = `Open Science Desktop can display workspace files through the present_artifact tool.
+export const ARTIFACT_PRESENTATION_SYSTEM = `ResearchMind can display workspace files through the present_artifact tool.
 - If the user asks to show, display, render, preview, or open an artifact in the chat/conversation, call present_artifact with display="inline".
 - If the user asks for a panel or side-by-side view in the current Screen, call present_artifact with display="panel", target="current-screen", and the placement they asked for: placement="bottom" for below/underneath/a bottom panel, otherwise placement="right".
 - If the artifact is already shown in a panel and the user asks to move it, call present_artifact again with the new placement; the host moves the open panel.
@@ -44,7 +44,7 @@ export function workspacePath(directory: string, requestedPath: string): string 
 export const presentArtifactTool = {
   name: "present_artifact",
   description:
-    "Actually display an existing workspace artifact in the Open Science Desktop UI. You MUST call this tool when the user asks to show, display, render, preview, or open a file in the conversation or a Screen panel; reading the file or mentioning its path does not display it. Use inline for the conversation. For panel display, target can use the current Screen, create a new Screen with the source conversation, or create a real dedicated Agent Session in a new Screen. The file must already exist, and you must not claim it is displayed unless this call succeeds.",
+    "Actually display an existing workspace artifact in the ResearchMind UI. You MUST call this tool when the user asks to show, display, render, preview, or open a file in the conversation or a Screen panel; reading the file or mentioning its path does not display it. Use inline for the conversation. For panel display, target can use the current Screen, create a new Screen with the source conversation, or create a real dedicated Agent Session in a new Screen. The file must already exist, and you must not claim it is displayed unless this call succeeds.",
   input: {
     type: "object",
     properties: {

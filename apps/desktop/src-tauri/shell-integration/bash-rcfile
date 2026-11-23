@@ -1,4 +1,4 @@
-# Open Science terminal integration (see terminal_env.rs), passed as
+# ResearchMind terminal integration (see terminal_env.rs), passed as
 # `bash --rcfile`: run the user's .bashrc, then restore what they exported by
 # hand before the app last closed, and keep recording it at every prompt.
 # Written for bash 3.2, the one macOS ships: no associative arrays.

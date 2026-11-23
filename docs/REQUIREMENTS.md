@@ -1,7 +1,7 @@
-# Open Science Desktop — Prioritized Requirements (Community-Informed)
+# ResearchMind — Prioritized Requirements (Community-Informed)
 
 > **Purpose.** This document turns real community evidence into concrete,
-> prioritized requirements for **Open Science Desktop**, our open-source, local-first,
+> prioritized requirements for **ResearchMind**, our open-source, local-first,
 > reproducible AI research workbench. It complements `PRD.md`: the PRD says
 > *what the product is*; this file says *what to build first and why*, tied to
 > evidence.
@@ -41,11 +41,11 @@ The moat of an AI research workbench is **not the model**. It is:
 4. **domain-correctness gates** — because across *every* field the top complaint
    is code that **runs but is scientifically wrong** (see P0-5).
 
-Open Science Desktop must win on those four axes — plus two things competitors are
+ResearchMind must win on those four axes — plus two things competitors are
 criticized for lacking: **multi-discipline breadth** and **Windows support**.
 
 Do **not** market as "open-source Claude Science" or "zero hallucination."
-Market as: *"Open Science Desktop — local-first, model-agnostic AI research
+Market as: *"ResearchMind — local-first, model-agnostic AI research
 workbench for macOS, Windows & Linux."* Sell **traceable / verifiable**, not **perfect**.
 
 ---
@@ -364,7 +364,7 @@ competitors.
 
   **Cleanup — structure (not urgent):**
   - [ ] Split `lib/runtime.ts` (1,014 lines, ~6 concerns): extract the pure
-    fold/history reducers and connection/retry; stop hardcoding `OpenScience/`
+    fold/history reducers and connection/retry; stop hardcoding the legacy workspace folder name
     in `tidyToolTitle` (`runtime.ts:835`).
   - [ ] Extract ProvidersCard/McpCard from `SettingsPage.tsx` (903 lines, 20
     `useState`, zero tests) following the existing ClusterCard pattern.
@@ -539,7 +539,7 @@ competitors.
 - **Status.** 🟡 One documented chart design system — a validated
   categorical/sequential/status palette as single source of truth in three synced
   places (`@ai4s/shared` chartPalette, `index.css --series-*`,
-  `openscience.mplstyle` applied by the `publication-figures` skill) — so agent
+  `researchmind.mplstyle` applied by the `publication-figures` skill) — so agent
   matplotlib and native UI read as one system in light+dark. Command palette
   reaches every primary action; live streaming text + file-path tool rows;
   per-session panes + scroll memory; slimmed one-line session header. **Native

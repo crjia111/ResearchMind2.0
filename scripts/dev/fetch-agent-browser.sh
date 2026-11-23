@@ -75,7 +75,7 @@ cp "$SRC/LICENSE" "$SKILL_OUT/LICENSE.txt"
 ADAPTER="$TMP/adapter.md"
 cat > "$ADAPTER" <<'ADAPTER_EOF'
 
-## Open Science Desktop MCP adapter
+## ResearchMind MCP adapter
 
 When Browser Control is enabled in Settings, this app provides the version-matched `open-science-browser` MCP server. Apply the official workflow below through its `agent_browser_*` MCP tools.
 
@@ -86,7 +86,7 @@ When Browser Control is enabled in Settings, this app provides the version-match
 - A browser lease is assigned automatically from the current conversation. Never pass `session`, `namespace`, restore fields, `extraArgs`, `headed`, `webgpu`, `webmcp`, CA certificate fields, or `idleTimeout`; the MCP boundary does not expose them. The lease is this conversation's session, so skip the official guide's `session id` and `--session` steps.
 - The official guide's references and templates are files next to this skill; read them directly instead of running `agent-browser skills get`.
 - Never pass the per-call `allowedDomains` argument. The app owns domain policy through Settings; upstream rejects `allowedDomains` when a Chrome profile is active.
-- Browsers opened by the user outside Open Science Desktop are external resources: never attach to, inspect, navigate, or close them. Other conversations' managed browsers are equally off-limits.
+- Browsers opened by the user outside ResearchMind are external resources: never attach to, inspect, navigate, or close them. Other conversations' managed browsers are equally off-limits.
 - If inventory shows a current browser, reuse a suitable current tab. Otherwise open the target URL directly. Never call `open` without a URL; never create a tab merely to test availability.
 - For multiple sequential URLs, call `open(url)` on the reusable current tab. Use `tab_new` only when the task genuinely requires concurrent pages or the user asks for them.
 - Before the final answer, close this conversation's browser unless the user explicitly asks to keep it open for a handoff. Never request close-all. Idle timeout and app exit reclaim abandoned app-managed leases.
@@ -99,7 +99,7 @@ awk -v adapter="$ADAPTER" '
     next
   }
   frontmatter == 1 && $0 ~ /^description:/ {
-    print "description: Official version-matched agent-browser guide for Open Science Desktop. Use this skill only when a task needs a real browser: JavaScript-rendered pages, a signed-in session, clicking or typing, forms, tabs, or screenshots. To read a page, an API, or a file, use the built-in web fetch tool; to find pages, the built-in web search tool; for GitHub use gh and for a plain download use curl. Do not use the unrelated browser-control skill."
+    print "description: Official version-matched agent-browser guide for ResearchMind. Use this skill only when a task needs a real browser: JavaScript-rendered pages, a signed-in session, clicking or typing, forms, tabs, or screenshots. To read a page, an API, or a file, use the built-in web fetch tool; to find pages, the built-in web search tool; for GitHub use gh and for a plain download use curl. Do not use the unrelated browser-control skill."
     next
   }
   {
@@ -114,7 +114,7 @@ awk -v adapter="$ADAPTER" '
 
 printf '%s\n' "$AGENT_BROWSER_VERSION" > "$SKILLS_OUT/.version"
 grep -q '^name: open-science-browser$' "$SKILL_OUT/SKILL.md"
-grep -q '^## Open Science Desktop MCP adapter$' "$SKILL_OUT/SKILL.md"
+grep -q '^## ResearchMind MCP adapter$' "$SKILL_OUT/SKILL.md"
 # Both halves of the "cheaper tools first" policy must survive the rewrite: the
 # description decides whether the skill is loaded at all, the bullet decides
 # what happens once it is.

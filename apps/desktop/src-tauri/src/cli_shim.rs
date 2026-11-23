@@ -21,11 +21,11 @@ use serde::Serialize;
 
 /// Marks a wrapper as ours, so a re-install overwrites our own file and never
 /// somebody else's `osd`.
-const SIGNATURE: &str = "Open Science Desktop CLI wrapper";
+const SIGNATURE: &str = "ResearchMind CLI wrapper";
 
 /// Delimits the block appended to a shell profile, so it is found again and
 /// written exactly once.
-const PROFILE_MARKER: &str = "# Open Science Desktop: put the osd command on PATH";
+const PROFILE_MARKER: &str = "# ResearchMind: put the osd command on PATH";
 
 /// How `osd` became reachable.
 #[derive(Serialize, PartialEq, Debug, Clone, Copy)]
@@ -178,7 +178,7 @@ fn wrapper_script(binary: &Path) -> String {
              rem {SIGNATURE}. A wrapper, not a symlink: osd finds its sidecars\r\n\
              rem and bundled resources next to the real executable.\r\n\
              if not exist \"{path}\" (\r\n\
-             echo Open Science Desktop is no longer installed; removing this leftover osd command. 1>&2\r\n\
+             echo ResearchMind is no longer installed; removing this leftover osd command. 1>&2\r\n\
              del \"%~f0\" >nul 2>&1\r\n\
              exit /b 127\r\n\
              )\r\n\
@@ -191,7 +191,7 @@ fn wrapper_script(binary: &Path) -> String {
              # bundled resources next to the real executable, and macOS does not\n\
              # resolve a symlink for current_exe().\n\
              if [ ! -x \"{path}\" ]; then\n\
-             \techo \"Open Science Desktop is no longer installed; removing this leftover osd command.\" >&2\n\
+             \techo \"ResearchMind is no longer installed; removing this leftover osd command.\" >&2\n\
              \trm -f -- \"$0\"\n\
              \texit 127\n\
              fi\n\
@@ -397,7 +397,7 @@ fn ensure_reachable(dir: &Path) -> (PathRoute, Option<PathBuf>) {
 fn install() -> Result<CliShimStatus, String> {
     let binary = bundled_osd().ok_or("this build does not carry the osd command")?;
     if runs_from_removable_image(&binary) {
-        return Err("this copy is running from the disk image — drag Open Science into \
+        return Err("this copy is running from the disk image — drag ResearchMind into \
                     Applications, open it from there, and the command installs itself"
             .into());
     }
@@ -507,8 +507,8 @@ mod tests {
 
     #[test]
     fn the_wrapper_execs_the_real_binary_and_never_symlinks_it() {
-        let script = wrapper_script(Path::new("/Applications/Open Science.app/Contents/MacOS/osd"));
-        assert!(script.contains("/Applications/Open Science.app/Contents/MacOS/osd"));
+        let script = wrapper_script(Path::new("/Applications/ResearchMind.app/Contents/MacOS/osd"));
+        assert!(script.contains("/Applications/ResearchMind.app/Contents/MacOS/osd"));
         assert!(script.contains(SIGNATURE), "a re-install must recognise its own file");
         if cfg!(windows) {
             assert!(script.starts_with("@echo off"), "{script}");
@@ -616,7 +616,7 @@ mod tests {
         // is reading the file is the part worth proving.
         use std::os::unix::fs::PermissionsExt;
         let dir = tmp("gone");
-        let missing = dir.join("Open Science.app/Contents/MacOS/osd");
+        let missing = dir.join("ResearchMind.app/Contents/MacOS/osd");
         let shim = dir.join("osd");
         std::fs::write(&shim, wrapper_script(&missing)).unwrap();
         std::fs::set_permissions(&shim, std::fs::Permissions::from_mode(0o755)).unwrap();
@@ -732,11 +732,11 @@ mod tests {
         // installed and missing at the same time.
         if cfg!(target_os = "macos") {
             assert!(runs_from_removable_image(Path::new(
-                "/Volumes/Open Science/Open Science.app/Contents/MacOS/osd"
+                "/Volumes/ResearchMind/ResearchMind.app/Contents/MacOS/osd"
             )));
         }
         assert!(!runs_from_removable_image(Path::new(
-            "/Applications/Open Science.app/Contents/MacOS/osd"
+            "/Applications/ResearchMind.app/Contents/MacOS/osd"
         )));
     }
 }

@@ -87,7 +87,7 @@ if [ -d "$root/apps/desktop/src-tauri/computer-use" ]; then
 fi
 
 cat > "$stage/README.txt" <<'EOF'
-Open Science Desktop — headless (osd)
+ResearchMind — headless (osd)
 
 Nothing to install: this directory runs as it is, on a server with no packages
 added (checked on a bare Ubuntu container).
@@ -119,7 +119,7 @@ As a service, systemd runs `osd server` unchanged, and stopping the unit takes
 the agent runtime with it. A unit that was tested end to end:
 
   [Unit]
-  Description=Open Science Desktop (headless)
+  Description=ResearchMind (headless)
   After=network-online.target
   [Service]
   Type=simple

@@ -1,4 +1,4 @@
-# Open Science Desktop Windows computer-use bridge: a small UI Automation
+# ResearchMind Windows computer-use bridge: a small UI Automation
 # adapter. One JSON operation in, one JSON response out.
 #
 # Ported from Orca (github.com/stablyai/orca, MIT, Copyright (c) 2026 Lovecast

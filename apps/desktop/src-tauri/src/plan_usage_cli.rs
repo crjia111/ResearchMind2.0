@@ -470,7 +470,7 @@ pub fn codex_rpc(env: &LaunchEnv, cwd: &Path) -> Result<CodexReading, CliFailure
 
     let mut send = |message: Value| writeln!(stdin, "{message}").and_then(|_| stdin.flush());
     let init = json!({"jsonrpc": "2.0", "id": 1, "method": "initialize",
-                      "params": {"clientInfo": {"name": "open-science-desktop", "version": "1.0.0"}}});
+                      "params": {"clientInfo": {"name": "researchmind", "version": "1.0.0"}}});
     let outcome = (|| {
         send(init).map_err(|e| e.to_string())?;
         let deadline = Instant::now() + Duration::from_secs(15);

@@ -188,7 +188,7 @@ jobs:
           # On a v* tag push, attach installers to a draft GitHub Release.
           # Empty tagName (workflow_dispatch) skips release creation.
           tagName: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
-          releaseName: ${{ github.ref_type == 'tag' && format('Open Science Desktop {0}', github.ref_name) || '' }}
+          releaseName: ${{ github.ref_type == 'tag' && format('ResearchMind {0}', github.ref_name) || '' }}
           releaseDraft: true
           # Standing install/first-launch notes. Tagged macOS releases are blocked
           # above unless Developer ID signing + notarization credentials are
@@ -197,7 +197,7 @@ jobs:
             ## Install & first launch
 
             **macOS** — Apple Silicon: `…_aarch64.dmg` · Intel: `…_x64.dmg` (requires macOS 13+)
-            - Developer ID-signed and notarized. Open the DMG and drag **Open Science** into Applications.
+            - Developer ID-signed and notarized. Open the DMG and drag **ResearchMind** into Applications.
             - When you use an existing project in place, allow access to its folder if macOS asks.
 
             **Windows** — `…_x64-setup.exe` (start here) · `…_x64_en-US.msi` (IT-managed deployment only)
@@ -209,7 +209,7 @@ jobs:
             **Linux** — Intel/AMD: `…_amd64.deb` / `…x86_64.rpm` · ARM64 (incl. NVIDIA DGX Spark): `…_arm64.deb` / `…aarch64.rpm` (Ubuntu 22.04+ or equivalent)
             - `sudo apt install ./…_amd64.deb` (or `_arm64.deb`)  ·  `sudo dnf install ./…x86_64.rpm` (or `aarch64.rpm`)
             - Check your machine with `uname -m`: `x86_64` → amd64/x86_64, `aarch64` → arm64/aarch64. A package for the other architecture fails with a dependency error that looks unrelated.
-            - No root? `curl -fsSL https://raw.githubusercontent.com/ai4s-research/open-science/master/scripts/install.sh | sh` installs `osd` (headless) under `$HOME`; add `-s -- --desktop` for the desktop app (needs WebKitGTK 4.1 already present).
+            - No root? `curl -fsSL https://raw.githubusercontent.com/crjia111/ResearchMind2.0/main/scripts/install.sh | sh` installs `osd` (headless) under `$HOME`; add `-s -- --desktop` for the desktop app (needs WebKitGTK 4.1 already present).
 
             > **No in-app auto-update** — download new versions from this Releases page. (The `.app.tar.gz` assets are build artifacts, not an update channel.)
 
@@ -263,7 +263,7 @@ jobs:
           deb=$(find "target/${{ matrix.target }}/release/bundle/deb" -maxdepth 1 -name '*.deb' -print -quit)
           [ -n "$deb" ] || { echo "::error::No .deb was produced."; exit 1; }
           version=$(jq -r '.version' apps/desktop/src-tauri/tauri.conf.json)
-          name="open-science-desktop-$version-${{ matrix.target }}"
+          name="researchmind-desktop-$version-${{ matrix.target }}"
           rm -rf dist-desktop && mkdir -p "dist-desktop/$name"
           dpkg-deb -x "$deb" "dist-desktop/$name"
           tar -czf "dist-desktop/$name.tar.gz" -C dist-desktop "$name"
@@ -297,8 +297,8 @@ jobs:
           esac
 
           archive_dir="$RUNNER_TEMP/macos-submitted-app"
-          archive_path="$archive_dir/Open.Science_${version}_${suffix}.submitted.app.zip"
-          dmg_path="$PWD/target/${{ matrix.target }}/release/bundle/dmg/Open.Science_${version}_${suffix}.dmg"
+          archive_path="$archive_dir/ResearchMind_${version}_${suffix}.submitted.app.zip"
+          dmg_path="$PWD/target/${{ matrix.target }}/release/bundle/dmg/ResearchMind_${version}_${suffix}.dmg"
           mkdir -p "$archive_dir"
           ditto -c -k --keepParent --sequesterRsrc "$app_path" "$archive_path"
 

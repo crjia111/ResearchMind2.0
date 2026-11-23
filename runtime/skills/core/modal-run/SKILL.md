@@ -34,7 +34,7 @@ the image so the run is reproducible, and fix any random seed.
 # compute.py — run with:  modal run compute.py
 import modal
 
-app = modal.App("open-science-job")
+app = modal.App("researchmind-job")
 image = modal.Image.debian_slim().pip_install("numpy==1.26.4", "scipy==1.13.1")
 
 @app.function(image=image, gpu=None, timeout=1800)  # set gpu="A10G" etc. if needed

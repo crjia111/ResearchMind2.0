@@ -1,12 +1,12 @@
 <div align="center">
 
-[![Open Science Desktop — 本地优先 AI 科研桌面工作台](./docs/assets/banner.webp)](https://github.com/ai4s-research/open-science)
+[![ResearchMind — 本地优先 AI 科研桌面工作台](./docs/assets/banner.webp)](https://github.com/crjia111/ResearchMind2.0)
 
-# Open Science Desktop
+# ResearchMind
 
 **本地优先、模型无关的 macOS、Windows & Linux AI 科研桌面工作台。**
 
-原名 Open Science。它是 Claude Science 及同类 AI-for-science 工作台的开源桌面替代：
+ResearchMind 是面向 AI 科研的开源桌面工作台：
 基于 Tauri、MCP、agent skills 和可复现工件构建。它把智能体、笔记本、文件、图表、
 报告、运行记录和审查连接成一条可审计的桌面工作流。
 
@@ -45,12 +45,12 @@
 - **2026-10-26** — 🌐 **在任何浏览器里用完整工作台，智能体之间能互相对话。** 远程访问现在支持分屏、Screen 和终端，手机上也能用，并可用账号密码登录；可以自定义专家智能体，各自配置指令、技能、连接器和模型；智能体还能通过 `osd` 读取并发消息给其他会话和终端。另有：智能体工作时可排队发消息，Linux 免 root 安装。*(v0.7.0)*
 - **2026-10-04** — 🖱️ **Computer Use、终端与编辑器。** 智能体现在能操作 ImageJ、Origin、仪器软件等桌面应用；窗格里可以放终端、文件和代码编辑器，Claude Code / Codex 重启后自动续上；另有全文查找（⌘F）、一键跳转任意会话或项目（⌘J），以及面向 DGX Spark 的 Linux ARM64 安装包。*(v0.6.0)*
 - **2026-08-18** — 🖥️ **无屏也能跑，终端命令随包附带。** `osd server` 在没有显示器的机器上启动整套工作台——工作区、智能体运行时，以及*同一套* Web UI；`osd session send … --wait` 让脚本或另一个智能体来驱动它。`osd` 现在装在桌面安装包里，首次启动自动进入 PATH；服务器上用压缩包，什么都不用装。模型、密钥、审批都能在终端配置（`osd model`、`osd auth`、`osd approval`）。
-- **2026-08-13** — 🔌 **双向支持 Agent Client Protocol。** 在本应用里直接驱动 Codex、Gemini CLI、Claude Code 等任意 ACP 智能体——沿用它自己的模型、历史，以及你在本应用配置的 MCP 连接器；反过来，也可以从 Zed、JetBrains、Neovim 里驱动 Open Science。 *(v0.4.0)*
+- **2026-08-13** — 🔌 **双向支持 Agent Client Protocol。** 在本应用里直接驱动 Codex、Gemini CLI、Claude Code 等任意 ACP 智能体——沿用它自己的模型、历史，以及你在本应用配置的 MCP 连接器；反过来，也可以从 Zed、JetBrains、Neovim 里驱动 ResearchMind。 *(v0.4.0)*
 - **2026-08-01** — 🗂️ **项目、记忆与完整历史。** 会话可以归入命名项目（**就地**导入已有仓库，不做复制），智能体获得持久的全局记忆与项目记忆，全部历史对话都能在可搜索的历史视图中找到，并支持归档、恢复与导出。 *(v0.3.1)*
 - **2026-07-24** — 🪟 **分屏平铺。** 会话可以并排平铺、拖拽分栏重新停靠、保留多个互不干扰的「屏幕」，每个分栏还能用不同的模型。 *(v0.3.0)*
 - **2026-07-21** — 🌐 **随时随地访问——连手机都行。** 一个基于令牌认证的网关，把*真正的*桌面 UI 提供给命令行、局域网中的浏览器或你的手机（默认仅回环地址；局域网需手动开启）。在电脑前发起一次运行，然后在手机上查看完成的图表和报告。 *(v0.2.3)*
 - **2026-07-21** — 🧭 **浏览器控制。** 智能体可以驱动你自己的 Chrome——保留配置文件和登录状态——像你一样浏览实时网页，也可以按需使用隔离的隐私浏览器。 *(v0.2.3)*
-- **2026-07-09** — 🎉 **ResearchClawBench 排名第 1。** Open Science Desktop 在面向自主科研智能体的端到端基准 [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/) 上，按已评分任务平均分排名第 1（Pass@1 榜单）。
+- **2026-07-09** — 🎉 **ResearchClawBench 排名第 1。** ResearchMind 在面向自主科研智能体的端到端基准 [ResearchClawBench](https://internscience.github.io/ResearchClawBench-Home/) 上，按已评分任务平均分排名第 1（Pass@1 榜单）。
 
 ---
 
@@ -98,7 +98,7 @@
 
 **驱动你自己的 Chrome。** 智能体通过你真实的浏览器配置文件——连同登录状态——读取实时网页，再把找到的内容变成一张图和一份可排序的 CSV。
 
-![智能体通过 open-science-browser 驱动用户自己的 Chrome，把 bioRxiv 预印本采集成图表和 CSV](./docs/assets/showcase-browser.webp)
+![智能体通过浏览器控制驱动用户自己的 Chrome，把 bioRxiv 预印本采集成图表和 CSV](./docs/assets/showcase-browser.webp)
 
 **随时随地做研究——连手机都行。** 内置的认证网关把*真正的*桌面 UI 提供给局域网里的浏览器(或通过隧道),这样你就能在电脑前发起一次运行,再在手机上查看完成的图表和报告。
 
@@ -153,7 +153,7 @@
 | 文件 | 全局和会话内文件浏览、右键菜单、系统打开/定位、复制路径、本地预览服务。 |
 | 无头与命令行 | `osd server` 以无窗口方式运行工作台——同样的工作区、同样的运行时、同样的 Web UI，全部来自一个自包含目录；`osd` 则从终端驱动它（或驱动正在运行的桌面应用）：会话、项目、运行记录、文件、审批，支持 `--wait` 与 `--json`。 |
 | 远程访问 | 基于令牌认证的网关，把真正的 UI 提供给命令行、局域网 Web 浏览器或你的手机(默认仅回环地址，局域网需手动开启);支持只读与完全访问两种模式;可复制一条内嵌令牌的链接，一键连接。API key 永不经过网络传输。 |
-| 编辑器互通（ACP） | 双向支持 Agent Client Protocol：既可以把任意 ACP 智能体（Codex、Gemini CLI、Claude Code 等）作为运行时接到常规界面背后，沿用它自己的模型与推理档位选择、历史回放，以及本应用的 MCP 连接器；也可以让外部编辑器（Zed、JetBrains、Neovim 等）驱动 Open Science，复用网关令牌。 |
+| 编辑器互通（ACP） | 双向支持 Agent Client Protocol：既可以把任意 ACP 智能体（Codex、Gemini CLI、Claude Code 等）作为运行时接到常规界面背后，沿用它自己的模型与推理档位选择、历史回放，以及本应用的 MCP 连接器；也可以让外部编辑器（Zed、JetBrains、Neovim 等）驱动 ResearchMind，复用网关令牌。 |
 | 浏览器控制 | 智能体驱动你自己的 Chrome——保留配置文件和登录状态——通过无障碍树读取页面，也可按需使用隔离的隐私浏览器。 |
 | 笔记本 | 真实 `.ipynb` 文件、Python/R 笔记本创建、本地内核运行、内置 `uv` 管理 Jupyter 环境，以及打开 JupyterLab。 |
 | 运行记录 | 追加式 run log、全局 SQLite 索引、搜索/筛选/分页、本地与远程 surface、输出链接、日志和复现提示。 |
@@ -184,12 +184,9 @@
 你也可以在 Settings 中添加任意本地或远程 MCP 服务器。参见
 [`docs/CONNECT_YOUR_TOOLS.md`](./docs/CONNECT_YOUR_TOOLS.md)。
 
-中立定位对比见
-[`Open Science Desktop vs OpenScience`](./docs/open-science-desktop-vs-openscience.md)。
-
 ## 安装
 
-从 [Releases 页面](https://github.com/ai4s-research/open-science/releases/latest) 下载最新安装包。
+从 [Releases 页面](https://github.com/crjia111/ResearchMind2.0/releases/latest) 下载最新安装包。
 
 - **macOS**：`.dmg` / `.app`，Apple Silicon 和 Intel，要求 macOS 13 Ventura 或更高。
 - **Windows**：NSIS `.exe`，Windows 10/11 x64 —— 按用户安装，无需管理员权限。另发 `.msi` 供机构批量部署；两种格式请择一使用，不要混装。
@@ -202,16 +199,16 @@ macOS 安装包已使用 Developer ID 签名、公证并 staple，可直接打�
 **Linux**：
 
 ```bash
-sudo apt install ./Open.Science_*.deb
+sudo apt install ./researchmind_*.deb
 # 或
-sudo rpm -i Open.Science-*.rpm
+sudo rpm -i researchmind-*.rpm
 ```
 
 没有 root 权限？下面的命令把所有东西装在你的用户目录下——默认装 `osd`，加 `--desktop` 装桌面版（要求系统里已有 WebKitGTK 4.1）。`--uninstall` 可以再卸掉。
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ai4s-research/open-science/master/scripts/install.sh | sh
-curl -fsSL https://raw.githubusercontent.com/ai4s-research/open-science/master/scripts/install.sh | sh -s -- --desktop
+curl -fsSL https://raw.githubusercontent.com/crjia111/ResearchMind2.0/main/scripts/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/crjia111/ResearchMind2.0/main/scripts/install.sh | sh -s -- --desktop
 ```
 
 ## 无头与命令行(`osd`)
@@ -289,7 +286,7 @@ osd approval set full   # 一律不问：命令、删除、装依赖、访问网
 ```ini
 # /etc/systemd/system/osd.service
 [Unit]
-Description=Open Science Desktop (headless)
+Description=ResearchMind (headless)
 After=network-online.target
 
 [Service]
@@ -320,8 +317,8 @@ WantedBy=multi-user.target
 - Tauri 在当前系统需要的 macOS、Windows 或 Linux 依赖
 
 ```bash
-git clone https://github.com/ai4s-research/open-science
-cd open-science
+git clone https://github.com/crjia111/ResearchMind2.0
+cd ResearchMind2.0
 pnpm install
 
 bash scripts/dev/fetch-opencode.sh
@@ -379,20 +376,20 @@ pnpm lint
 ## 参与贡献
 
 欢迎 Issue 和 PR。请保持改动最小且可验证，遵循 [`AGENTS.md`](./AGENTS.md)，并在提交 PR 前运行检查。讨论和交流可以加入
-[Open Science Discord](https://discord.gg/fWNMDKcd5P)，也可以在 [linux.do](https://linux.do) 社区参与。
+[ResearchMind Discord](https://discord.gg/fWNMDKcd5P)，也可以在 [linux.do](https://linux.do) 社区参与。
 
 ## 引用
 
-如果 Open Science Desktop 对你的研究有帮助,请如下引用:
+如果 ResearchMind 对你的研究有帮助,请如下引用:
 
 ```bibtex
 @software{open_science_desktop,
-  author  = {{The Open Science Desktop Contributors}},
-  title   = {Open Science Desktop: a local-first, model-agnostic AI research workbench},
+  author  = {{The ResearchMind Contributors}},
+  title   = {ResearchMind: a local-first, model-agnostic AI research workbench},
   year    = {2026},
   version = {0.7.3},
   doi     = {10.5281/zenodo.24286110},
-  url     = {https://github.com/ai4s-research/open-science},
+  url     = {https://github.com/crjia111/ResearchMind2.0},
   license = {MIT}
 }
 ```
@@ -403,4 +400,4 @@ pnpm lint
 
 [MIT](./LICENSE)。随附的第三方技能和连接器保留各自许可证。
 
-> Open Science Desktop 仍是 beta 阶段科研工具。产出应视为草稿：发表或决策前请核对数字、引用、代码和结论。
+> ResearchMind 仍是 beta 阶段科研工具。产出应视为草稿：发表或决策前请核对数字、引用、代码和结论。
