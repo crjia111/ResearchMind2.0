@@ -1,48 +1,39 @@
 #!/bin/sh
-# Install ResearchMind on Linux for the current user — no root, no
-# package manager, nothing outside $HOME.
+# Install the local ResearchMind server and Web client on Linux for the current
+# user — no root, no package manager, nothing outside $HOME.
 #
 #   curl -fsSL https://raw.githubusercontent.com/crjia111/ResearchMind2.0/main/scripts/install.sh | sh
-#   curl -fsSL …/install.sh | sh -s -- --desktop     the desktop app as well
 #   curl -fsSL …/install.sh | sh -s -- --uninstall
 #
-# Default: `osd`, the headless server and CLI (the same workbench and web UI,
-# served over HTTP). `--desktop` installs the windowed app instead, which
-# carries `osd` too; it needs the system's WebKitGTK 4.1, which this script
-# cannot install without root, so it checks for it first.
+# The installer provides `osd`, the local server and CLI. The Web client is
+# served over HTTP by `osd server` and opens in the user's browser.
 #
 # Layout:
 #   ~/.local/share/researchmind/osd/        the osd archive, unpacked
-#   ~/.local/share/researchmind/desktop/    the desktop app (usr/bin, usr/lib)
+#   ~/.local/share/researchmind/osd/        the server archive, unpacked
 #   ~/.local/bin/osd                        a wrapper (not a symlink: osd finds
 #                                           its sidecars next to its real path)
-#   ~/.local/bin/researchmind               the desktop app's launcher
-#   ~/.local/share/applications/researchmind.desktop
 #
 # Environment: OSD_VERSION=0.6.1 pins a release (default: latest).
 #              OSD_DOWNLOAD_BASE overrides the release download URL (a mirror).
 set -eu
 
 REPO="crjia111/ResearchMind2.0"
-# Shared with the desktop app's own wrapper (cli_shim.rs), so whichever wrote
-# `osd` last, the other recognizes it as ours and may replace it.
+# Shared with the CLI wrapper, so an existing install can be replaced safely.
 SIGNATURE="ResearchMind CLI wrapper"
 
 DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
 PREFIX="$DATA/researchmind"
 BIN="$HOME/.local/bin"
-DESKTOP_ENTRY="$DATA/applications/researchmind.desktop"
 
 say() { printf '%s\n' "$*"; }
 die() { printf 'error: %s\n' "$*" >&2; exit 1; }
 
-mode=cli
 case "${1:-}" in
-  "") ;;
-  --desktop) mode=desktop ;;
+  "") mode=install ;;
   --uninstall) mode=uninstall ;;
-  -h|--help) say "usage: install.sh [--desktop | --uninstall]"; exit 0 ;;
-  *) die "unknown option: $1 (use --desktop or --uninstall)" ;;
+  -h|--help) say "usage: install.sh [--uninstall]"; exit 0 ;;
+  *) die "unknown option: $1 (use --uninstall)" ;;
 esac
 
 # Remove a file only when this project wrote it.
@@ -55,8 +46,6 @@ remove_ours() {
 if [ "$mode" = uninstall ]; then
   rm -rf "$PREFIX"
   remove_ours "$BIN/osd"
-  remove_ours "$BIN/researchmind"
-  remove_ours "$DESKTOP_ENTRY"
   say "Removed ResearchMind from $PREFIX."
   say "Your workspace (~/Documents/ResearchMind) and settings were left in place."
   exit 0
@@ -83,29 +72,13 @@ fi
 version="${version#v}"
 base="${OSD_DOWNLOAD_BASE:-https://github.com/$REPO/releases/download/v$version}"
 
-if [ "$mode" = desktop ]; then
-  archive="researchmind-desktop-$version-$target.tar.gz"
-else
-  archive="osd-$version-$target.tar.gz"
-fi
-
-if [ "$mode" = desktop ]; then
-  # Without root this script cannot add WebKitGTK, so say so before downloading
-  # several hundred megabytes that would not start.
-  if ! { /sbin/ldconfig -p 2>/dev/null || ldconfig -p 2>/dev/null; } | grep -q 'libwebkit2gtk-4\.1\.so\.0'; then
-    die "the desktop app needs WebKitGTK 4.1 (libwebkit2gtk-4.1-0), which is not installed here.
-Ask an administrator to install it, or run the workbench headless instead —
-the same UI in your browser, nothing else required:
-  curl -fsSL https://raw.githubusercontent.com/$REPO/master/scripts/install.sh | sh"
-  fi
-fi
+archive="osd-$version-$target.tar.gz"
 
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT INT TERM
 
 say "Downloading $archive…"
 if ! curl -fL --progress-bar -o "$tmp/$archive" "$base/$archive"; then
-  [ "$mode" = desktop ] && die "download failed: $base/$archive (releases up to 0.6.0 have no desktop archive)"
   die "download failed: $base/$archive"
 fi
 mkdir "$tmp/unpacked"
@@ -113,13 +86,8 @@ tar -xzf "$tmp/$archive" -C "$tmp/unpacked"
 
 # Swap the new copy in only after it unpacked completely.
 mkdir -p "$PREFIX"
-if [ "$mode" = desktop ]; then
-  dest="$PREFIX/desktop"
-  osd_bin="$dest/usr/bin/osd"
-else
-  dest="$PREFIX/osd"
-  osd_bin="$dest/osd"
-fi
+dest="$PREFIX/osd"
+osd_bin="$dest/osd"
 rm -rf "$dest"
 mv "$tmp/unpacked/"* "$dest"
 [ -x "$osd_bin" ] || die "the archive did not contain $osd_bin"
@@ -149,33 +117,10 @@ EOF
 mkdir -p "$BIN"
 write_wrapper "$BIN/osd" "$osd_bin"
 
-if [ "$mode" = desktop ]; then
-  app_bin="$dest/usr/bin/ai4s-workbench"
-  [ -x "$app_bin" ] || die "the archive did not contain $app_bin"
-  write_wrapper "$BIN/researchmind" "$app_bin"
-  mkdir -p "$(dirname "$DESKTOP_ENTRY")"
-  cat > "$DESKTOP_ENTRY" <<EOF
-[Desktop Entry]
-# $SIGNATURE
-Type=Application
-Name=ResearchMind
-Comment=Local AI research workbench
-Exec="$app_bin"
-Icon=$dest/usr/share/icons/hicolor/128x128/apps/ai4s-workbench.png
-StartupWMClass=ai4s-workbench
-Terminal=false
-Categories=Science;Education;
-EOF
-fi
-
 say ""
-say "Installed ResearchMind $version ($mode) in $dest"
+say "Installed ResearchMind $version in $dest"
 case ":$PATH:" in
   *":$BIN:"*) ;;
   *) say "Add $BIN to your PATH:  export PATH=\"$BIN:\$PATH\"" ;;
 esac
-if [ "$mode" = desktop ]; then
-  say "Start it from your applications menu, or run:  researchmind"
-else
-  say "Start it with:  osd server        (osd --help for everything else)"
-fi
+say "Start it with:  osd server        (osd --help for everything else)"

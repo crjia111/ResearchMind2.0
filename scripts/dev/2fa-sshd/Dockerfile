@@ -6,7 +6,7 @@
 #   docker build -t os-2fa-sshd scripts/dev/2fa-sshd
 #   docker run -d --name os-2fa-test -p 2222:22 os-2fa-sshd
 #   CODE=$(docker exec os-2fa-test oathtool --totp 3132333435363738393031323334353637383930)
-#   cd apps/desktop/src-tauri && OS_SSH_TEST_HOST=tester@localhost \
+#   cd crates/osd-core && OS_SSH_TEST_HOST=tester@localhost \
 #     OS_SSH_TEST_PORT=2222 OS_SSH_TEST_ANSWERS="pw-first-factor;$CODE" \
 #     cargo test --lib shared_connection -- --ignored --nocapture
 #   docker rm -f os-2fa-test

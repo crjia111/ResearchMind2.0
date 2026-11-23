@@ -1,8 +1,7 @@
-# Open Science Desktop
+# ResearchMind
 
-Brand name: **Open Science Desktop** — "Local-first, model-agnostic AI research
-workbench for macOS, Windows & Linux." Formerly Open Science. Bundle identifier stays
-`com.ai4s.workbench` and internal `@ai4s/*` package names are unchanged.
+Brand name: **ResearchMind** — "Local-first, model-agnostic AI research
+workbench." It runs as a local server with a browser client and CLI.
 
 Project rules and working context for AI agents (Claude Code, Cursor, Codex, etc.).
 `CLAUDE.md` is a symlink to this file — edit only `AGENTS.md`.
@@ -18,23 +17,20 @@ Keep it **simple, explicit, clear, complete**.
 
 ## What this project is
 
-An open-source, local-first, model-agnostic, reproducible AI research desktop
-for macOS, Windows, and Linux. See `README.md`, `docs/PRD.md`, and
+An open-source, local-first, model-agnostic, reproducible AI research workbench
+that runs locally through a browser. See `README.md`, `docs/PRD.md`, and
 `docs/TECHNICAL_DESIGN.md`.
 
-Recommended stack: **Tauri 2 + React + TypeScript + Vite**, Tailwind + Radix UI,
-**OpenCode** as the agent runtime (bundled single-binary sidecar; HTTP + SSE API),
+Recommended stack: **React + TypeScript + Vite**, Tailwind + Radix UI,
+**OpenCode** as the agent runtime (local process; HTTP + SSE API),
 local workspace + SQLite + JSONL provenance.
 
 ## Repository map
 
-- `apps/desktop/` — Tauri + React desktop shell (`src/` frontend, `src-tauri/` Rust).
+- `apps/web/` — React + Vite browser client.
 - `packages/` — `ui`, `shared`, `sdk` (the `OpenCodeClient` wrapper).
 - `runtime/` — `manager`, `opencode-profile`, `mcp`, `skills`, the OpenCode
   guard plugins and custom tools, and `computer/` (the computer-use host layer).
-- `native/` — the per-platform computer-use providers (macOS Swift helper app,
-  Linux AT-SPI script, Windows UI Automation script), ported from Orca (MIT).
-  Staged into the bundle by `scripts/dev/build-computer-use.mjs`.
 - `docs/` — product and technical specs.
 - `examples/bci-trends/` — the built-in demo project.
 - `scripts/` — release and dev scripts.
@@ -42,8 +38,8 @@ local workspace + SQLite + JSONL provenance.
 ## Architecture guardrails
 
 - The UI never calls OpenCode directly — it goes through `packages/sdk` (`OpenCodeClient`).
-  Pin the OpenCode version (see `OPENCODE_VERSION`) and bundle it as a sidecar.
-- Keep the frontend, desktop shell, and agent runtime decoupled.
+  Pin the OpenCode version (see `OPENCODE_VERSION`) and package it with `osd`.
+- Keep the browser client and agent runtime decoupled.
 - Skills, MCP servers, and model providers must stay pluggable.
 - Keep the artifact schema and workflow templates stable and versioned.
 - Every feature must work on Windows, macOS, and Linux, AND in the gateway web
@@ -52,7 +48,7 @@ local workspace + SQLite + JSONL provenance.
   native dialogs, host filesystem access), hide it in web mode (`isGatewayWeb`)
   instead of shipping a control that fails.
 
-## Safety defaults (non-negotiable for the desktop)
+## Safety defaults
 
 - The agent may only access the current workspace.
 - Command execution, file deletion, dependency install, and remote connections

@@ -968,10 +968,6 @@ pub fn sidecar_bin(name: &str) -> Option<PathBuf> {
 }
 
 /// A `std::process::Command` that never pops a console window on Windows.
-/// A GUI app spawning a console-subsystem child (python.exe, taskkill, git…)
-/// otherwise flashes a black window per spawn — every direct spawn in this
-/// crate must go through here. (Sidecars via tauri_plugin_shell already set
-/// the flag internally.)
 pub fn quiet_command(bin: impl AsRef<std::ffi::OsStr>) -> std::process::Command {
     #[allow(unused_mut)]
     let mut cmd = std::process::Command::new(bin);

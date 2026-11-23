@@ -1,10 +1,9 @@
 // Where the app is on disk, and nothing else.
 //
-// Every function that used to take a Tauri `AppHandle` only ever asked it three
+// Every function that used to take an application handle only ever asked it three
 // questions: where is my data directory, where are my bundled resources, and
-// what version am I. `Env` answers those three without a window — which is what
-// lets the same code serve the desktop app and `osd server` on a machine with no
-// display at all.
+// what version am I. `Env` answers those three without a window, so `osd server`
+// runs on a machine with no display at all.
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
@@ -24,8 +23,7 @@ struct Inner {
     runtime: RuntimeState,
 }
 
-/// Cheap to clone (one `Arc`), so it can be handed to threads and stored in
-/// Tauri state without ceremony.
+/// Cheap to clone (one `Arc`), so it can be handed to worker threads.
 #[derive(Clone)]
 pub struct Env(Arc<Inner>);
 

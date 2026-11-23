@@ -4,11 +4,11 @@
 
 # ResearchMind
 
-**本地优先、模型无关的 macOS、Windows & Linux AI 科研桌面工作台。**
+**本地优先、模型无关的浏览器 AI 科研工作台。**
 
-ResearchMind 是面向 AI 科研的开源桌面工作台：
-基于 Tauri、MCP、agent skills 和可复现工件构建。它把智能体、笔记本、文件、图表、
-报告、运行记录和审查连接成一条可审计的桌面工作流。
+ResearchMind 是面向 AI 科研的开源本地工作台：
+基于 MCP、agent skills 和可复现工件构建。它把智能体、笔记本、文件、图表、
+报告、运行记录和审查连接成一条可审计的工作流。
 
 <p>
   <a href="./README.md">English</a> ·
@@ -141,8 +141,8 @@ ResearchMind 是面向 AI 科研的开源桌面工作台：
 
 | 范围 | 当前状态 |
 | --- | --- |
-| 桌面外壳 | Tauri 2 + React + TypeScript + Vite，主打 macOS 和 Windows 桌面构建，同时提供 Linux 包。 |
-| 运行时 | 内置 OpenCode sidecar，由应用自动启动，并与用户自己的 OpenCode 配置/数据隔离。 |
+| Web 客户端 | React + TypeScript + Vite，由 `osd server` 在本机提供。 |
+| 运行时 | 由服务端管理的本地 OpenCode 进程，与用户自己的 OpenCode 配置/数据隔离。 |
 | 项目 | 命名的项目工作区,把相关会话归到一处;可就地导入已有文件夹(绝不复制),或纳管工作区内已存在的文件夹;已有会话也能移动到项目中。 |
 | 会话 | 多会话聊天与历史、按时间创建的工作区文件夹、可搜索的历史(含归档/恢复/导出)、`@` 引用文件与 `#` 引用历史会话、`/` 命令和 `!` shell 模式。 |
 | 布局 | N 元分屏平铺,支持拖拽停靠、多个独立「屏幕」、每个分栏各自的模型与推理强度,以及跨屏幕拖拽分栏。 |
@@ -204,16 +204,15 @@ sudo apt install ./researchmind_*.deb
 sudo rpm -i researchmind-*.rpm
 ```
 
-没有 root 权限？下面的命令把所有东西装在你的用户目录下——默认装 `osd`，加 `--desktop` 装桌面版（要求系统里已有 WebKitGTK 4.1）。`--uninstall` 可以再卸掉。
+没有 root 权限？下面的命令把 `osd` 和 Web 客户端装在你的用户目录下。`--uninstall` 可以再卸掉。
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/crjia111/ResearchMind2.0/main/scripts/install.sh | sh
-curl -fsSL https://raw.githubusercontent.com/crjia111/ResearchMind2.0/main/scripts/install.sh | sh -s -- --desktop
 ```
 
 ## 无头与命令行(`osd`)
 
-科研机器通常没有屏幕。`osd` 就是没有屏幕的同一套工作台：同样的工作区布局、同样的智能体运行时、同样的项目、同样的 Web UI——只是通过 HTTP 提供，而不是画在窗口里。
+科研机器可以直接在本地启动服务，并用任意浏览器访问。`osd` 通过 HTTP 提供工作区、智能体运行时、项目和 Web UI。
 
 **在服务器上，用压缩包。** Releases 里的 `osd-<version>-<target>` 解压即跑，什么都不用装——已在一个不加任何软件包的空白 Ubuntu 容器里验证过。
 
@@ -314,7 +313,6 @@ WantedBy=multi-user.target
 - Node.js >= 20
 - pnpm 9
 - Rust 工具链
-- Tauri 在当前系统需要的 macOS、Windows 或 Linux 依赖
 
 ```bash
 git clone https://github.com/crjia111/ResearchMind2.0
@@ -328,8 +326,7 @@ bash scripts/dev/fetch-skills.sh
 # osd 终端客户端也一起打包；它是我们自己的代码，所以是构建而非下载。
 bash scripts/dev/build-osd-sidecar.sh $(rustc -vV | sed -n 's/host: //p')
 
-pnpm --filter @ai4s/desktop tauri dev
-pnpm --filter @ai4s/desktop tauri build
+pnpm dev
 ```
 
 常用检查：
@@ -343,7 +340,7 @@ pnpm lint
 ## 安全与隐私
 
 - 工作区文件、原始数据、会话历史、溯源、笔记本和运行记录默认保留在本机。
-- 命令执行、删除文件、安装依赖和远程连接在桌面应用中走人工批准流程。
+- 命令执行、删除文件、安装依赖和远程连接在本地 Web 客户端中走人工批准流程。
 - 提供方凭据写入应用私有运行时配置，不进入工作区、溯源、git、导出或用户全局 OpenCode 配置。
 - Settings 中有大白话数据流说明，说明哪些内容可能发给所选模型提供方。
 
@@ -351,7 +348,7 @@ pnpm lint
 
 | 路径 | 用途 |
 | --- | --- |
-| `apps/desktop/` | Tauri + React 桌面应用。 |
+| `apps/web/` | React + Vite 浏览器客户端。 |
 | `packages/sdk/` | `OpenCodeClient`，避免 UI 直接调用 OpenCode。 |
 | `packages/shared/` | 共享领域类型和图表色板。 |
 | `packages/ui/` | 共享 UI 包。 |

@@ -4,12 +4,11 @@
 
 # ResearchMind
 
-**Local-first, model-agnostic AI research workbench for macOS, Windows & Linux.**
+**Local-first, model-agnostic AI research workbench for your browser.**
 
-ResearchMind is an open-source desktop workbench for AI-assisted science,
-built with Tauri, MCP, agent skills, and
-reproducible artifacts. It connects agents, notebooks, files, figures, reports,
-runs, and review into one auditable desktop workflow.
+ResearchMind is an open-source local workbench for AI-assisted science,
+built with MCP, agent skills, and reproducible artifacts. It connects agents,
+notebooks, files, figures, reports, runs, and review into one auditable workflow.
 
 <p>
   <b>English</b> ·
@@ -173,8 +172,8 @@ office/document skills below.
 
 | Area | Current state |
 | --- | --- |
-| Desktop shell | Tauri 2 + React + TypeScript + Vite, with macOS, Windows, and Linux desktop builds. |
-| Runtime | Bundled OpenCode sidecar, auto-started by the app, isolated from the user's own OpenCode config/data. |
+| Web client | React + TypeScript + Vite, served locally by `osd server`. |
+| Runtime | Local OpenCode process managed by the server, isolated from the user's own OpenCode config/data. |
 | Projects | Named project workspaces that group their sessions; import an existing folder in place (never copied) or adopt one already inside the workspace; move an existing session into a project. |
 | Sessions | Multi-session chat/history, dated workspace folders, searchable history with archive/restore/export, `@` file and `#` conversation references, `/` commands, and `!` shell mode. |
 | Layout | N-ary split-pane tiling with drag-to-dock, independent Screens, per-pane model and reasoning effort, and cross-screen pane drag. |
@@ -183,7 +182,7 @@ office/document skills below.
 | Remote compute | Register machines from your `~/.ssh/config`, probe them, and submit, track, or cancel jobs from the app. |
 | Appearance | Light, Warm, and Dark themes with per-theme accents, and UI zoom. |
 | Files | Global and per-session file browsing, context menu actions, external open/reveal, copy path, and local preview server. |
-| Headless & CLI | `osd server` runs the workbench with no window — same workspace, same runtime, same web UI, served from one self-contained directory — and `osd` drives it (or a running desktop app) from a terminal: sessions, projects, runs, files, approvals, `--wait`, `--json`. |
+| Server & CLI | `osd server` runs the workbench locally and serves the Web UI; `osd` drives it from a terminal: sessions, projects, runs, files, approvals, `--wait`, `--json`. |
 | Remote access | Token-authenticated gateway that serves the real UI to a CLI, a LAN web browser, or your phone (loopback by default, LAN opt-in); read-only vs full access modes; copy a link with the token embedded to connect in one tap. API keys never cross the wire. |
 | Editor interop (ACP) | Speaks the Agent Client Protocol in both directions: run any ACP agent (Codex, Gemini CLI, Claude Code, …) as the runtime behind the ordinary UI, with its own model and reasoning selectors, history replay, and this app's MCP connectors; or let an external editor (Zed, JetBrains, Neovim, …) drive ResearchMind, reusing the gateway token. |
 | Browser control | The agent drives your own Chrome — profile and login state preserved — reading pages through the accessibility tree, or an isolated/private browser on demand. |
@@ -243,20 +242,17 @@ sudo apt install ./researchmind_*.deb
 sudo rpm -i researchmind-*.rpm
 ```
 
-No root? This installs everything under your home directory — `osd` by
-default, the desktop app with `--desktop` (which needs WebKitGTK 4.1 already on
-the system). `--uninstall` removes it again.
+No root? This installs `osd` and the Web client under your home directory.
+`--uninstall` removes it again.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/crjia111/ResearchMind2.0/main/scripts/install.sh | sh
-curl -fsSL https://raw.githubusercontent.com/crjia111/ResearchMind2.0/main/scripts/install.sh | sh -s -- --desktop
 ```
 
 ## Headless & CLI (`osd`)
 
-A research machine usually has no screen. `osd` is the same workbench without
-one: the same workspace layout, the same agent runtime, the same projects, and
-the same web UI — served over HTTP instead of drawn in a window.
+A research machine can run the workbench locally and open it in any browser.
+`osd` starts the server, runtime, projects, and Web UI over HTTP.
 
 **On a server, take the archive.** `osd-<version>-<target>` from Releases
 unpacks and runs with nothing installed — verified on a bare Ubuntu container
@@ -439,9 +435,8 @@ bash scripts/dev/fetch-skills.sh
 # The osd terminal client is bundled too — it is ours, so it is built, not fetched.
 bash scripts/dev/build-osd-sidecar.sh $(rustc -vV | sed -n 's/host: //p')
 
-# Run in development or build installers.
-pnpm --filter @ai4s/desktop tauri dev
-pnpm --filter @ai4s/desktop tauri build
+# Run the local Web client.
+pnpm dev
 ```
 
 Useful checks:
@@ -457,7 +452,7 @@ pnpm lint
 - Workspace files, raw data, session history, provenance, notebooks, and run records
   stay local by default.
 - Command execution, file deletion, dependency installation, and remote connections
-  are human-approved flows in the desktop app.
+  are human-approved flows in the local Web client.
 - Provider credentials are written to app-private runtime config, not to the
   workspace, provenance, git, exports, or global OpenCode config.
 - Settings includes a plain-language data-flow view explaining what can be sent to
@@ -467,7 +462,7 @@ pnpm lint
 
 | Path | Purpose |
 | --- | --- |
-| `apps/desktop/` | Tauri + React desktop app. |
+| `apps/web/` | React + Vite browser client. |
 | `packages/sdk/` | `OpenCodeClient`; keeps the UI from calling OpenCode directly. |
 | `packages/shared/` | Shared domain types and chart palette. |
 | `packages/ui/` | Shared UI package. |
@@ -483,7 +478,7 @@ pnpm lint
 
 ## Status
 
-The project is a working desktop MVP in active development. The most reliable current
+The project is a working local Web MVP in active development. The most reliable current
 implementation log is [`PROGRESS.md`](./PROGRESS.md). Product and architecture notes
 live in [`docs/PRD.md`](./docs/PRD.md) and
 [`docs/TECHNICAL_DESIGN.md`](./docs/TECHNICAL_DESIGN.md), but those documents include

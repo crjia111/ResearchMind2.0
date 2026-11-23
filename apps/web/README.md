@@ -1,6 +1,6 @@
-# apps/desktop
+# apps/web
 
-The Tauri 2 + React + TypeScript + Vite desktop application — the AI4S Workbench shell.
+The React + TypeScript + Vite Web client for ResearchMind.
 
 ## Layout
 
@@ -11,7 +11,6 @@ The Tauri 2 + React + TypeScript + Vite desktop application — the AI4S Workben
   - `features/` — feature modules: `onboarding/`, `projects/`, `chat/`, `agent-runtime/`,
     `literature/`, `artifacts/`, `provenance/`, `review/`, `skills/`, `settings/`.
   - `lib/` — `api/`, `events/` (event bus for agent streams), `store/` (Zustand), `theme/`.
-- `src-tauri/` — the Rust side: native commands, sidecar orchestration, packaging config.
 
 ## State strategy
 

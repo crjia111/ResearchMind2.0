@@ -22,12 +22,8 @@ set -euo pipefail
 target="${1:?usage: package-osd.sh <rust-target> [output-dir]}"
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 out_dir="${2:-$root/dist-osd}"
-# A RELATIVE path on purpose: under Git Bash (which is what the Windows CI leg
-# runs), `$root` is a POSIX path like /d/a/repo, and MSYS only translates those
-# when they are whole arguments — inside a JS string it reaches node unchanged
-# and `require` fails. Measured on Windows 11: the absolute form errors, the
-# relative form returns the version.
-version="$(cd "$root" && node -p "require('./apps/desktop/src-tauri/tauri.conf.json').version")"
+# Read the Web client's version from its package metadata.
+version="$(cd "$root" && node -p "require('./apps/web/package.json').version")"
 
 ext=""
 case "$target" in *windows*) ext=".exe" ;; esac
@@ -40,10 +36,9 @@ echo "Building osd for ${target}..."
 cargo build --release --target "$target" --package osd-cli --manifest-path "$root/Cargo.toml"
 cp "$root/target/$target/release/osd$ext" "$stage/osd$ext"
 
-# The sidecars, under the plain names `sidecar_bin()` looks for next to the
-# executable (Tauri strips the target triple the same way when it bundles).
+# The sidecars are placed next to the executable under their plain names.
 for name in opencode uv agent-browser; do
-  src="$root/apps/desktop/src-tauri/binaries/$name-$target$ext"
+  src="$root/dist-sidecars/$name-$target$ext"
   if [ ! -e "$src" ]; then
     echo "Missing sidecar: $src (run scripts/dev/fetch-$name.sh $target)" >&2
     exit 1
@@ -52,10 +47,7 @@ for name in opencode uv agent-browser; do
   chmod +x "$stage/$name$ext"
 done
 
-# The bundled resources, under the names `Env::resource` asks for. This list
-# MUST match `bundle.resources` in tauri.conf.json — the two hosts deploy the
-# same profile, and a resource in one and not the other means the agent behaves
-# differently depending on which door you came in by.
+# The bundled resources under the names the headless runtime expects.
 copy_resource() {
   local src="$root/$1" dst="$stage/resources/$2"
   if [ ! -e "$src" ]; then
@@ -78,14 +70,6 @@ copy_resource runtime/harness harness
 copy_resource runtime/acp-server acp-server
 copy_resource examples/climate-trends examples/climate-trends
 
-# The native computer-use providers, when this machine staged them. Optional on
-# purpose: a compute node has no desktop to drive, and the `computer` tool
-# already reports "no provider for this platform" rather than failing. The host
-# layer above is NOT optional — `osd-plugin/computer.ts` imports it.
-if [ -d "$root/apps/desktop/src-tauri/computer-use" ]; then
-  copy_resource apps/desktop/src-tauri/computer-use computer-use
-fi
-
 cat > "$stage/README.txt" <<'EOF'
 ResearchMind — headless (osd)
 
@@ -96,7 +80,7 @@ added (checked on a bare Ubuntu container).
   ./osd server --lan           also reachable from the network
   ./osd --help                 everything else
 
-The web UI is the same one the desktop app runs. Open the URL it prints,
+The web UI is served locally. Open the URL it prints,
 including the ?token=... it gives you.
 
 Set the machine up before starting a server:
@@ -131,8 +115,6 @@ the agent runtime with it. A unit that was tested end to end:
   [Install]
   WantedBy=multi-user.target
 
-macOS: files from a downloaded archive are quarantined. If macOS refuses to
-run them, clear it once with:  xattr -dr com.apple.quarantine .
 EOF
 
 archive="$out_dir/osd-$version-$target"
